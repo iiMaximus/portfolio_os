@@ -706,13 +706,7 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
           scale={0.06}
           zIndexRange={[120, 0]}
         >
-          <div className="mac-screen-viewport">
-            <iframe
-              className="mac-screen-frame"
-              src={LEGACY_SCREEN_SRC}
-              title="Mac OS portfolio preview"
-            />
-          </div>
+          <MacScreenFrame />
         </Html>
       )}
 
@@ -725,6 +719,21 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
         <meshStandardMaterial color="#1f2320" roughness={0.4} />
       </mesh>
     </group>
+  );
+}
+
+function MacScreenFrame() {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <div className="mac-screen-viewport">
+      <iframe
+        className={`mac-screen-frame ${loaded ? "is-loaded" : ""}`}
+        src={LEGACY_SCREEN_SRC}
+        title="Mac OS portfolio preview"
+        onLoad={() => setLoaded(true)}
+      />
+    </div>
   );
 }
 
@@ -1583,12 +1592,17 @@ function LegacyOSOverlay({
   onLoadFreePlay
 }) {
   const { width, height } = useViewportSize();
+  const [loaded, setLoaded] = useState(false);
   const screenFitScale = Math.max(1, width / LEGACY_SCREEN_WIDTH, height / LEGACY_SCREEN_HEIGHT);
   const overlaySrc = `${LEGACY_SCREEN_SRC}&scale=${screenFitScale.toFixed(4)}`;
 
+  useEffect(() => {
+    setLoaded(false);
+  }, [active, overlaySrc]);
+
   return (
     <section
-      className={`legacy-os-overlay ${active ? "is-visible" : ""} ${locked ? "is-locked" : "is-cinematic"}`}
+      className={`legacy-os-overlay ${active ? "is-visible" : ""} ${loaded ? "is-loaded" : ""} ${locked ? "is-locked" : "is-cinematic"}`}
       style={{
         opacity: progress
       }}
@@ -1598,9 +1612,10 @@ function LegacyOSOverlay({
         {active && (
           <iframe
             key={overlaySrc}
-            className="legacy-os-frame"
+            className={`legacy-os-frame ${loaded ? "is-loaded" : ""}`}
             src={overlaySrc}
             title="Interactive Mac OS portfolio desktop"
+            onLoad={() => setLoaded(true)}
           />
         )}
       </div>

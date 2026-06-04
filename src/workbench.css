@@ -59,7 +59,7 @@ button {
   display: block;
   width: 960px;
   height: 720px;
-  background: #111;
+  background: transparent;
   border-radius: 0;
   overflow: hidden;
   image-rendering: pixelated;
@@ -71,10 +71,16 @@ button {
   width: 960px;
   height: 720px;
   border: 0;
-  background: #111;
+  background: transparent;
+  opacity: 0;
   pointer-events: none;
   image-rendering: pixelated;
   filter: saturate(0.9) contrast(1.05);
+  transition: opacity 120ms linear;
+}
+
+.mac-screen-frame.is-loaded {
+  opacity: 1;
 }
 
 .mac-preview {
@@ -422,8 +428,12 @@ button {
   z-index: 999;
   display: block;
   padding: 0;
-  background: #111;
+  background: transparent;
   pointer-events: none;
+}
+
+.legacy-os-overlay.is-loaded {
+  background: #111;
 }
 
 .legacy-os-overlay.is-visible {
@@ -440,7 +450,7 @@ button {
   width: 100vw;
   height: 100vh;
   border: 0;
-  background: #111;
+  background: transparent;
   overflow: hidden;
 }
 
@@ -454,8 +464,14 @@ button {
   height: 100%;
   min-height: 100vh;
   border: 0;
-  background: #111;
+  background: transparent;
+  opacity: 0;
   image-rendering: pixelated;
+  transition: opacity 120ms linear;
+}
+
+.legacy-os-frame.is-loaded {
+  opacity: 1;
 }
 
 .legacy-action-bar {
