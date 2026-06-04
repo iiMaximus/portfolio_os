@@ -101,6 +101,14 @@ function isAtScrollEnd() {
   return window.scrollY >= maxScroll - 2;
 }
 
+function retreatFromScrollEnd(deltaY = -180) {
+  const doc = document.documentElement;
+  const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+  const retreat = Math.min(maxScroll * 0.038, Math.max(130, Math.abs(deltaY) * 1.15));
+  window.scrollTo({ top: Math.max(0, maxScroll - retreat), left: 0, behavior: "auto" });
+  window.dispatchEvent(new Event("scroll"));
+}
+
 function useScrollTimeline() {
   const progressRef = useRef(0);
   const targetRef = useRef(0);
@@ -240,6 +248,37 @@ function App() {
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
     window.scrollTo({ top: maxScroll * target, behavior: "smooth" });
   }
+
+  function reverseOutOfTerminal(deltaY = -180) {
+    if (mode !== "cinematic" || !terminalLocked) return;
+    releaseTerminalLock();
+    setTerminalLocked(false);
+    retreatFromScrollEnd(deltaY);
+    window.requestAnimationFrame(() => retreatFromScrollEnd(deltaY));
+  }
+
+  useEffect(() => {
+    if (mode !== "cinematic" || !terminalLocked) return undefined;
+
+    function handleWheel(event) {
+      if (event.deltaY >= -8) return;
+      event.preventDefault();
+      reverseOutOfTerminal(event.deltaY);
+    }
+
+    function handleMessage(event) {
+      if (event.origin !== window.location.origin || event.data?.type !== "portfolio-os-reverse-scroll") return;
+      reverseOutOfTerminal(event.data.deltaY);
+    }
+
+    window.addEventListener("wheel", handleWheel, { capture: true, passive: false });
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener("wheel", handleWheel, { capture: true });
+      window.removeEventListener("message", handleMessage);
+    };
+  }, [mode, terminalLocked]);
 
   function selectDisk(disk) {
     const nextDisk = insertedDiskId === disk.id ? null : disk;

@@ -127,6 +127,27 @@
     }
   }
 
+  function requestParentReverseScroll(deltaY) {
+    if (window.parent === window) return;
+    window.parent.postMessage({ type: "portfolio-os-reverse-scroll", deltaY }, window.location.origin);
+  }
+
+  let reverseTouchStartY = 0;
+
+  window.addEventListener("wheel", (event) => {
+    if (event.deltaY < -8) requestParentReverseScroll(event.deltaY);
+  }, { passive: true });
+
+  window.addEventListener("touchstart", (event) => {
+    reverseTouchStartY = event.touches[0]?.clientY || 0;
+  }, { passive: true });
+
+  window.addEventListener("touchmove", (event) => {
+    const currentY = event.touches[0]?.clientY || 0;
+    const pullDistance = currentY - reverseTouchStartY;
+    if (pullDistance > 28) requestParentReverseScroll(-pullDistance * 2);
+  }, { passive: true });
+
   window.setMountedPortfolioDisk = setMountedPortfolioDisk;
   window.addEventListener("message", (event) => {
     if (event.origin !== window.location.origin || event.data?.type !== "portfolio-disk") return;
