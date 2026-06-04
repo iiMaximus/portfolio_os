@@ -343,11 +343,54 @@ button {
   text-transform: uppercase;
 }
 
-.scroll-hairline {
+.tour-progress {
   position: fixed;
   right: 18px;
   top: 50%;
   z-index: 10;
+  display: grid;
+  grid-template-columns: minmax(120px, 190px) 5px;
+  gap: 12px;
+  align-items: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.tour-progress-copy {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  color: rgba(245, 240, 230, 0.82);
+  text-align: right;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.42);
+  animation: tour-copy-enter 320ms ease both;
+}
+
+.tour-progress-copy span {
+  color: rgba(245, 240, 230, 0.52);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+
+.tour-progress-copy strong {
+  color: #fff7df;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.tour-progress-copy p {
+  max-width: 190px;
+  margin: 0;
+  color: rgba(245, 240, 230, 0.68);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.24;
+}
+
+.scroll-hairline {
+  position: relative;
   width: 5px;
   height: min(46vh, 360px);
   border-radius: 999px;
@@ -356,7 +399,6 @@ button {
     inset 0 0 0 1px rgba(255, 255, 255, 0.16),
     0 12px 34px rgba(0, 0, 0, 0.28);
   overflow: hidden;
-  transform: translateY(-50%);
 }
 
 .scroll-hairline span {
@@ -367,8 +409,20 @@ button {
   height: calc(var(--scroll-progress, 0) * 100%);
   display: block;
   border-radius: inherit;
-  background: linear-gradient(180deg, #fff8d5 0%, #79d5ff 48%, #8bf0c5 100%);
-  box-shadow: 0 0 16px rgba(121, 213, 255, 0.7);
+  background: #fff7df;
+  box-shadow: 0 0 15px rgba(255, 247, 223, 0.45);
+}
+
+@keyframes tour-copy-enter {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .bench-status {
@@ -816,6 +870,7 @@ button {
   .cinematic-stage,
   .scroll-track,
   .skip-cinematic,
+  .tour-progress,
   .scroll-hairline,
   .bench-status {
     display: none;

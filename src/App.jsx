@@ -7,7 +7,8 @@ import {
   disks,
   freePlayCamera,
   mobileApps,
-  softwareProjects
+  softwareProjects,
+  timelineStops
 } from "./portfolioContent";
 
 const LEGACY_SCREEN_WIDTH = 960;
@@ -301,7 +302,7 @@ function App() {
         </Canvas>
 
         {!legacyActive && (
-          <CinematicHud onSkip={loadNormal} />
+          <CinematicHud progress={uiProgress} onSkip={loadNormal} />
         )}
 
         <LegacyOSOverlay
@@ -420,6 +421,10 @@ function sampleCamera(progress) {
     target: mixArray(current.target, next.target, t),
     fov: mix(current.fov, next.fov, t)
   };
+}
+
+function getTimelineStop(progress) {
+  return timelineStops.find((stop) => progress >= stop.start && progress < stop.end) || timelineStops[timelineStops.length - 1];
 }
 
 function WorkbenchScene({
@@ -1572,15 +1577,25 @@ function LinearActuatorPlaceholder({ position, onFocus }) {
   );
 }
 
-function CinematicHud({ onSkip }) {
+function CinematicHud({ progress, onSkip }) {
+  const activeStop = getTimelineStop(progress);
+  const activeIndex = Math.max(0, timelineStops.findIndex((stop) => stop.id === activeStop.id));
+
   return (
     <>
       <button className="skip-cinematic" type="button" onClick={onSkip}>
         skip this bullshit and load normal portfolio
       </button>
 
-      <div className="scroll-hairline" aria-hidden="true">
-        <span />
+      <div className="tour-progress" aria-live="polite">
+        <div className="tour-progress-copy" key={activeStop.id}>
+          <span>{String(activeIndex + 1).padStart(2, "0")}</span>
+          <strong>{activeStop.title}</strong>
+          <p>{activeStop.detail}</p>
+        </div>
+        <div className="scroll-hairline" aria-hidden="true">
+          <span />
+        </div>
       </div>
     </>
   );
