@@ -67,6 +67,30 @@ export const timelineStops = [
   }
 ];
 
+export const blueprintProjects = [
+  {
+    id: "fpv",
+    title: "FPV Drone",
+    accent: "#bdeeff",
+    paper: "#0d5a91",
+    detail: "Frame geometry, prop clearance, electronics layout."
+  },
+  {
+    id: "fixture",
+    title: "Fixture Jig",
+    accent: "#c8ffd7",
+    paper: "#145f43",
+    detail: "Locating pins, clamp travel, repeatable assembly setup."
+  },
+  {
+    id: "juice",
+    title: "Juice Mechanism",
+    accent: "#ffe7a8",
+    paper: "#8d5c18",
+    detail: "Rollers, feed path, enclosure and service access."
+  }
+];
+
 export const cameraKeyframes = [
   {
     t: 0,

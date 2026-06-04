@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Html, OrbitControls, useCursor } from "@react-three/drei";
 import * as THREE from "three";
 import {
+  blueprintProjects,
   cameraKeyframes,
   disks,
   freePlayCamera,
@@ -489,7 +490,7 @@ function WorkbenchScene({
           screenLive={screenLive}
           terminalProgressSource={getTerminalProgress}
         />
-        <BlueprintStack onFocus={onOpenProjects} />
+        <BlueprintStack progressRef={progressRef} onFocus={onOpenProjects} />
         <PhysicalProjects onFocus={onOpenProjects} />
         <MobilePhoneShowcase onFocus={onOpenProjects} />
 
@@ -967,9 +968,18 @@ function FloppyDisk({ disk, index, active, onSelect }) {
   );
 }
 
-function BlueprintStack({ onFocus }) {
+function BlueprintStack({ progressRef, onFocus }) {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
+
+  const orderedSheets = useMemo(
+    () =>
+      blueprintProjects
+        .map((project, index) => ({ project, index }))
+        .sort((a, b) => Number(a.index === activeIndex) - Number(b.index === activeIndex)),
+    [activeIndex]
+  );
 
   return (
     <group
@@ -979,90 +989,301 @@ function BlueprintStack({ onFocus }) {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <mesh position={[0.05, -0.018, -0.035]} receiveShadow castShadow>
-        <boxGeometry args={[1.64, 0.025, 1.02]} />
-        <meshStandardMaterial color="#d8d0bc" roughness={0.7} />
-      </mesh>
-      <mesh receiveShadow castShadow>
-        <boxGeometry args={[1.56, 0.025, 0.96]} />
-        <meshStandardMaterial color="#0d5a91" roughness={0.58} />
+      <mesh position={[0.08, -0.024, -0.05]} receiveShadow castShadow>
+        <boxGeometry args={[1.72, 0.03, 1.08]} />
+        <meshStandardMaterial color="#d8d0bc" roughness={0.78} />
       </mesh>
 
-      {[-0.36, -0.18, 0, 0.18, 0.36].map((z) => (
-        <BlueprintLine key={`grid-x-${z}`} position={[0, 0.03, z]} size={[1.36, 0.011, 0.004]} subtle />
+      {orderedSheets.map(({ project, index }) => (
+        <BlueprintSheet
+          key={project.id}
+          project={project}
+          index={index}
+          active={index === activeIndex}
+          progressRef={progressRef}
+          onSelect={() => setActiveIndex(index)}
+        />
       ))}
-      {[-0.54, -0.27, 0, 0.27, 0.54].map((x) => (
-        <BlueprintLine key={`grid-z-${x}`} position={[x, 0.031, 0]} size={[0.004, 0.011, 0.74]} subtle />
-      ))}
-
-      <BlueprintLine position={[0, 0.034, -0.43]} size={[1.36, 0.014, 0.008]} />
-      <BlueprintLine position={[0, 0.034, 0.43]} size={[1.36, 0.014, 0.008]} />
-      <BlueprintLine position={[-0.68, 0.034, 0]} size={[0.008, 0.014, 0.86]} />
-      <BlueprintLine position={[0.68, 0.034, 0]} size={[0.008, 0.014, 0.86]} />
-
-      <group position={[-0.28, 0.038, 0.08]}>
-        <BlueprintLine position={[0, 0, 0]} size={[0.36, 0.018, 0.18]} bright />
-        <BlueprintLine position={[0, 0.002, 0]} size={[0.92, 0.016, 0.014]} rotation={[0, 0.58, 0]} />
-        <BlueprintLine position={[0, 0.003, 0]} size={[0.92, 0.016, 0.014]} rotation={[0, -0.58, 0]} />
-        {[
-          [-0.42, -0.26],
-          [0.42, -0.26],
-          [-0.42, 0.26],
-          [0.42, 0.26]
-        ].map(([x, z]) => (
-          <BlueprintCircle key={`${x}-${z}`} position={[x, 0.004, z]} radius={0.085} />
-        ))}
-        <BlueprintLine position={[0, 0.004, -0.41]} size={[0.86, 0.012, 0.006]} bright />
-        <BlueprintLine position={[-0.43, 0.006, -0.38]} size={[0.006, 0.012, 0.06]} bright />
-        <BlueprintLine position={[0.43, 0.006, -0.38]} size={[0.006, 0.012, 0.06]} bright />
-        <BlueprintLine position={[0.55, 0.005, 0]} size={[0.006, 0.012, 0.54]} bright />
-        <BlueprintLine position={[0.52, 0.006, -0.27]} size={[0.06, 0.012, 0.006]} bright />
-        <BlueprintLine position={[0.52, 0.006, 0.27]} size={[0.06, 0.012, 0.006]} bright />
-      </group>
-
-      <group position={[0.45, 0.039, -0.05]}>
-        <BlueprintLine position={[0, 0, 0.18]} size={[0.38, 0.016, 0.035]} bright />
-        <BlueprintLine position={[-0.08, 0.002, 0.12]} size={[0.18, 0.016, 0.018]} />
-        <BlueprintLine position={[0.19, 0.003, 0.18]} size={[0.22, 0.014, 0.01]} rotation={[0, -0.24, 0]} />
-        <BlueprintCircle position={[0.33, 0.004, 0.15]} radius={0.045} />
-        <BlueprintLine position={[-0.26, 0.006, 0.34]} size={[0.36, 0.012, 0.006]} />
-        <BlueprintLine position={[-0.44, 0.006, 0.3]} size={[0.006, 0.012, 0.08]} />
-        <BlueprintLine position={[-0.08, 0.006, 0.3]} size={[0.006, 0.012, 0.08]} />
-      </group>
-
-      <group position={[0.43, 0.04, 0.31]}>
-        <BlueprintLine position={[0, 0, 0]} size={[0.46, 0.013, 0.006]} />
-        <BlueprintLine position={[0, 0, 0.07]} size={[0.46, 0.013, 0.006]} />
-        <BlueprintLine position={[0.12, 0, -0.07]} size={[0.22, 0.013, 0.006]} />
-        <BlueprintLine position={[-0.24, 0, 0.035]} size={[0.006, 0.013, 0.14]} />
-        <BlueprintLine position={[0.24, 0, 0.035]} size={[0.006, 0.013, 0.14]} />
-        <BlueprintLine position={[0.02, 0, 0.12]} size={[0.44, 0.013, 0.006]} />
-      </group>
     </group>
   );
 }
 
-function BlueprintLine({ position, size, rotation = [0, 0, 0], subtle = false, bright = false }) {
+function BlueprintSheet({ project, index, active, progressRef, onSelect }) {
+  const ref = useRef();
+  const [hovered, setHovered] = useState(false);
+  const texture = useBlueprintTexture(project, index);
+  const targetPosition = useMemo(() => new THREE.Vector3(), []);
+  const targetScale = useMemo(() => new THREE.Vector3(1, 1, 1), []);
+  useCursor(hovered);
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+
+    const fan = smoothRange(progressRef?.current ?? 0.56, 0.485, 0.575);
+    const stacked = [0.04 * index, 0.012 * index, -0.035 * index];
+    const fanned = [-0.38 + index * 0.38, 0.018 * index, -0.12 + index * 0.14];
+    const lift = (active ? 0.075 : 0) + (hovered ? 0.025 : 0);
+    const selectNudge = active ? [-0.04 + index * 0.035, 0, -0.025] : [0, 0, 0];
+
+    targetPosition.set(
+      mix(stacked[0], fanned[0], fan) + selectNudge[0],
+      mix(stacked[1], fanned[1], fan) + lift,
+      mix(stacked[2], fanned[2], fan) + selectNudge[2]
+    );
+
+    const targetRotationY = mix(0, -0.2 + index * 0.2, fan) + (active ? 0.02 : 0);
+    const targetRotationZ = mix(0, -0.06 + index * 0.06, fan) + (active ? -0.015 : 0);
+    const targetScaleValue = active ? 1.035 : hovered ? 1.02 : 1;
+    targetScale.set(targetScaleValue, targetScaleValue, targetScaleValue);
+
+    const ease = 1 - Math.exp(-delta * 10);
+    ref.current.position.lerp(targetPosition, ease);
+    ref.current.rotation.y = THREE.MathUtils.lerp(ref.current.rotation.y, targetRotationY, ease);
+    ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, targetRotationZ, ease);
+    ref.current.scale.lerp(targetScale, ease);
+  });
+
   return (
-    <mesh position={position} rotation={rotation}>
-      <boxGeometry args={size} />
-      <meshStandardMaterial
-        color={bright ? "#f3fbff" : "#bdeeff"}
-        opacity={subtle ? 0.44 : 0.9}
-        transparent
-        roughness={0.42}
-      />
-    </mesh>
+    <group
+      ref={ref}
+      onClick={(event) => {
+        event.stopPropagation();
+        onSelect();
+      }}
+      onPointerOver={(event) => {
+        event.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
+      <mesh position={[0.045, -0.012, -0.035]} receiveShadow castShadow>
+        <boxGeometry args={[1.58, 0.026, 0.98]} />
+        <meshStandardMaterial color="#191919" roughness={0.72} transparent opacity={0.26} />
+      </mesh>
+      <mesh receiveShadow castShadow>
+        <boxGeometry args={[1.56, 0.025, 0.96]} />
+        <meshStandardMaterial color={project.paper} roughness={0.62} />
+      </mesh>
+      <mesh position={[0, 0.0145, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[1.54, 0.94]} />
+        <meshStandardMaterial map={texture} roughness={0.5} transparent />
+      </mesh>
+    </group>
   );
 }
 
-function BlueprintCircle({ position, radius }) {
-  return (
-    <mesh position={position} rotation={[Math.PI / 2, 0, 0]}>
-      <torusGeometry args={[radius, 0.006, 8, 32]} />
-      <meshStandardMaterial color="#f3fbff" roughness={0.35} />
-    </mesh>
-  );
+function useBlueprintTexture(project, index) {
+  return useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1024;
+    canvas.height = 640;
+    const ctx = canvas.getContext("2d");
+    const accent = project.accent;
+
+    ctx.fillStyle = project.paper;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = hexToRgba(accent, 0.22);
+    ctx.lineWidth = 1;
+    for (let x = 56; x < 968; x += 64) {
+      ctx.beginPath();
+      ctx.moveTo(x, 72);
+      ctx.lineTo(x, 540);
+      ctx.stroke();
+    }
+    for (let y = 96; y < 540; y += 56) {
+      ctx.beginPath();
+      ctx.moveTo(64, y);
+      ctx.lineTo(958, y);
+      ctx.stroke();
+    }
+
+    ctx.strokeStyle = hexToRgba(accent, 0.94);
+    ctx.lineWidth = 4;
+    ctx.strokeRect(54, 62, 916, 478);
+    ctx.lineWidth = 2;
+    ctx.strokeRect(70, 78, 884, 446);
+
+    ctx.fillStyle = hexToRgba(accent, 0.12);
+    ctx.fillRect(704, 440, 236, 78);
+    ctx.strokeStyle = hexToRgba(accent, 0.82);
+    ctx.strokeRect(704, 440, 236, 78);
+
+    ctx.fillStyle = "#f4fbff";
+    ctx.font = "700 34px Menlo, Monaco, monospace";
+    ctx.fillText(project.title.toUpperCase(), 80, 48);
+    ctx.font = "500 19px Menlo, Monaco, monospace";
+    ctx.fillText(`SHEET 0${index + 1}`, 720, 474);
+    ctx.fillStyle = hexToRgba("#ffffff", 0.86);
+    drawWrappedText(ctx, project.detail, 720, 500, 205, 19);
+
+    if (project.id === "fpv") drawDroneBlueprint(ctx, accent);
+    if (project.id === "fixture") drawFixtureBlueprint(ctx, accent);
+    if (project.id === "juice") drawJuiceBlueprint(ctx, accent);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = 8;
+    texture.needsUpdate = true;
+    return texture;
+  }, [index, project]);
+}
+
+function hexToRgba(hex, alpha) {
+  const value = hex.replace("#", "");
+  const bigint = Number.parseInt(value, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+  const words = text.split(" ");
+  let line = "";
+  words.forEach((word, index) => {
+    const candidate = line ? `${line} ${word}` : word;
+    if (ctx.measureText(candidate).width > maxWidth && line) {
+      ctx.fillText(line, x, y);
+      line = word;
+      y += lineHeight;
+      return;
+    }
+    line = candidate;
+    if (index === words.length - 1) ctx.fillText(line, x, y);
+  });
+}
+
+function drawDroneBlueprint(ctx, accent) {
+  ctx.save();
+  ctx.translate(380, 305);
+  ctx.strokeStyle = hexToRgba(accent, 0.92);
+  ctx.fillStyle = hexToRgba("#ffffff", 0.12);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.lineWidth = 8;
+  ctx.strokeRect(-100, -60, 200, 120);
+  ctx.lineWidth = 7;
+  ctx.beginPath();
+  ctx.moveTo(-76, -44);
+  ctx.lineTo(-255, -178);
+  ctx.moveTo(76, -44);
+  ctx.lineTo(255, -178);
+  ctx.moveTo(-76, 44);
+  ctx.lineTo(-255, 178);
+  ctx.moveTo(76, 44);
+  ctx.lineTo(255, 178);
+  ctx.stroke();
+
+  ctx.lineWidth = 5;
+  [
+    [-270, -190],
+    [270, -190],
+    [-270, 190],
+    [270, 190]
+  ].forEach(([x, y]) => {
+    ctx.beginPath();
+    ctx.arc(x, y, 54, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x - 74, y);
+    ctx.lineTo(x + 74, y);
+    ctx.moveTo(x, y - 74);
+    ctx.lineTo(x, y + 74);
+    ctx.stroke();
+  });
+
+  ctx.fillRect(-72, -38, 144, 76);
+  ctx.restore();
+}
+
+function drawFixtureBlueprint(ctx, accent) {
+  ctx.save();
+  ctx.translate(380, 300);
+  ctx.strokeStyle = hexToRgba(accent, 0.92);
+  ctx.fillStyle = hexToRgba("#ffffff", 0.1);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.lineWidth = 8;
+  ctx.strokeRect(-270, -150, 540, 300);
+  ctx.fillRect(-230, -110, 460, 220);
+
+  ctx.lineWidth = 5;
+  [-170, 170].forEach((x) => {
+    ctx.beginPath();
+    ctx.arc(x, -70, 38, 0, Math.PI * 2);
+    ctx.arc(x, 70, 38, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  ctx.lineWidth = 7;
+  ctx.strokeRect(-74, -42, 148, 84);
+  ctx.beginPath();
+  ctx.moveTo(-210, 0);
+  ctx.lineTo(-110, 0);
+  ctx.moveTo(110, 0);
+  ctx.lineTo(210, 0);
+  ctx.stroke();
+
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(-200, 188);
+  ctx.lineTo(200, 188);
+  ctx.moveTo(-200, 188);
+  ctx.lineTo(-166, 168);
+  ctx.moveTo(-200, 188);
+  ctx.lineTo(-166, 208);
+  ctx.moveTo(200, 188);
+  ctx.lineTo(166, 168);
+  ctx.moveTo(200, 188);
+  ctx.lineTo(166, 208);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawJuiceBlueprint(ctx, accent) {
+  ctx.save();
+  ctx.translate(380, 302);
+  ctx.strokeStyle = hexToRgba(accent, 0.92);
+  ctx.fillStyle = hexToRgba("#ffffff", 0.1);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  ctx.lineWidth = 8;
+  ctx.strokeRect(-250, -170, 500, 340);
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(-215, -120);
+  ctx.lineTo(-65, -36);
+  ctx.lineTo(215, -36);
+  ctx.lineTo(215, 120);
+  ctx.lineTo(-215, 120);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.lineWidth = 6;
+  [-65, 70].forEach((x) => {
+    ctx.beginPath();
+    ctx.arc(x, 18, 64, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x - 45, 18);
+    ctx.lineTo(x + 45, 18);
+    ctx.moveTo(x, -27);
+    ctx.lineTo(x, 63);
+    ctx.stroke();
+  });
+
+  ctx.beginPath();
+  ctx.moveTo(150, 90);
+  ctx.bezierCurveTo(80, 160, -80, 160, -160, 90);
+  ctx.stroke();
+
+  ctx.fillRect(-226, -134, 70, 48);
+  ctx.strokeRect(156, -134, 70, 48);
+  ctx.restore();
 }
 
 function PhysicalProjects({ onFocus }) {
