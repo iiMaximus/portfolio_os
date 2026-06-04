@@ -42,19 +42,19 @@
         <span class="menu-rule"></span>
         <button type="button" class="menu-item" data-open-window="profile"><span class="item-icon profiler"></span>Maksym System Profiler</button>
         <button type="button" class="menu-item" data-open-window="apps"><span class="item-icon player"></span>App Catalog</button>
-        <button type="button" class="menu-item has-sub"><span class="item-icon tasks"></span>Automated Tasks</button>
+        <button type="button" class="menu-item" data-open-window="tasks"><span class="item-icon tasks"></span>Automated Tasks</button>
         <button type="button" class="menu-item" data-open-window="calculator"><span class="item-icon calc"></span>Calculator</button>
-        <button type="button" class="menu-item has-sub"><span class="item-icon panels"></span>Control Panels</button>
-        <button type="button" class="menu-item"><span class="item-icon printer"></span>Desktop Printers</button>
+        <button type="button" class="menu-item" data-open-window="control-panels"><span class="item-icon panels"></span>Control Panels</button>
+        <button type="button" class="menu-item" data-open-window="printers"><span class="item-icon printer"></span>Desktop Printers</button>
         <button type="button" class="menu-item" data-open-window="find"><span class="item-icon find"></span>Find File</button>
         <button type="button" class="menu-item" data-open-window="graphics"><span class="item-icon paint"></span>Graphics Calculator</button>
         <button type="button" class="menu-item" data-open-window="puzzle"><span class="item-icon puzzle"></span>Jigsaw Puzzle</button>
         <button type="button" class="menu-item" data-open-window="note"><span class="item-icon note"></span>Note Pad</button>
         <button type="button" class="menu-item" data-open-window="terminal"><span class="item-icon terminal-item"></span>Terminal</button>
         <button type="button" class="menu-item" data-open-window="email"><span class="item-icon mail-item"></span>Email</button>
-        <button type="button" class="menu-item has-sub"><span class="item-icon recent"></span>Recent Applications</button>
+        <button type="button" class="menu-item" data-open-window="recent"><span class="item-icon recent"></span>Recent Applications</button>
         <button type="button" class="menu-item" data-open-window="scrapbook"><span class="item-icon scrapbook"></span>Scrapbook</button>
-        <button type="button" class="menu-item"><span class="item-icon sound"></span>SimpleSound</button>
+        <button type="button" class="menu-item" data-open-window="sound"><span class="item-icon sound"></span>SimpleSound</button>
         <button type="button" class="menu-item" data-open-window="stickies"><span class="item-icon sticky"></span>Stickies</button>
         <button type="button" class="menu-item power"><span class="item-icon power-dot"></span>Shut Down</button>
       </nav>
@@ -81,9 +81,9 @@
       </nav>
 
       <nav class="dropdown slim" data-dropdown="label" aria-label="Label menu">
-        <button type="button" class="menu-item label-red" data-action="desktop-message">Urgent Red</button>
-        <button type="button" class="menu-item label-blue" data-action="desktop-message">Deep Blue</button>
-        <button type="button" class="menu-item label-green" data-action="desktop-message">Ready Green</button>
+        <button type="button" class="menu-item label-red" data-action="label-red">Urgent Red</button>
+        <button type="button" class="menu-item label-blue" data-action="label-blue">Deep Blue</button>
+        <button type="button" class="menu-item label-green" data-action="label-green">Ready Green</button>
       </nav>
 
       <nav class="dropdown slim" data-dropdown="special" aria-label="Special menu">
@@ -347,6 +347,112 @@ Projects become little worlds.</pre>
           </div>
         </section>
 
+        <section class="window mini-window" data-window="tasks" style="--left: 228px; --top: 96px; --width: 372px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Automated Tasks"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Automated Tasks</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Automated Tasks"></button>
+          </div>
+          <div class="window-body task-body">
+            <p class="utility-note">Tiny portfolio macros. Mostly harmless.</p>
+            <button type="button" class="utility-row" data-task="open-apps">
+              <span class="status-led on"></span>
+              <strong>Index app catalog</strong>
+              <em>ready</em>
+            </button>
+            <button type="button" class="utility-row" data-task="launch-drone">
+              <span class="status-led"></span>
+              <strong>Run CAD viewer warmup</strong>
+              <em>queued</em>
+            </button>
+            <button type="button" class="utility-row" data-task="open-email">
+              <span class="status-led on"></span>
+              <strong>Prepare contact draft</strong>
+              <em>idle</em>
+            </button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="control-panels" style="--left: 354px; --top: 102px; --width: 326px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Control Panels"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Control Panels</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Control Panels"></button>
+          </div>
+          <div class="window-body control-panel-body">
+            <button type="button" class="control-tile" data-action="toggle-dither">
+              <span class="control-icon pattern"></span>
+              <strong>Desktop Pattern</strong>
+            </button>
+            <button type="button" class="control-tile" data-action="arrange-icons">
+              <span class="control-icon grid"></span>
+              <strong>Icon Grid</strong>
+            </button>
+            <button type="button" class="control-tile" data-action="system-beep">
+              <span class="control-icon speaker"></span>
+              <strong>Sound</strong>
+            </button>
+            <button type="button" class="control-tile" data-open-window="terminal">
+              <span class="control-icon terminal-chip"></span>
+              <strong>Terminal</strong>
+            </button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="printers" style="--left: 190px; --top: 256px; --width: 318px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Desktop Printers"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Desktop Printers</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Desktop Printers"></button>
+          </div>
+          <div class="window-body printer-body">
+            <span class="printer-machine" aria-hidden="true"></span>
+            <div>
+              <p><strong>Portfolio Printer</strong></p>
+              <p>Status: waiting for CV.pdf</p>
+              <button class="classic-button" type="button" data-action="print-cv">Print CV</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="recent" style="--left: 438px; --top: 154px; --width: 342px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Recent Applications"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Recent Applications</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Recent Applications"></button>
+          </div>
+          <div class="window-body finder-list recent-body">
+            <button type="button" data-open-window="terminal"><span class="list-icon list-terminal"></span><span>Terminal</span><em>commands and shortcuts</em></button>
+            <button type="button" data-open-window="fpv-detail"><span class="list-icon list-drone"></span><span>FPV Drone CAD</span><em>hardware viewer</em></button>
+            <button type="button" data-open-window="email"><span class="list-icon list-email"></span><span>Email</span><em>contact draft</em></button>
+            <button type="button" data-open-window="games"><span class="list-icon list-game"></span><span>Do Not Open</span><em>tiny games</em></button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="sound" style="--left: 500px; --top: 248px; --width: 264px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close SimpleSound"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>SimpleSound</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom SimpleSound"></button>
+          </div>
+          <div class="window-body sound-body">
+            <button type="button" class="sound-pad" data-sound="beep">Beep</button>
+            <button type="button" class="sound-pad" data-sound="boot">Boot</button>
+            <button type="button" class="sound-pad" data-sound="click">Click</button>
+            <button type="button" class="sound-pad" data-sound="alert">Alert</button>
+          </div>
+        </section>
+
         <section class="window mini-window" data-window="app-detail" style="--left: 268px; --top: 146px; --width: 342px">
           <div class="title-bar">
             <button class="close-window" type="button" aria-label="Close Mobile Apps"></button>
@@ -439,10 +545,11 @@ Projects become little worlds.</pre>
           </div>
           <div class="window-body calculator-body">
             <output id="calc-output">0</output>
-            <div class="calc-grid" aria-hidden="true">
-              <span>7</span><span>8</span><span>9</span><span>+</span>
-              <span>4</span><span>5</span><span>6</span><span>-</span>
-              <span>1</span><span>2</span><span>3</span><span>=</span>
+            <div class="calc-grid" aria-label="Calculator keypad">
+              <button type="button" data-calc="7">7</button><button type="button" data-calc="8">8</button><button type="button" data-calc="9">9</button><button type="button" data-calc="+">+</button>
+              <button type="button" data-calc="4">4</button><button type="button" data-calc="5">5</button><button type="button" data-calc="6">6</button><button type="button" data-calc="-">-</button>
+              <button type="button" data-calc="1">1</button><button type="button" data-calc="2">2</button><button type="button" data-calc="3">3</button><button type="button" data-calc="=">=</button>
+              <button type="button" data-calc="clear">C</button><button type="button" data-calc="0">0</button><button type="button" data-calc="back">Del</button><button type="button" data-calc="sign">+/-</button>
             </div>
           </div>
         </section>
@@ -457,9 +564,10 @@ Projects become little worlds.</pre>
           </div>
           <div class="window-body">
             <label class="classic-field">Find:
-              <input value="projects with personality" />
+              <input data-find-input value="projects with personality" />
             </label>
-            <button class="classic-button" type="button" data-action="desktop-message">Search</button>
+            <button class="classic-button" type="button" data-find-submit>Search</button>
+            <div class="find-results" data-find-results aria-live="polite"></div>
           </div>
         </section>
 
@@ -620,10 +728,10 @@ Projects become little worlds.</pre>
         <button type="button" aria-label="Open apps" data-open-window="apps"><span class="tiny-folder"></span></button>
         <button type="button" aria-label="Open terminal" data-open-window="terminal"><span class="tiny-terminal"></span></button>
         <button type="button" aria-label="Open email" data-open-window="email"><span class="tiny-mail"></span></button>
-        <button type="button" aria-label="Color labels"><span class="tiny-bars"></span></button>
+        <button type="button" aria-label="Color labels" data-action="cycle-label"><span class="tiny-bars"></span></button>
         <button type="button" aria-label="Desktop pattern" data-action="toggle-dither"><span class="tiny-pattern"></span></button>
-        <button type="button" aria-label="Print"><span class="tiny-printer"></span></button>
-        <button type="button" aria-label="Sound"><span class="tiny-speaker"></span></button>
+        <button type="button" aria-label="Print" data-open-window="printers"><span class="tiny-printer"></span></button>
+        <button type="button" aria-label="Sound" data-open-window="sound"><span class="tiny-speaker"></span></button>
         <button type="button" aria-label="Next"><span class="tiny-caret right"></span></button>
       </footer>
     </div>

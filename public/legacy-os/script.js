@@ -8,6 +8,7 @@
   const windows = [...document.querySelectorAll(".window")];
   let topZ = 50;
   let alertTimer = 0;
+  let audioContext = null;
 
   const defaultMessage = "That command is wired for the next pass.";
   const desktopIconStorageKey = "maksym-os.desktop-icons.v2";
@@ -24,6 +25,45 @@
   let selectedDesktopIcon = null;
   let desktopIconDrag = null;
   let desktopDropTarget = null;
+  const labelClasses = ["label-red", "label-blue", "label-green"];
+  const labelNames = {
+    "label-red": "Urgent Red",
+    "label-blue": "Deep Blue",
+    "label-green": "Ready Green"
+  };
+  const launchAliases = {
+    about: "about",
+    apps: "apps",
+    calculator: "calculator",
+    cad: "fpv-detail",
+    contact: "contact",
+    controls: "control-panels",
+    "control-panels": "control-panels",
+    drone: "fpv-detail",
+    email: "email",
+    find: "find",
+    flappy: "flappy-game",
+    games: "games",
+    graphics: "graphics",
+    juice: "juice-detail",
+    note: "note",
+    notepad: "note",
+    portfolio: "portfolio-detail",
+    printers: "printers",
+    profile: "profile",
+    projects: "projects",
+    puzzle: "puzzle",
+    readme: "readme",
+    recent: "recent",
+    scrapbook: "scrapbook",
+    snake: "snake-game",
+    sound: "sound",
+    stickies: "stickies",
+    tasks: "tasks",
+    terminal: "terminal",
+    trash: "trash",
+    untitled: "untitled"
+  };
 
   function getDesktopScale() {
     const shellRect = shell.getBoundingClientRect();
@@ -45,6 +85,60 @@
     alertTimer = window.setTimeout(() => {
       alertBox.classList.remove("show");
     }, 1800);
+  }
+
+  function getAudioContext() {
+    if (audioContext) {
+      if (audioContext.state === "suspended") {
+        audioContext.resume().catch(() => {});
+      }
+      return audioContext;
+    }
+    const AudioEngine = window.AudioContext || window.webkitAudioContext;
+    if (!AudioEngine) return null;
+    audioContext = new AudioEngine();
+    if (audioContext.state === "suspended") {
+      audioContext.resume().catch(() => {});
+    }
+    return audioContext;
+  }
+
+  function playTone(frequency = 440, duration = 0.1, delay = 0, type = "square") {
+    const context = getAudioContext();
+    if (!context) return;
+    const start = context.currentTime + delay;
+    const oscillator = context.createOscillator();
+    const gain = context.createGain();
+
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(0.08, start + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration + 0.02);
+  }
+
+  function playSound(name = "beep") {
+    const patterns = {
+      alert: [
+        [260, 0.08, 0],
+        [180, 0.12, 0.09]
+      ],
+      beep: [[520, 0.09, 0]],
+      boot: [
+        [330, 0.08, 0],
+        [440, 0.08, 0.1],
+        [660, 0.12, 0.2]
+      ],
+      click: [[760, 0.04, 0]]
+    };
+    (patterns[name] || patterns.beep).forEach(([frequency, duration, delay]) => {
+      playTone(frequency, duration, delay);
+    });
   }
 
   function desktopIconKey(icon) {
@@ -254,7 +348,50 @@
     showAlert("Desktop icons arranged.");
   }
 
-  function handleAction(action) {
+  function launchTarget(name) {
+    const cleaned = name.toLowerCase().replace(/\.md$/, "").trim();
+    const target = launchAliases[cleaned];
+    if (!target) return false;
+    openWindow(target);
+    return true;
+  }
+
+  function setSelectedIconLabel(labelClass) {
+    if (!selectedDesktopIcon) {
+      showAlert("Select a desktop icon first.");
+      return;
+    }
+    selectedDesktopIcon.classList.remove(...labelClasses);
+    selectedDesktopIcon.classList.add(labelClass);
+    showAlert(`${desktopIconLabel(selectedDesktopIcon)} labeled ${labelNames[labelClass]}.`);
+  }
+
+  function cycleSelectedIconLabel() {
+    if (!selectedDesktopIcon) {
+      showAlert("Select a desktop icon first.");
+      return;
+    }
+    const currentIndex = labelClasses.findIndex((labelClass) => selectedDesktopIcon.classList.contains(labelClass));
+    const next = labelClasses[(currentIndex + 1) % labelClasses.length];
+    setSelectedIconLabel(next);
+  }
+
+  function handleDesktopMessage(target) {
+    const label = target?.textContent.trim() || "Command";
+    const messages = {
+      "Copy": "Copied selected portfolio vibes to clipboard-ish memory.",
+      "Paste": "Paste buffer is empty. Very vintage.",
+      "Select All": "Selected everything emotionally. Use icons for real selection.",
+      "Open Case Study": "Case study placeholder. Real write-up goes here.",
+      "View Build Log": "Build log placeholder. The workbench story will live here.",
+      "Inspect Parts": "Parts inspection will connect to the real CAD model later.",
+      "Open Sketches": "Sketch archive placeholder. Blender/CAD exports go here.",
+      "Secret Level": "Secret level locked until the arcade concept wakes up."
+    };
+    showAlert(messages[label] || defaultMessage);
+  }
+
+  function handleAction(action, target) {
     if (action === "clear-windows") {
       clearWindows();
       return;
@@ -270,6 +407,27 @@
     if (action === "new-note") {
       openWindow("note");
       showAlert("New note opened.");
+      return;
+    }
+    if (action === "desktop-message") {
+      handleDesktopMessage(target);
+      return;
+    }
+    if (action?.startsWith("label-")) {
+      setSelectedIconLabel(action);
+      return;
+    }
+    if (action === "cycle-label") {
+      cycleSelectedIconLabel();
+      return;
+    }
+    if (action === "system-beep") {
+      playSound("beep");
+      showAlert("Beep.");
+      return;
+    }
+    if (action === "print-cv") {
+      showAlert("CV printer queued. Add the real PDF and this becomes a download.");
       return;
     }
     showAlert(defaultMessage);
@@ -298,7 +456,7 @@
     const openTarget = event.target.closest("[data-open-window]");
     const actionTarget = event.target.closest("[data-action]");
 
-    if (!event.target.closest(".desktop-icon")) {
+    if (!event.target.closest(".desktop-icon") && !event.target.closest(".dropdown") && !actionTarget) {
       clearDesktopIconSelection();
     }
 
@@ -313,7 +471,7 @@
 
     if (actionTarget) {
       event.preventDefault();
-      handleAction(actionTarget.dataset.action);
+      handleAction(actionTarget.dataset.action, actionTarget);
       closeMenus();
       return;
     }
@@ -585,8 +743,179 @@
   });
 
   document.querySelector(".power")?.addEventListener("click", () => {
+    playSound("alert");
     showAlert("Nice try. The portfolio is staying awake.");
   });
+
+  function initCalculatorApp() {
+    const output = document.getElementById("calc-output");
+    const buttons = [...document.querySelectorAll("[data-calc]")];
+    if (!output || !buttons.length) return;
+
+    let expression = "";
+    let justCalculated = false;
+
+    function render(value = expression || "0") {
+      output.textContent = value.slice(-18);
+    }
+
+    function calculate() {
+      const parts = expression.trim().split(/\s+/);
+      if (parts.length < 3) return expression || "0";
+
+      let total = Number(parts[0]);
+      for (let index = 1; index < parts.length; index += 2) {
+        const operator = parts[index];
+        const value = Number(parts[index + 1]);
+        if (!Number.isFinite(value)) continue;
+        if (operator === "+") total += value;
+        if (operator === "-") total -= value;
+      }
+      return Number.isFinite(total) ? String(total) : "0";
+    }
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.calc;
+        playSound("click");
+
+        if (key === "clear") {
+          expression = "";
+          justCalculated = false;
+          render();
+          return;
+        }
+
+        if (key === "back") {
+          expression = expression.trimEnd().slice(0, -1).trimEnd();
+          justCalculated = false;
+          render();
+          return;
+        }
+
+        if (key === "sign") {
+          const match = expression.match(/(^|[+-]\s)(-?\d+)$/);
+          if (!match) return;
+          const prefix = expression.slice(0, match.index) + match[1];
+          const value = match[2].startsWith("-") ? match[2].slice(1) : `-${match[2]}`;
+          expression = `${prefix}${value}`;
+          justCalculated = false;
+          render();
+          return;
+        }
+
+        if (key === "=") {
+          expression = calculate();
+          justCalculated = true;
+          render(expression);
+          return;
+        }
+
+        if (/^\d$/.test(key)) {
+          if (justCalculated) expression = "";
+          expression += key;
+          justCalculated = false;
+          render();
+          return;
+        }
+
+        if (key === "+" || key === "-") {
+          if (!expression || /[+-]\s*$/.test(expression)) return;
+          expression = `${expression.trim()} ${key} `;
+          justCalculated = false;
+          render();
+        }
+      });
+    });
+
+    render();
+  }
+
+  function initFindApp() {
+    const input = document.querySelector("[data-find-input]");
+    const button = document.querySelector("[data-find-submit]");
+    const results = document.querySelector("[data-find-results]");
+    if (!input || !button || !results) return;
+
+    const items = [
+      { label: "Apps", target: "apps", type: "folder", keywords: "mobile apps allergify absorb quarter product" },
+      { label: "Projects", target: "projects", type: "folder", keywords: "projects personality hardware software" },
+      { label: "FPV Drone CAD", target: "fpv-detail", type: "project", keywords: "drone cad hardware blueprint mechanical" },
+      { label: "Juice Maker", target: "juice-detail", type: "project", keywords: "juice machine product prototype" },
+      { label: "Terminal", target: "terminal", type: "app", keywords: "command shell terminal print fun" },
+      { label: "Email", target: "email", type: "app", keywords: "contact send message email" },
+      { label: "README.md", target: "readme", type: "document", keywords: "readme intro portfolio markdown" },
+      { label: "Do Not Open", target: "games", type: "folder", keywords: "games snake flappy secret" },
+      { label: "Control Panels", target: "control-panels", type: "utility", keywords: "settings controls dither icons sound" }
+    ];
+
+    function renderResults() {
+      const stopWords = new Set(["a", "and", "for", "of", "the", "to", "with"]);
+      const terms = input.value.toLowerCase().trim().split(/\s+/).filter((term) => term && !stopWords.has(term));
+      const matches = items.filter((item) => {
+        const haystack = `${item.label} ${item.type} ${item.keywords}`.toLowerCase();
+        return terms.every((term) => haystack.includes(term));
+      }).slice(0, 5);
+
+      results.textContent = "";
+      if (!matches.length) {
+        const empty = document.createElement("p");
+        empty.textContent = "No matches. Try drone, apps, email, games, or readme.";
+        results.appendChild(empty);
+        return;
+      }
+
+      matches.forEach((item) => {
+        const row = document.createElement("button");
+        row.type = "button";
+        row.innerHTML = `<span>${item.label}</span><em>${item.type}</em>`;
+        row.addEventListener("click", () => openWindow(item.target));
+        results.appendChild(row);
+      });
+    }
+
+    button.addEventListener("click", renderResults);
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        renderResults();
+      }
+    });
+
+    document.querySelector('[data-window="find"]')?.addEventListener("window-opened", () => {
+      renderResults();
+      window.setTimeout(() => input.focus(), 60);
+    });
+  }
+
+  function initUtilityApps() {
+    document.querySelectorAll("[data-task]").forEach((taskButton) => {
+      taskButton.addEventListener("click", () => {
+        const task = taskButton.dataset.task;
+        taskButton.querySelector(".status-led")?.classList.add("on");
+        playSound("boot");
+
+        if (task === "open-apps") {
+          openWindow("apps");
+          showAlert("App catalog indexed.");
+        }
+        if (task === "launch-drone") {
+          openWindow("fpv-detail");
+          showAlert("CAD viewer warmed up.");
+        }
+        if (task === "open-email") {
+          openWindow("email");
+          showAlert("Contact draft prepared.");
+        }
+      });
+    });
+
+    document.querySelectorAll("[data-sound]").forEach((button) => {
+      button.addEventListener("click", () => {
+        playSound(button.dataset.sound);
+      });
+    });
+  }
 
   function initTerminalApp() {
     const terminalWindow = document.querySelector('[data-window="terminal"]');
@@ -598,20 +927,13 @@
     const history = [];
     let historyIndex = 0;
 
-    const openTargets = {
-      about: "about",
-      apps: "apps",
-      cad: "fpv-detail",
-      contact: "contact",
-      drone: "fpv-detail",
-      email: "email",
-      flappy: "flappy-game",
-      games: "games",
-      projects: "projects",
-      readme: "readme",
-      snake: "snake-game",
-      terminal: "terminal"
-    };
+    const fortunes = [
+      "A prototype with personality beats a perfect empty page.",
+      "Good CAD tells a story before the render even loads.",
+      "Recruiter detected. Hide the rough edges, keep the charm.",
+      "The best portfolio object is the one visitors want to poke twice.",
+      "Measure once, sketch twice, make the interface memorable."
+    ];
 
     function appendLine(text = "", type = "") {
       const line = document.createElement("div");
@@ -634,7 +956,7 @@
       const normalized = verb.toLowerCase();
       const rest = args.join(" ");
 
-      if (normalized === "clear") {
+      if (normalized === "clear" || normalized === "cls") {
         screen.textContent = "";
         return;
       }
@@ -643,12 +965,17 @@
         writeBlock([
           "Available commands:",
           "  help              show this list",
-          "  ls                list desktop things",
+          "  ls / dir          list desktop things",
+          "  open <name>       open apps, drone, email, controls, sound, games...",
           "  projects          show project folders",
           "  games             show game folder contents",
-          "  open <name>       open apps, email, games, readme, drone, snake, flappy",
-          "  cat readme        print the current README",
+          "  cat <file>        read readme, contact, projects",
           "  print <text>      print text to the terminal",
+          "  launch drone      open the CAD window with fake boot logs",
+          "  skills            list engineering/software interests",
+          "  fortune           print a useful tiny prophecy",
+          "  coffee            run the productivity subsystem",
+          "  beep              make a vintage beep",
           "  date              print local date/time",
           "  whoami            identify current user",
           "  clear             wipe terminal output"
@@ -656,7 +983,7 @@
         return;
       }
 
-      if (normalized === "ls") {
+      if (normalized === "ls" || normalized === "dir") {
         writeBlock([
           "Applications/",
           "Projects/",
@@ -666,6 +993,19 @@
           "Email.app",
           "Terminal.app"
         ]);
+        return;
+      }
+
+      if (normalized === "apps") {
+        openWindow("apps");
+        writeBlock([
+          "Opening Applications...",
+          "Allergify.app",
+          "Absorb.app",
+          "Quarter.app",
+          "Terminal.app",
+          "Email.app"
+        ], "system");
         return;
       }
 
@@ -688,24 +1028,116 @@
         return;
       }
 
-      if (normalized === "open") {
+      if (normalized === "open" || normalized === "run" || normalized === "start") {
         const targetName = rest.toLowerCase().replace(/\.md$/, "");
-        const target = openTargets[targetName];
-        if (target) {
+        if (launchTarget(targetName)) {
           appendLine(`Opening ${rest || targetName}...`, "system");
-          openWindow(target);
           return;
         }
         appendLine(`No launch target named "${rest}". Try: open apps`, "error");
         return;
       }
 
-      if (normalized === "cat" && rest.toLowerCase().replace(/\.md$/, "") === "readme") {
+      if (normalized === "cat") {
+        const file = rest.toLowerCase().replace(/\.md$/, "").trim();
+        if (file === "readme" || file === "readme.md") {
+          writeBlock([
+            "# README.md",
+            "STATUS: portfolio shell 0.4",
+            "MOOD: desktop utilities waking up",
+            "NEXT: wire real case studies, CV, and email endpoint"
+          ], "system");
+          return;
+        }
+        if (file === "contact" || file === "contact.card") {
+          writeBlock([
+            "Contact.card",
+            "Email: connect endpoint later",
+            "Mode: mechanical engineering portfolio with software side quests"
+          ], "system");
+          return;
+        }
+        if (file === "projects") {
+          writeBlock([
+            "Projects/",
+            "- FPV Drone: CAD, assembly, electronics",
+            "- Juice Maker: product/mechanism concept",
+            "- Apps: Allergify, Absorb, Quarter",
+            "- Portfolio OS: the interface you are inside"
+          ], "system");
+          return;
+        }
+        appendLine(`No readable file named "${rest}". Try: cat readme`, "error");
+        return;
+      }
+
+      if (normalized === "launch" && rest.toLowerCase() === "drone") {
         writeBlock([
-          "# README.md",
-          "STATUS: portfolio shell 0.3",
-          "MOOD: terminal installed",
-          "NEXT: decide what the command line should become"
+          "arming CAD viewer...",
+          "checking prop clearance...",
+          "loading wireframe cube placeholder...",
+          "opening FPV Drone CAD"
+        ], "system");
+        playSound("boot");
+        openWindow("fpv-detail");
+        return;
+      }
+
+      if (normalized === "skills") {
+        writeBlock([
+          "Mechanical: CAD, prototyping, mechanisms, assemblies",
+          "Hardware: FPV builds, electronics packaging, testing",
+          "Software: React, mobile apps, interactive portfolio systems",
+          "Taste: tactile interfaces, weird-but-useful UX, polished details"
+        ], "system");
+        return;
+      }
+
+      if (normalized === "fortune") {
+        appendLine(fortunes[Math.floor(Math.random() * fortunes.length)], "system");
+        return;
+      }
+
+      if (normalized === "coffee") {
+        writeBlock([
+          "warming mug...",
+          "checking deadline pressure...",
+          "productivity subsystem online"
+        ], "system");
+        playSound("boot");
+        return;
+      }
+
+      if (normalized === "beep" || normalized === "sound") {
+        playSound(rest.toLowerCase() || "beep");
+        appendLine("beep", "system");
+        return;
+      }
+
+      if (normalized === "theme") {
+        shell.classList.toggle("no-dither");
+        appendLine(shell.classList.contains("no-dither") ? "dither disabled" : "dither enabled", "system");
+        return;
+      }
+
+      if (normalized === "mail" || normalized === "contact") {
+        openWindow(normalized === "mail" ? "email" : "contact");
+        appendLine(`Opening ${normalized}...`, "system");
+        return;
+      }
+
+      if (normalized === "cv" || normalized === "resume") {
+        openWindow("contact");
+        appendLine("CV download hook is ready for the real PDF.", "system");
+        return;
+      }
+
+      if (normalized === "panic") {
+        writeBlock([
+          "panic report:",
+          "screen: alive",
+          "projects: recoverable",
+          "taste level: still under supervision"
         ], "system");
         return;
       }
@@ -1377,6 +1809,9 @@
     render();
   });
 
+  initCalculatorApp();
+  initFindApp();
+  initUtilityApps();
   initTerminalApp();
   initEmailApp();
   initFlappyGame();
