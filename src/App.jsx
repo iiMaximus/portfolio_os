@@ -293,6 +293,7 @@ function App() {
             />
           </Suspense>
           <ScrollCameraRig progressRef={progressRef} />
+          <ShadowMapController progressRef={progressRef} freezeAfter={0.52} />
         </Canvas>
 
         {!legacyActive && (
@@ -340,6 +341,40 @@ function SceneAtmosphere({ progressRef }) {
 
     scene.background = background;
     scene.fog = fog;
+  });
+
+  return null;
+}
+
+function ShadowMapController({ progressRef, freezeAfter = 0.52 }) {
+  const { gl } = useThree();
+  const frozen = useRef(false);
+
+  useEffect(() => {
+    gl.shadowMap.autoUpdate = true;
+    gl.shadowMap.needsUpdate = true;
+
+    return () => {
+      gl.shadowMap.autoUpdate = true;
+      gl.shadowMap.needsUpdate = true;
+    };
+  }, [gl]);
+
+  useFrame(() => {
+    const shouldUpdate = progressRef.current < freezeAfter;
+
+    if (shouldUpdate) {
+      if (frozen.current) frozen.current = false;
+      gl.shadowMap.autoUpdate = true;
+      gl.shadowMap.needsUpdate = true;
+      return;
+    }
+
+    if (!frozen.current) {
+      gl.shadowMap.needsUpdate = true;
+      gl.shadowMap.autoUpdate = false;
+      frozen.current = true;
+    }
   });
 
   return null;
@@ -465,6 +500,7 @@ function FadeGroup({ opacitySource, children }) {
   const ref = useRef();
   const visualOpacity = useRef(0);
   const lastAppliedOpacity = useRef(-1);
+  const settled = useRef(false);
 
   useFrame((_, delta) => {
     if (!ref.current) return;
@@ -472,7 +508,31 @@ function FadeGroup({ opacitySource, children }) {
     visualOpacity.current = THREE.MathUtils.damp(visualOpacity.current, opacity, 5.8, delta);
     ref.current.visible = visualOpacity.current > 0.001;
 
-    if (Math.abs(visualOpacity.current - lastAppliedOpacity.current) < 0.003) return;
+    if (visualOpacity.current > 0.996) {
+      if (!settled.current) {
+        settled.current = true;
+        lastAppliedOpacity.current = 1;
+        ref.current.traverse((child) => {
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach((material) => {
+            if (!material) return;
+            if (material.userData.fadeBaseOpacity === undefined) {
+              material.userData.fadeBaseOpacity = material.opacity ?? 1;
+              material.userData.fadeBaseTransparent = material.transparent;
+              material.userData.fadeBaseDepthWrite = material.depthWrite;
+            }
+
+            material.opacity = material.userData.fadeBaseOpacity;
+            material.transparent = material.userData.fadeBaseTransparent;
+            material.depthWrite = material.userData.fadeBaseDepthWrite;
+          });
+        });
+      }
+      return;
+    }
+
+    settled.current = false;
+    if (Math.abs(visualOpacity.current - lastAppliedOpacity.current) < 0.01) return;
     lastAppliedOpacity.current = visualOpacity.current;
 
     ref.current.traverse((child) => {
@@ -481,11 +541,13 @@ function FadeGroup({ opacitySource, children }) {
         if (!material) return;
         if (material.userData.fadeBaseOpacity === undefined) {
           material.userData.fadeBaseOpacity = material.opacity ?? 1;
+          material.userData.fadeBaseTransparent = material.transparent;
+          material.userData.fadeBaseDepthWrite = material.depthWrite;
         }
 
         const nextOpacity = material.userData.fadeBaseOpacity * visualOpacity.current;
         material.opacity = nextOpacity;
-        material.transparent = true;
+        material.transparent = nextOpacity < 0.995 || material.userData.fadeBaseTransparent;
         material.depthWrite = visualOpacity.current > 0.5;
       });
     });
@@ -577,6 +639,7 @@ function PegGrid() {
 
 function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = () => 0 }) {
   const screenMaterialRef = useRef();
+  const screenTexture = useMacScreenTexture();
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -617,10 +680,13 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
         <boxGeometry args={[1.62, 1.2, 0.035]} />
         <meshStandardMaterial
           ref={screenMaterialRef}
-          color="#101514"
+          map={screenTexture}
+          emissiveMap={screenTexture}
+          color="#ffffff"
           roughness={0.32}
-          emissive="#c3fff1"
+          emissive="#b9fff0"
           emissiveIntensity={0.18}
+          toneMapped={false}
         />
       </mesh>
       <mesh position={[0, 1.03, 0.282]}>
@@ -660,6 +726,170 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
       </mesh>
     </group>
   );
+}
+
+function useMacScreenTexture() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = LEGACY_SCREEN_WIDTH;
+    canvas.height = LEGACY_SCREEN_HEIGHT;
+    const ctx = canvas.getContext("2d");
+
+    ctx.imageSmoothingEnabled = false;
+    ctx.fillStyle = "#2f9f9d";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#f7f7f7";
+    ctx.fillRect(0, 0, canvas.width, 18);
+    ctx.fillStyle = "#050505";
+    ctx.fillRect(0, 18, canvas.width, 2);
+    drawSystemBadge(ctx, 10, 4);
+    drawMenuText(ctx, "File", 40, 13, true);
+    drawMenuText(ctx, "Edit", 80, 13, true);
+    drawMenuText(ctx, "View", 122, 13, false);
+    drawMenuText(ctx, "Label", 168, 13, false);
+    drawMenuText(ctx, "Special", 222, 13, true);
+    drawMenuText(ctx, "10:39 PM", 846, 13, true);
+
+    [
+      { kind: "folder", label: "Apps", x: 58, y: 86 },
+      { kind: "hazard", label: "Do Not Open", x: 154, y: 86 },
+      { kind: "striped", label: "Projects", x: 58, y: 164 },
+      { kind: "doc", label: "About Me", x: 58, y: 242 },
+      { kind: "contact", label: "Contact", x: 58, y: 320 },
+      { kind: "readme", label: "README.md", x: 58, y: 398 },
+      { kind: "disk", label: "Untitled", x: 848, y: 74 },
+      { kind: "trash", label: "Trash", x: 858, y: 620 }
+    ].forEach((icon) => drawDesktopPreviewIcon(ctx, icon));
+
+    drawControlStrip(ctx);
+
+    const nextTexture = new THREE.CanvasTexture(canvas);
+    nextTexture.colorSpace = THREE.SRGBColorSpace;
+    nextTexture.minFilter = THREE.LinearFilter;
+    nextTexture.magFilter = THREE.NearestFilter;
+    nextTexture.generateMipmaps = false;
+    nextTexture.needsUpdate = true;
+    return nextTexture;
+  }, []);
+
+  useEffect(() => () => texture.dispose(), [texture]);
+
+  return texture;
+}
+
+function drawMenuText(ctx, text, x, y, bold = false) {
+  ctx.fillStyle = bold ? "#050505" : "#737373";
+  ctx.font = `${bold ? 700 : 600} 13px Monaco, Menlo, monospace`;
+  ctx.fillText(text, x, y);
+}
+
+function drawSystemBadge(ctx, x, y) {
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(x, y, 12, 12);
+  ctx.strokeStyle = "#777";
+  ctx.strokeRect(x, y, 12, 12);
+  [["#ff5a5f", 2, 2], ["#ffde59", 7, 2], ["#67e08a", 2, 7], ["#7bc7ff", 7, 7]].forEach(([color, dx, dy]) => {
+    ctx.fillStyle = color;
+    ctx.fillRect(x + dx, y + dy, 4, 4);
+  });
+}
+
+function drawDesktopPreviewIcon(ctx, { kind, label, x, y }) {
+  const iconX = x + 12;
+  const iconY = y;
+
+  ctx.save();
+  ctx.translate(iconX, iconY);
+  ctx.fillStyle = "rgba(0,0,0,0.42)";
+  ctx.fillRect(4, 4, 38, 30);
+
+  if (kind === "folder" || kind === "striped") {
+    ctx.fillStyle = "#93b9ff";
+    ctx.fillRect(0, 8, 40, 28);
+    ctx.fillRect(0, 4, 18, 8);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(0, 8, 40, 28);
+    ctx.strokeRect(0, 4, 18, 8);
+    if (kind === "striped") {
+      ctx.fillStyle = "#ffec59";
+      for (let stripe = -20; stripe < 48; stripe += 13) {
+        ctx.fillRect(stripe, 9, 7, 36);
+      }
+    }
+  } else if (kind === "hazard") {
+    ctx.fillStyle = "#ffec59";
+    ctx.fillRect(0, 0, 40, 32);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(0, 0, 40, 32);
+    ctx.fillStyle = "#050505";
+    for (let stripe = -18; stripe < 54; stripe += 14) {
+      ctx.save();
+      ctx.translate(stripe, 0);
+      ctx.rotate(-Math.PI / 4);
+      ctx.fillRect(0, 0, 8, 62);
+      ctx.restore();
+    }
+    ctx.fillStyle = "#ff5a87";
+    ctx.fillRect(25, 19, 10, 10);
+  } else if (kind === "disk") {
+    ctx.fillStyle = "#d5d5d5";
+    ctx.fillRect(0, 4, 40, 27);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(0, 4, 40, 27);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(23, 16, 12, 9);
+    ctx.strokeRect(23, 16, 12, 9);
+  } else if (kind === "trash") {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(4, 4, 28, 42);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(4, 4, 28, 42);
+    ctx.fillRect(9, 0, 18, 5);
+    ctx.fillStyle = "#bfbfbf";
+    for (let line = 9; line < 30; line += 7) ctx.fillRect(line, 8, 2, 36);
+  } else {
+    ctx.fillStyle = "#f8f8f8";
+    ctx.fillRect(6, 0, 28, 40);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(6, 0, 28, 40);
+    ctx.fillStyle = "#050505";
+    if (kind === "contact") {
+      ctx.fillStyle = "#ffde59";
+      ctx.beginPath();
+      ctx.arc(20, 12, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#87dfff";
+      ctx.fillRect(11, 21, 18, 9);
+      ctx.strokeRect(11, 21, 18, 9);
+    } else {
+      ctx.fillRect(13, 13, 16, 3);
+      ctx.fillRect(13, 24, 16, 3);
+      if (kind === "readme") ctx.fillText("#", 14, 19);
+    }
+  }
+
+  ctx.restore();
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(x + 2, y + 44, Math.max(40, label.length * 8), 18);
+  ctx.fillStyle = "#050505";
+  ctx.font = "700 13px Monaco, Menlo, monospace";
+  ctx.fillText(label, x + 6, y + 58);
+}
+
+function drawControlStrip(ctx) {
+  let x = 0;
+  const y = LEGACY_SCREEN_HEIGHT - 18;
+
+  for (let index = 0; index < 11; index += 1) {
+    ctx.fillStyle = "#d8d8d8";
+    ctx.fillRect(x, y, 23, 18);
+    ctx.strokeStyle = "#050505";
+    ctx.strokeRect(x, y, 23, 18);
+    ctx.fillStyle = index % 3 === 0 ? "#8fdfff" : index % 3 === 1 ? "#93b9ff" : "#050505";
+    ctx.fillRect(x + 6, y + 5, 11, 8);
+    x += 26;
+  }
 }
 
 function FloppyDisk({ disk, index, active, onSelect }) {
@@ -1439,6 +1669,7 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
           maxPolarAngle={Math.PI / 2.02}
           target={[0, 0.85, -0.12]}
         />
+        <ShadowMapController progressRef={freePlayProgressRef} freezeAfter={0.01} />
       </Canvas>
       <nav className="freeplay-toolbar" aria-label="Workbench modes">
         <button type="button" onClick={onLoadCinematic}>
