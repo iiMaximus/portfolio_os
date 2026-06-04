@@ -275,10 +275,10 @@ Projects become little worlds.</pre>
               <strong>Snake</strong>
               <small>grid chase</small>
             </button>
-            <button type="button" class="file-card" data-action="desktop-message">
-              <span class="mini-app secret-level" aria-hidden="true"></span>
-              <strong>Secret Level</strong>
-              <small>locked</small>
+            <button type="button" class="file-card" data-open-window="minesweeper-game">
+              <span class="mini-app minesweeper-icon" aria-hidden="true"></span>
+              <strong>Minesweeper</strong>
+              <small>logic grid</small>
             </button>
           </div>
         </section>
@@ -328,6 +328,28 @@ Projects become little worlds.</pre>
                 <button class="classic-button icon-command down" type="button" data-snake-dir="down" aria-label="Down">↓</button>
               </div>
               <button class="classic-button" type="button" data-snake-reset>Reset</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="window game-window minesweeper-window" data-window="minesweeper-game" style="--left: 330px; --top: 118px; --width: 390px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Minesweeper"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Minesweeper</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Minesweeper"></button>
+          </div>
+          <div class="window-body game-body minesweeper-body" data-game="minesweeper">
+            <div class="game-hud minesweeper-hud" aria-live="polite">
+              <span>Mines <strong data-mine-count>10</strong></span>
+              <span>Time <strong data-mine-time>0</strong></span>
+              <span><strong data-mine-status>Ready</strong></span>
+            </div>
+            <div class="minesweeper-board" data-minesweeper-board role="grid" aria-label="Minesweeper board"></div>
+            <div class="game-actions minesweeper-actions">
+              <button class="classic-button" type="button" data-minesweeper-reset>Reset</button>
+              <button class="classic-button" type="button" data-minesweeper-flag-mode aria-pressed="false">Flag Mode</button>
             </div>
           </div>
         </section>

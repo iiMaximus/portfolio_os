@@ -1352,21 +1352,35 @@ html.screen-surface .os-shell {
   content: "";
 }
 
-.secret-level {
-  background:
-    repeating-linear-gradient(45deg, #111 0 4px, #ffe75c 4px 8px),
-    #ffe75c;
+.minesweeper-icon {
+  background: #cfcfcf;
+  box-shadow:
+    inset 2px 2px 0 #fff,
+    inset -2px -2px 0 #8d8d8d;
 }
 
-.secret-level::after {
+.minesweeper-icon::before,
+.minesweeper-icon::after {
   position: absolute;
-  left: 9px;
-  top: 8px;
-  width: 9px;
-  height: 10px;
-  border: 2px solid var(--black);
-  background: #fff;
   content: "";
+}
+
+.minesweeper-icon::before {
+  inset: 4px;
+  background:
+    linear-gradient(90deg, transparent 8px, #111 8px 10px, transparent 10px),
+    linear-gradient(transparent 8px, #111 8px 10px, transparent 10px),
+    #d8d8d8;
+}
+
+.minesweeper-icon::after {
+  left: 12px;
+  top: 12px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  background: #ff4d74;
 }
 
 .finder-list {
@@ -1775,6 +1789,94 @@ html.screen-surface .os-shell {
   aspect-ratio: 1 / 1;
 }
 
+.minesweeper-window {
+  min-width: min(390px, calc(100vw - 30px));
+}
+
+.minesweeper-body {
+  gap: 9px;
+}
+
+.minesweeper-hud {
+  max-width: 286px;
+}
+
+.minesweeper-board {
+  display: grid;
+  grid-template-columns: repeat(8, 30px);
+  grid-auto-rows: 30px;
+  gap: 0;
+  padding: 5px;
+  border: 3px solid var(--black);
+  background: #bdbdbd;
+  box-shadow:
+    inset 3px 3px 0 #fff,
+    inset -3px -3px 0 #777,
+    3px 3px 0 var(--hard-shadow);
+  touch-action: manipulation;
+}
+
+.mine-cell {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid #777;
+  border-top-color: #fff;
+  border-left-color: #fff;
+  background: #cfcfcf;
+  color: var(--black);
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.mine-cell:disabled {
+  opacity: 1;
+}
+
+.mine-cell:active,
+.mine-cell.is-revealed {
+  border: 1px solid #858585;
+  background: #dedede;
+  box-shadow: inset 1px 1px 0 #b5b5b5;
+}
+
+.mine-cell.is-flagged {
+  color: #d3002d;
+}
+
+.mine-cell.is-mine {
+  background: #ff8cab;
+}
+
+.mine-cell.n1 {
+  color: #1b4dff;
+}
+
+.mine-cell.n2 {
+  color: #108a3a;
+}
+
+.mine-cell.n3 {
+  color: #d3002d;
+}
+
+.mine-cell.n4,
+.mine-cell.n5,
+.mine-cell.n6,
+.mine-cell.n7,
+.mine-cell.n8 {
+  color: #111;
+}
+
+.minesweeper-actions [aria-pressed="true"] {
+  background: var(--black);
+  color: var(--paper);
+  box-shadow: inset 2px 2px 0 #3a3a3a;
+}
+
 .game-actions {
   display: grid;
   grid-template-columns: minmax(72px, auto) 34px minmax(72px, auto);
@@ -1782,6 +1884,10 @@ html.screen-surface .os-shell {
   justify-content: center;
   gap: 8px;
   width: 100%;
+}
+
+.game-actions.minesweeper-actions {
+  grid-template-columns: minmax(82px, auto) minmax(96px, auto);
 }
 
 .icon-command {

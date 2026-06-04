@@ -46,6 +46,10 @@
     games: "games",
     graphics: "graphics",
     juice: "juice-detail",
+    mine: "minesweeper-game",
+    mines: "minesweeper-game",
+    minesweeper: "minesweeper-game",
+    "minesweeper-game": "minesweeper-game",
     note: "note",
     notepad: "note",
     portfolio: "portfolio-detail",
@@ -385,8 +389,7 @@
       "Open Case Study": "Case study placeholder. Real write-up goes here.",
       "View Build Log": "Build log placeholder. The workbench story will live here.",
       "Inspect Parts": "Parts inspection will connect to the real CAD model later.",
-      "Open Sketches": "Sketch archive placeholder. Blender/CAD exports go here.",
-      "Secret Level": "Secret level locked until the arcade concept wakes up."
+      "Open Sketches": "Sketch archive placeholder. Blender/CAD exports go here."
     };
     showAlert(messages[label] || defaultMessage);
   }
@@ -845,7 +848,8 @@
       { label: "Terminal", target: "terminal", type: "app", keywords: "command shell terminal print fun" },
       { label: "Email", target: "email", type: "app", keywords: "contact send message email" },
       { label: "README.md", target: "readme", type: "document", keywords: "readme intro portfolio markdown" },
-      { label: "Do Not Open", target: "games", type: "folder", keywords: "games snake flappy secret" },
+      { label: "Do Not Open", target: "games", type: "folder", keywords: "games snake flappy minesweeper mines" },
+      { label: "Minesweeper", target: "minesweeper-game", type: "game", keywords: "minesweeper mines logic grid game" },
       { label: "Control Panels", target: "control-panels", type: "utility", keywords: "settings controls dither icons sound" }
     ];
 
@@ -966,7 +970,7 @@
           "Available commands:",
           "  help              show this list",
           "  ls / dir          list desktop things",
-          "  open <name>       open apps, drone, email, controls, sound, games...",
+          "  open <name>       open apps, drone, email, minesweeper, controls...",
           "  projects          show project folders",
           "  games             show game folder contents",
           "  cat <file>        read readme, contact, projects",
@@ -1023,7 +1027,7 @@
         writeBlock([
           "Flappy Byte           open flappy",
           "Snake                 open snake",
-          "Secret Level          access denied for now"
+          "Minesweeper           open minesweeper"
         ]);
         return;
       }
@@ -1723,6 +1727,232 @@
     reset();
   }
 
+  function initMinesweeperGame() {
+    const boardEl = document.querySelector("[data-minesweeper-board]");
+    if (!boardEl) return;
+
+    const gameWindow = boardEl.closest(".window");
+    const mineCountEl = document.querySelector("[data-mine-count]");
+    const timeEl = document.querySelector("[data-mine-time]");
+    const statusEl = document.querySelector("[data-mine-status]");
+    const resetButton = document.querySelector("[data-minesweeper-reset]");
+    const flagButton = document.querySelector("[data-minesweeper-flag-mode]");
+    const size = 8;
+    const mineTotal = 10;
+    let cells = [];
+    let state = "ready";
+    let flagMode = false;
+    let elapsed = 0;
+    let timer = 0;
+
+    function indexFor(row, col) {
+      return row * size + col;
+    }
+
+    function neighbors(cell) {
+      const result = [];
+      for (let rowOffset = -1; rowOffset <= 1; rowOffset += 1) {
+        for (let colOffset = -1; colOffset <= 1; colOffset += 1) {
+          if (rowOffset === 0 && colOffset === 0) continue;
+          const row = cell.row + rowOffset;
+          const col = cell.col + colOffset;
+          if (row >= 0 && row < size && col >= 0 && col < size) {
+            result.push(cells[indexFor(row, col)]);
+          }
+        }
+      }
+      return result;
+    }
+
+    function stopTimer() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = 0;
+      }
+    }
+
+    function startTimer() {
+      if (timer) return;
+      timer = window.setInterval(() => {
+        if (state !== "playing") return;
+        elapsed += 1;
+        timeEl.textContent = String(elapsed);
+      }, 1000);
+    }
+
+    function setStatus(label) {
+      statusEl.textContent = label;
+    }
+
+    function updateHud() {
+      const flagged = cells.filter((cell) => cell.flagged).length;
+      mineCountEl.textContent = String(Math.max(0, mineTotal - flagged));
+      timeEl.textContent = String(elapsed);
+      flagButton.setAttribute("aria-pressed", flagMode ? "true" : "false");
+    }
+
+    function createCells() {
+      cells = Array.from({ length: size * size }, (_, index) => ({
+        adjacent: 0,
+        col: index % size,
+        element: null,
+        flagged: false,
+        mine: false,
+        revealed: false,
+        row: Math.floor(index / size)
+      }));
+    }
+
+    function plantMines(safeIndex) {
+      const forbidden = new Set([safeIndex, ...neighbors(cells[safeIndex]).map((cell) => indexFor(cell.row, cell.col))]);
+      let planted = 0;
+
+      while (planted < mineTotal) {
+        const index = Math.floor(Math.random() * cells.length);
+        if (cells[index].mine || forbidden.has(index)) continue;
+        cells[index].mine = true;
+        planted += 1;
+      }
+
+      cells.forEach((cell) => {
+        cell.adjacent = neighbors(cell).filter((neighbor) => neighbor.mine).length;
+      });
+    }
+
+    function renderCell(cell) {
+      const button = cell.element;
+      button.className = "mine-cell";
+      button.textContent = "";
+      button.setAttribute("aria-label", `Cell ${cell.row + 1}, ${cell.col + 1}`);
+
+      if (cell.revealed) {
+        button.classList.add("is-revealed");
+        button.disabled = true;
+        if (cell.mine) {
+          button.classList.add("is-mine");
+          button.textContent = "*";
+          button.setAttribute("aria-label", "Mine");
+        } else if (cell.adjacent > 0) {
+          button.classList.add(`n${cell.adjacent}`);
+          button.textContent = String(cell.adjacent);
+          button.setAttribute("aria-label", `${cell.adjacent} nearby mines`);
+        } else {
+          button.setAttribute("aria-label", "Empty cell");
+        }
+        return;
+      }
+
+      button.disabled = state === "won" || state === "lost";
+      if (cell.flagged) {
+        button.classList.add("is-flagged");
+        button.textContent = "F";
+        button.setAttribute("aria-label", "Flagged cell");
+      }
+    }
+
+    function renderBoard() {
+      cells.forEach(renderCell);
+      updateHud();
+    }
+
+    function revealCell(cell) {
+      if (cell.revealed || cell.flagged) return;
+      cell.revealed = true;
+      if (cell.adjacent !== 0 || cell.mine) return;
+      neighbors(cell).forEach(revealCell);
+    }
+
+    function revealAllMines() {
+      cells.forEach((cell) => {
+        if (cell.mine) cell.revealed = true;
+      });
+    }
+
+    function checkWin() {
+      const coveredSafeCells = cells.filter((cell) => !cell.mine && !cell.revealed).length;
+      if (coveredSafeCells > 0) return;
+      state = "won";
+      stopTimer();
+      setStatus("Cleared");
+      cells.forEach((cell) => {
+        if (cell.mine) cell.flagged = true;
+      });
+      renderBoard();
+      showAlert("Minesweeper cleared.");
+    }
+
+    function handleReveal(cell) {
+      if (state === "lost" || state === "won" || cell.flagged || cell.revealed) return;
+      if (state === "ready") {
+        plantMines(indexFor(cell.row, cell.col));
+        state = "playing";
+        setStatus("Running");
+        startTimer();
+      }
+
+      if (cell.mine) {
+        state = "lost";
+        stopTimer();
+        revealAllMines();
+        setStatus("Boom");
+        renderBoard();
+        showAlert("Boom. Reset and sweep again.");
+        return;
+      }
+
+      revealCell(cell);
+      renderBoard();
+      checkWin();
+    }
+
+    function toggleFlag(cell) {
+      if (state === "lost" || state === "won" || cell.revealed) return;
+      cell.flagged = !cell.flagged;
+      renderBoard();
+    }
+
+    function reset() {
+      stopTimer();
+      createCells();
+      state = "ready";
+      flagMode = false;
+      elapsed = 0;
+      boardEl.textContent = "";
+      cells.forEach((cell) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "mine-cell";
+        button.setAttribute("role", "gridcell");
+        button.addEventListener("click", () => {
+          if (flagMode) {
+            toggleFlag(cell);
+          } else {
+            handleReveal(cell);
+          }
+        });
+        button.addEventListener("contextmenu", (event) => {
+          event.preventDefault();
+          toggleFlag(cell);
+        });
+        cell.element = button;
+        boardEl.appendChild(button);
+      });
+      setStatus("Ready");
+      renderBoard();
+    }
+
+    resetButton?.addEventListener("click", reset);
+    flagButton?.addEventListener("click", () => {
+      flagMode = !flagMode;
+      updateHud();
+    });
+    gameWindow.addEventListener("window-opened", () => {
+      if (!cells.length) reset();
+    });
+
+    reset();
+  }
+
   document.querySelectorAll("[data-cad-scene]").forEach((scene) => {
     const cube = scene.querySelector(".cad-cube");
     if (!cube) return;
@@ -1816,6 +2046,7 @@
   initEmailApp();
   initFlappyGame();
   initSnakeGame();
+  initMinesweeperGame();
   setClock();
   window.setInterval(setClock, 15000);
 })();
