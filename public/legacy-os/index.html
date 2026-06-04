@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Maksym OS Portfolio</title>
+    <script>
+      const screenParams = new URLSearchParams(window.location.search);
+      if (screenParams.get("surface") === "screen") {
+        document.documentElement.classList.add("screen-surface");
+        const surfaceScale = Number.parseFloat(screenParams.get("scale") || "1");
+        if (Number.isFinite(surfaceScale) && surfaceScale > 0) {
+          document.documentElement.style.setProperty("--surface-scale", surfaceScale.toString());
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="os-shell" aria-label="Maksym OS portfolio desktop">
+      <header class="menu-bar" role="menubar" aria-label="Desktop menu bar">
+        <button class="system-mark menu-trigger" type="button" data-menu="system" aria-label="Maksym OS menu">
+          <span class="pixel-badge" aria-hidden="true">
+            <i></i><i></i><i></i><i></i>
+          </span>
+        </button>
+        <button class="menu-trigger" type="button" data-menu="file">File</button>
+        <button class="menu-trigger" type="button" data-menu="edit">Edit</button>
+        <button class="menu-trigger muted" type="button" data-menu="view">View</button>
+        <button class="menu-trigger muted" type="button" data-menu="label">Label</button>
+        <button class="menu-trigger" type="button" data-menu="special">Special</button>
+
+        <div class="menu-clock" aria-live="polite">
+          <span id="desktop-clock">2:00 AM</span>
+          <span class="mini-status globe" aria-hidden="true"></span>
+          <span class="mini-status disk" aria-hidden="true"></span>
+        </div>
+      </header>
+
+      <nav class="dropdown" data-dropdown="system" aria-label="System menu">
+        <button type="button" class="menu-item wide" data-open-window="about">About This Computer...</button>
+        <span class="menu-rule"></span>
+        <button type="button" class="menu-item" data-open-window="profile"><span class="item-icon profiler"></span>Maksym System Profiler</button>
+        <button type="button" class="menu-item" data-open-window="apps"><span class="item-icon player"></span>App Catalog</button>
+        <button type="button" class="menu-item has-sub"><span class="item-icon tasks"></span>Automated Tasks</button>
+        <button type="button" class="menu-item" data-open-window="calculator"><span class="item-icon calc"></span>Calculator</button>
+        <button type="button" class="menu-item has-sub"><span class="item-icon panels"></span>Control Panels</button>
+        <button type="button" class="menu-item"><span class="item-icon printer"></span>Desktop Printers</button>
+        <button type="button" class="menu-item" data-open-window="find"><span class="item-icon find"></span>Find File</button>
+        <button type="button" class="menu-item" data-open-window="graphics"><span class="item-icon paint"></span>Graphics Calculator</button>
+        <button type="button" class="menu-item" data-open-window="puzzle"><span class="item-icon puzzle"></span>Jigsaw Puzzle</button>
+        <button type="button" class="menu-item" data-open-window="note"><span class="item-icon note"></span>Note Pad</button>
+        <button type="button" class="menu-item" data-open-window="terminal"><span class="item-icon terminal-item"></span>Terminal</button>
+        <button type="button" class="menu-item" data-open-window="email"><span class="item-icon mail-item"></span>Email</button>
+        <button type="button" class="menu-item has-sub"><span class="item-icon recent"></span>Recent Applications</button>
+        <button type="button" class="menu-item" data-open-window="scrapbook"><span class="item-icon scrapbook"></span>Scrapbook</button>
+        <button type="button" class="menu-item"><span class="item-icon sound"></span>SimpleSound</button>
+        <button type="button" class="menu-item" data-open-window="stickies"><span class="item-icon sticky"></span>Stickies</button>
+        <button type="button" class="menu-item power"><span class="item-icon power-dot"></span>Shut Down</button>
+      </nav>
+
+      <nav class="dropdown" data-dropdown="file" aria-label="File menu">
+        <button type="button" class="menu-item" data-open-window="apps">Open Apps Folder</button>
+        <button type="button" class="menu-item" data-open-window="projects">Open Projects Folder</button>
+        <button type="button" class="menu-item" data-open-window="readme">Open README.md</button>
+        <button type="button" class="menu-item" data-open-window="games">Open Do Not Open</button>
+        <button type="button" class="menu-item" data-open-window="contact">Open Contact Card</button>
+        <span class="menu-rule"></span>
+        <button type="button" class="menu-item" data-action="new-note">New Note</button>
+      </nav>
+
+      <nav class="dropdown" data-dropdown="edit" aria-label="Edit menu">
+        <button type="button" class="menu-item" data-action="desktop-message">Copy</button>
+        <button type="button" class="menu-item" data-action="desktop-message">Paste</button>
+        <button type="button" class="menu-item" data-action="desktop-message">Select All</button>
+      </nav>
+
+      <nav class="dropdown slim" data-dropdown="view" aria-label="View menu">
+        <button type="button" class="menu-item" data-action="toggle-dither">Toggle Dither</button>
+        <button type="button" class="menu-item" data-action="arrange-icons">Arrange Icons</button>
+      </nav>
+
+      <nav class="dropdown slim" data-dropdown="label" aria-label="Label menu">
+        <button type="button" class="menu-item label-red" data-action="desktop-message">Urgent Red</button>
+        <button type="button" class="menu-item label-blue" data-action="desktop-message">Deep Blue</button>
+        <button type="button" class="menu-item label-green" data-action="desktop-message">Ready Green</button>
+      </nav>
+
+      <nav class="dropdown slim" data-dropdown="special" aria-label="Special menu">
+        <button type="button" class="menu-item" data-action="clear-windows">Clean Up Desktop</button>
+        <button type="button" class="menu-item" data-open-window="about">About Maksym OS</button>
+      </nav>
+
+      <main class="desktop" id="desktop">
+        <button type="button" class="desktop-icon folder-icon" data-open-window="apps" style="--x: 34px; --y: 72px">
+          <span class="folder-art" aria-hidden="true"></span>
+          <span>Apps</span>
+        </button>
+
+        <button type="button" class="desktop-icon folder-icon" data-open-window="projects" style="--x: 34px; --y: 150px">
+          <span class="folder-art striped" aria-hidden="true"></span>
+          <span>Projects</span>
+        </button>
+
+        <button type="button" class="desktop-icon document-icon" data-open-window="about" style="--x: 34px; --y: 228px">
+          <span class="doc-art" aria-hidden="true"></span>
+          <span>About Me</span>
+        </button>
+
+        <button type="button" class="desktop-icon document-icon" data-open-window="contact" style="--x: 34px; --y: 306px">
+          <span class="contact-art" aria-hidden="true"></span>
+          <span>Contact</span>
+        </button>
+
+        <button type="button" class="desktop-icon document-icon readme-icon" data-open-window="readme" style="--x: 34px; --y: 384px">
+          <span class="readme-art" aria-hidden="true"></span>
+          <span>README.md</span>
+        </button>
+
+        <button type="button" class="desktop-icon folder-icon danger-folder" data-open-window="games" style="--x: 132px; --y: 72px">
+          <span class="folder-art warning" aria-hidden="true"></span>
+          <span>Do Not Open</span>
+        </button>
+
+        <button type="button" class="desktop-icon disk-icon" data-open-window="untitled" style="--x: calc(100% - 96px); --y: 54px">
+          <span class="disk-art" aria-hidden="true"></span>
+          <span>Untitled</span>
+        </button>
+
+        <button type="button" class="desktop-icon trash-icon" data-open-window="trash" style="--x: calc(100% - 86px); --y: calc(100% - 92px)">
+          <span class="trash-art" aria-hidden="true"></span>
+          <span>Trash</span>
+        </button>
+
+        <section class="window" data-window="about" style="--left: 230px; --top: 76px; --width: 360px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close About Me"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>About This Computer</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom About Me"></button>
+          </div>
+          <div class="window-body about-body">
+            <div class="computer-tile" aria-hidden="true">
+              <span class="screen-face"></span>
+            </div>
+            <div>
+              <h1>Maksym OS</h1>
+              <p>Front-page portfolio shell, version 0.1. Built for apps, experiments, hardware projects, and odd little side quests.</p>
+              <dl class="spec-list">
+                <div><dt>Memory</dt><dd>Curiosity: 4096K</dd></div>
+                <div><dt>Status</dt><dd>Under construction</dd></div>
+                <div><dt>Mode</dt><dd>Classic desktop</dd></div>
+              </dl>
+            </div>
+          </div>
+        </section>
+
+        <section class="window" data-window="apps" style="--left: 196px; --top: 92px; --width: 430px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Apps"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Apps</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Apps"></button>
+          </div>
+          <div class="window-toolbar">
+            <span>6 items</span>
+            <span>portfolio disk</span>
+          </div>
+          <div class="window-body icon-grid">
+            <button type="button" class="file-card" data-open-window="app-detail">
+              <span class="mini-app color-bars" aria-hidden="true"></span>
+              <strong>Mobile Apps</strong>
+              <small>shipping work</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="portfolio-detail">
+              <span class="mini-app terminal" aria-hidden="true"></span>
+              <strong>This Portfolio</strong>
+              <small>interface lab</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="terminal">
+              <span class="mini-app terminal-app" aria-hidden="true"></span>
+              <strong>Terminal</strong>
+              <small>command line</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="email">
+              <span class="mini-app email-app" aria-hidden="true"></span>
+              <strong>Email</strong>
+              <small>compose</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="fpv-detail">
+              <span class="mini-app drone" aria-hidden="true"></span>
+              <strong>FPV Drone</strong>
+              <small>hardware</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="juice-detail">
+              <span class="mini-app juice" aria-hidden="true"></span>
+              <strong>Juice Maker</strong>
+              <small>machine idea</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="window" data-window="projects" style="--left: 286px; --top: 128px; --width: 394px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Projects"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Projects</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Projects"></button>
+          </div>
+          <div class="window-body finder-list">
+            <button type="button" data-open-window="app-detail"><span class="list-icon list-app"></span><span>Apps</span><em>product, iOS, Android</em></button>
+            <button type="button" data-open-window="fpv-detail"><span class="list-icon list-drone"></span><span>FPV drone</span><em>electronics and flight</em></button>
+            <button type="button" data-open-window="juice-detail"><span class="list-icon list-juice"></span><span>Juice maker</span><em>prototype machine</em></button>
+          </div>
+        </section>
+
+        <section class="window note-window" data-window="contact" style="--left: 340px; --top: 116px; --width: 332px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Contact"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Contact Card</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Contact"></button>
+          </div>
+          <div class="window-body">
+            <h2>Maksym</h2>
+            <p>Builder of apps, systems, physical prototypes, and portfolio concepts with a little theatrical machinery inside.</p>
+            <a class="classic-link" href="mailto:hello@example.com">hello@example.com</a>
+          </div>
+        </section>
+
+        <section class="window note-window readme-window" data-window="readme" style="--left: 236px; --top: 112px; --width: 398px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close README"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>README.md</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom README"></button>
+          </div>
+          <div class="window-body readme-body">
+            <pre># README.md
+
+STATUS: portfolio shell 0.2
+MOOD: classic desktop, weird machine
+NEXT: arcade drawer
+
+Folders become projects.
+Projects become little worlds.</pre>
+          </div>
+        </section>
+
+        <section class="window" data-window="games" style="--left: 244px; --top: 142px; --width: 396px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Do Not Open"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Do Not Open</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Do Not Open"></button>
+          </div>
+          <div class="window-toolbar">
+            <span>3 items</span>
+            <span>classified</span>
+          </div>
+          <div class="window-body game-shelf">
+            <button type="button" class="file-card" data-open-window="flappy-game">
+              <span class="mini-app flappy-byte-icon" aria-hidden="true"></span>
+              <strong>Flappy Byte</strong>
+              <small>side scroller</small>
+            </button>
+            <button type="button" class="file-card" data-open-window="snake-game">
+              <span class="mini-app snake-test" aria-hidden="true"></span>
+              <strong>Snake</strong>
+              <small>grid chase</small>
+            </button>
+            <button type="button" class="file-card" data-action="desktop-message">
+              <span class="mini-app secret-level" aria-hidden="true"></span>
+              <strong>Secret Level</strong>
+              <small>locked</small>
+            </button>
+          </div>
+        </section>
+
+        <section class="window game-window" data-window="flappy-game" style="--left: 274px; --top: 108px; --width: 372px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Flappy Byte"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Flappy Byte</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Flappy Byte"></button>
+          </div>
+          <div class="window-body game-body" data-game="flappy">
+            <div class="game-hud" aria-live="polite">
+              <span>Score <strong data-flappy-score>0</strong></span>
+              <span>Best <strong data-flappy-best>0</strong></span>
+            </div>
+            <canvas class="game-canvas flappy-canvas" data-flappy-canvas width="256" height="176" aria-label="Flappy Byte game canvas"></canvas>
+            <div class="game-actions">
+              <button class="classic-button" type="button" data-flappy-start>Start</button>
+              <button class="classic-button icon-command" type="button" data-flappy-flap aria-label="Flap">↑</button>
+              <button class="classic-button" type="button" data-flappy-reset>Reset</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="window game-window" data-window="snake-game" style="--left: 300px; --top: 134px; --width: 356px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Snake"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Snake</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Snake"></button>
+          </div>
+          <div class="window-body game-body snake-body" data-game="snake">
+            <div class="game-hud" aria-live="polite">
+              <span>Score <strong data-snake-score>0</strong></span>
+              <span>Best <strong data-snake-best>0</strong></span>
+            </div>
+            <canvas class="game-canvas snake-canvas" data-snake-canvas width="240" height="240" aria-label="Snake game canvas"></canvas>
+            <div class="game-actions snake-actions">
+              <button class="classic-button" type="button" data-snake-start>Start</button>
+              <div class="dpad" aria-label="Snake direction controls">
+                <button class="classic-button icon-command up" type="button" data-snake-dir="up" aria-label="Up">↑</button>
+                <button class="classic-button icon-command left" type="button" data-snake-dir="left" aria-label="Left">←</button>
+                <button class="classic-button icon-command right" type="button" data-snake-dir="right" aria-label="Right">→</button>
+                <button class="classic-button icon-command down" type="button" data-snake-dir="down" aria-label="Down">↓</button>
+              </div>
+              <button class="classic-button" type="button" data-snake-reset>Reset</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="profile" style="--left: 236px; --top: 164px; --width: 360px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Profiler"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>System Profiler</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Profiler"></button>
+          </div>
+          <div class="window-body">
+            <p><strong>Primary Drive:</strong> portfolio concepts</p>
+            <p><strong>Current Shell:</strong> Old-school OS prototype</p>
+            <p><strong>Next Concept:</strong> Arcade cabinet</p>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="app-detail" style="--left: 268px; --top: 146px; --width: 342px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Mobile Apps"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Mobile Apps</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Mobile Apps"></button>
+          </div>
+          <div class="window-body project-body">
+            <h2>Apps</h2>
+            <p>A cabinet for shipped mobile apps, experiments, and product polish notes.</p>
+            <button class="classic-button" type="button" data-action="desktop-message">Open Case Study</button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="portfolio-detail" style="--left: 300px; --top: 158px; --width: 350px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Portfolio"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>This Portfolio</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Portfolio"></button>
+          </div>
+          <div class="window-body project-body">
+            <h2>Portfolio</h2>
+            <p>The interface itself is part of the project: a desktop metaphor for browsing work.</p>
+            <button class="classic-button" type="button" data-action="desktop-message">View Build Log</button>
+          </div>
+        </section>
+
+        <section class="window cad-window" data-window="fpv-detail" style="--left: 296px; --top: 132px; --width: 484px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close FPV Drone"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>FPV Drone CAD</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom FPV Drone"></button>
+          </div>
+          <div class="window-body project-body cad-project-body">
+            <div>
+              <h2>FPV Drone</h2>
+              <p>Flight hardware, tuning notes, controller setup, and whatever survives testing.</p>
+              <button class="classic-button" type="button" data-action="desktop-message">Inspect Parts</button>
+            </div>
+            <div class="cad-viewer" data-cad-viewer>
+              <div class="cad-toolbar">
+                <span>DRONE_FRAME.CAD</span>
+                <span>wire cube</span>
+              </div>
+              <div class="cad-scene" data-cad-scene tabindex="0" aria-label="Interactive CAD cube placeholder">
+                <span class="cad-grid" aria-hidden="true"></span>
+                <span class="cad-axis x" aria-hidden="true">X</span>
+                <span class="cad-axis y" aria-hidden="true">Y</span>
+                <span class="cad-axis z" aria-hidden="true">Z</span>
+                <div class="cad-cube" aria-hidden="true">
+                  <span class="front"></span>
+                  <span class="back"></span>
+                  <span class="right"></span>
+                  <span class="left"></span>
+                  <span class="top"></span>
+                  <span class="bottom"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="juice-detail" style="--left: 350px; --top: 184px; --width: 338px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Juice Maker"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Juice Maker</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Juice Maker"></button>
+          </div>
+          <div class="window-body project-body">
+            <h2>Juice Maker</h2>
+            <p>A physical product/prototype folder for the machine concept and interaction flow.</p>
+            <button class="classic-button" type="button" data-action="desktop-message">Open Sketches</button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="calculator" style="--left: 422px; --top: 94px; --width: 212px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Calculator"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Calculator</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Calculator"></button>
+          </div>
+          <div class="window-body calculator-body">
+            <output id="calc-output">0</output>
+            <div class="calc-grid" aria-hidden="true">
+              <span>7</span><span>8</span><span>9</span><span>+</span>
+              <span>4</span><span>5</span><span>6</span><span>-</span>
+              <span>1</span><span>2</span><span>3</span><span>=</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="find" style="--left: 234px; --top: 216px; --width: 302px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Find File"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Find File</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Find File"></button>
+          </div>
+          <div class="window-body">
+            <label class="classic-field">Find:
+              <input value="projects with personality" />
+            </label>
+            <button class="classic-button" type="button" data-action="desktop-message">Search</button>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="graphics" style="--left: 392px; --top: 240px; --width: 300px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Graphics Calculator"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Graphics Calculator</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Graphics Calculator"></button>
+          </div>
+          <div class="window-body graph-body" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="puzzle" style="--left: 224px; --top: 236px; --width: 260px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Jigsaw Puzzle"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Jigsaw Puzzle</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Jigsaw Puzzle"></button>
+          </div>
+          <div class="window-body puzzle-body" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </section>
+
+        <section class="window note-window" data-window="note" style="--left: 454px; --top: 140px; --width: 318px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Note Pad"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Note Pad</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Note Pad"></button>
+          </div>
+          <div class="window-body">
+            <textarea aria-label="Portfolio note">Make the portfolio feel like a place you can poke around in.</textarea>
+          </div>
+        </section>
+
+        <section class="window note-window" data-window="scrapbook" style="--left: 280px; --top: 186px; --width: 312px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Scrapbook"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Scrapbook</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Scrapbook"></button>
+          </div>
+          <div class="window-body scrapbook-body">
+            <span class="scrap scrap-one"></span>
+            <span class="scrap scrap-two"></span>
+            <span class="scrap scrap-three"></span>
+          </div>
+        </section>
+
+        <section class="window note-window" data-window="stickies" style="--left: 382px; --top: 268px; --width: 242px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Stickies"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Stickies</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Stickies"></button>
+          </div>
+          <div class="window-body sticky-body">
+            <p>Second concept: old-school arcade.</p>
+          </div>
+        </section>
+
+        <section class="window terminal-window" data-window="terminal" style="--left: 286px; --top: 108px; --width: 476px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Terminal"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Terminal</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Terminal"></button>
+          </div>
+          <div class="window-body terminal-body">
+            <div class="terminal-screen" data-terminal-screen aria-live="polite"></div>
+            <form class="terminal-prompt" data-terminal-form>
+              <label for="terminal-input">guest@maksym-os:~$</label>
+              <input id="terminal-input" data-terminal-input autocomplete="off" spellcheck="false" />
+            </form>
+          </div>
+        </section>
+
+        <section class="window email-window" data-window="email" style="--left: 258px; --top: 112px; --width: 500px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Email"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Email</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Email"></button>
+          </div>
+          <div class="window-body email-body">
+            <aside class="mailboxes" aria-label="Mailboxes">
+              <button type="button" class="mailbox active">Inbox</button>
+              <button type="button" class="mailbox">Drafts</button>
+              <button type="button" class="mailbox">Outbox</button>
+            </aside>
+            <form class="email-compose" data-email-form>
+              <label>Name
+                <input data-email-name autocomplete="name" />
+              </label>
+              <label>Reply Email
+                <input data-email-reply type="email" autocomplete="email" />
+              </label>
+              <label>Subject
+                <input data-email-subject value="Portfolio hello" />
+              </label>
+              <label>Message
+                <textarea data-email-message>Hey Maksym, I found your portfolio OS.</textarea>
+              </label>
+              <div class="email-actions">
+                <button class="classic-button" type="submit">Send</button>
+                <button class="classic-button" type="button" data-email-clear>Clear</button>
+              </div>
+              <p class="email-status" data-email-status>Draft ready.</p>
+            </form>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="untitled" style="--left: 420px; --top: 72px; --width: 274px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Untitled"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Untitled</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Untitled"></button>
+          </div>
+          <div class="window-body">
+            <p>An empty disk for the next portfolio idea.</p>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="trash" style="--left: 510px; --top: 250px; --width: 248px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close Trash"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>Trash</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom Trash"></button>
+          </div>
+          <div class="window-body">
+            <p>No bad ideas in here yet.</p>
+          </div>
+        </section>
+
+        <aside class="desktop-alert" id="desktop-alert" role="status" aria-live="polite"></aside>
+      </main>
+
+      <footer class="control-strip" aria-label="Desktop control strip">
+        <button type="button" aria-label="Collapse control strip"><span class="tiny-caret left"></span></button>
+        <button type="button" aria-label="Finder"><span class="tiny-computer"></span></button>
+        <button type="button" aria-label="Open apps" data-open-window="apps"><span class="tiny-folder"></span></button>
+        <button type="button" aria-label="Open terminal" data-open-window="terminal"><span class="tiny-terminal"></span></button>
+        <button type="button" aria-label="Open email" data-open-window="email"><span class="tiny-mail"></span></button>
+        <button type="button" aria-label="Color labels"><span class="tiny-bars"></span></button>
+        <button type="button" aria-label="Desktop pattern" data-action="toggle-dither"><span class="tiny-pattern"></span></button>
+        <button type="button" aria-label="Print"><span class="tiny-printer"></span></button>
+        <button type="button" aria-label="Sound"><span class="tiny-speaker"></span></button>
+        <button type="button" aria-label="Next"><span class="tiny-caret right"></span></button>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
