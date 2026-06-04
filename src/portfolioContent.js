@@ -70,21 +70,21 @@ export const timelineStops = [
 export const cameraKeyframes = [
   {
     t: 0,
-    position: [-2.2, 1.5, 5.25],
-    target: [-2.42, 1.2, 1.26],
-    fov: 36
+    position: [-2.38, 1.28, 5.0],
+    target: [-2.8, 1.04, 1.24],
+    fov: 40
   },
   {
     t: 0.12,
-    position: [-2.78, 1.55, 4.04],
-    target: [-2.42, 1.3, 1.26],
-    fov: 35
+    position: [-2.96, 1.3, 4.0],
+    target: [-2.8, 1.08, 1.24],
+    fov: 38
   },
   {
     t: 0.23,
-    position: [-1.68, 1.48, 3.34],
-    target: [-2.42, 1.34, 1.26],
-    fov: 33
+    position: [-1.82, 1.34, 3.34],
+    target: [-2.8, 1.04, 1.24],
+    fov: 35
   },
   {
     t: 0.3,
@@ -160,57 +160,57 @@ export const cameraKeyframes = [
   },
   {
     t: 0.86,
-    position: [2.08, 1.38, 2.64],
+    position: [2.5, 1.36, 2.38],
     target: [3.05, 0.69, 1.02],
-    fov: 39
+    fov: 38
   },
   {
     t: 0.878,
-    position: [3.05, 2.42, 1.1],
+    position: [3.05, 2.28, 1.42],
     target: [3.05, 0.69, 1.02],
-    fov: 28
+    fov: 35
   },
   {
-    t: 0.902,
-    position: [3.05, 2.42, 1.1],
+    t: 0.905,
+    position: [3.05, 2.28, 1.42],
     target: [3.05, 0.69, 1.02],
-    fov: 28
+    fov: 35
   },
   {
-    t: 0.92,
-    position: [3.68, 1.36, 2.0],
+    t: 0.923,
+    position: [3.4, 1.32, 2.1],
     target: [3.05, 0.69, 1.02],
     fov: 36
   },
   {
     t: 0.94,
-    position: [1.4, 1.5, 2.38],
-    target: [0.18, 1.34, -0.68],
-    fov: 42
+    position: [1.28, 1.48, 2.28],
+    target: [0.18, 1.5, -0.61],
+    fov: 40
   },
   {
     t: 0.955,
-    position: [0.55, 1.6, 1.18],
-    target: [0.18, 1.62, -0.56],
-    fov: 31
+    position: [0.52, 1.58, 1.12],
+    target: [0.18, 1.62, -0.61],
+    fov: 30
   },
   {
     t: 0.98,
-    position: [0.28, 1.67, 0.62],
-    target: [0.18, 1.67, -0.56],
-    fov: 25
+    position: [0.28, 1.67, 0.58],
+    target: [0.18, 1.67, -0.61],
+    fov: 23
   },
   {
     t: 0.995,
-    position: [0.2, 1.67, 0.42],
-    target: [0.18, 1.67, -0.56],
-    fov: 22
+    position: [0.2, 1.67, 0.39],
+    target: [0.18, 1.67, -0.61],
+    fov: 21
   },
   {
     t: 1,
-    position: [0.18, 1.67, 0.28],
-    target: [0.18, 1.67, -0.56],
-    fov: 20
+    position: [0.18, 1.67, 0.26],
+    target: [0.18, 1.67, -0.61],
+    fov: 19
   }
 ];
 

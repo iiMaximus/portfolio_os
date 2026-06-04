@@ -167,6 +167,7 @@ function App() {
   const { progressRef, uiProgress } = useScrollTimeline();
   const [activeDisk, setActiveDisk] = useState(disks[0]);
   const [insertedDiskId, setInsertedDiskId] = useState(null);
+  const [terminalLocked, setTerminalLocked] = useState(false);
   const [mode, setMode] = useState(() => {
     if (typeof window === "undefined") return "cinematic";
     return window.matchMedia("(max-width: 760px)").matches ? "normal" : "cinematic";
@@ -187,12 +188,12 @@ function App() {
 
   useEffect(() => {
     if (mode === "cinematic" && uiProgress > 0.998 && isAtScrollEnd()) {
-      setMode("terminal");
+      setTerminalLocked(true);
     }
   }, [mode, uiProgress]);
 
   useEffect(() => {
-    if (mode !== "terminal") return undefined;
+    if (mode !== "terminal" && !terminalLocked) return undefined;
 
     const bodyOverflow = document.body.style.overflow;
     const htmlOverflowY = document.documentElement.style.overflowY;
@@ -204,7 +205,7 @@ function App() {
       document.body.style.overflow = bodyOverflow;
       document.documentElement.style.overflowY = htmlOverflowY;
     };
-  }, [mode]);
+  }, [mode, terminalLocked]);
 
   function scrollToProgress(target) {
     const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
@@ -224,6 +225,7 @@ function App() {
     }
 
     releaseTerminalLock();
+    setTerminalLocked(false);
     jumpToTop();
     setMode("cinematic");
     window.requestAnimationFrame(jumpToTop);
@@ -232,11 +234,13 @@ function App() {
 
   function loadNormal() {
     releaseTerminalLock();
+    setTerminalLocked(false);
     setMode("normal");
   }
 
   function loadFreePlay() {
     releaseTerminalLock();
+    setTerminalLocked(false);
     jumpToTop();
     setMode("freeplay");
     window.requestAnimationFrame(jumpToTop);
@@ -268,8 +272,8 @@ function App() {
     );
   }
 
-  const legacyOpacity = smoothRange(uiProgress, 0.978, 0.992);
-  const legacyActive = uiProgress > 0.955;
+  const legacyOpacity = terminalLocked ? 1 : smoothRange(uiProgress, 0.956, 0.963);
+  const legacyActive = terminalLocked || legacyOpacity > 0.001;
 
   return (
     <main className="workbench-app">
@@ -286,7 +290,7 @@ function App() {
               activeDisk={activeDisk}
               insertedDiskId={insertedDiskId}
               progressRef={progressRef}
-              screenLive={uiProgress > 0.935 && legacyOpacity < 0.85}
+              screenLive={uiProgress > 0.25 && legacyOpacity < 0.08}
               onSelectDisk={selectDisk}
               onOpenComputer={() => scrollToProgress(1)}
               onOpenProjects={() => scrollToProgress(0.5)}
@@ -302,8 +306,9 @@ function App() {
 
         <LegacyOSOverlay
           progress={legacyOpacity}
-          active={legacyActive}
-          locked={false}
+          active
+          visible={legacyActive}
+          locked={terminalLocked}
           onLoadCinematic={loadCinematic}
           onLoadNormal={loadNormal}
           onLoadFreePlay={loadFreePlay}
@@ -388,7 +393,8 @@ function ScrollCameraRig({ progressRef }) {
 
   useFrame((_, delta) => {
     const next = sampleCamera(progressRef.current);
-    const ease = 1 - Math.exp(-delta * 7.8);
+    const terminalApproach = smoothRange(progressRef.current, 0.94, 1);
+    const ease = 1 - Math.exp(-delta * mix(7.8, 18, terminalApproach));
 
     targetPosition.current.set(next.position[0], next.position[1], next.position[2]);
     targetLookAt.current.set(next.target[0], next.target[1], next.target[2]);
@@ -639,7 +645,6 @@ function PegGrid() {
 
 function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = () => 0 }) {
   const screenMaterialRef = useRef();
-  const screenTexture = useMacScreenTexture();
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -680,11 +685,9 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
         <boxGeometry args={[1.62, 1.2, 0.035]} />
         <meshStandardMaterial
           ref={screenMaterialRef}
-          map={screenTexture}
-          emissiveMap={screenTexture}
-          color="#ffffff"
+          color="#2f9f9d"
           roughness={0.32}
-          emissive="#b9fff0"
+          emissive="#319f9c"
           emissiveIntensity={0.18}
           toneMapped={false}
         />
@@ -1156,7 +1159,7 @@ function DroneAssembly({ progressRef }) {
   const targetPosition = useMemo(() => new THREE.Vector3(), []);
   const targetScale = useMemo(() => new THREE.Vector3(), []);
   const landedPosition = [-3.02, 0.83, 1.37];
-  const voidPosition = [-2.42, 1.52, 1.26];
+  const voidPosition = [-2.8, 1.0, 1.24];
 
   const getAssemblyProgress = () => smoothRange(progressRef.current, 0.01, 0.23);
   const getLandingProgress = () => smoothRange(progressRef.current, 0.28, 0.45);
@@ -1586,6 +1589,7 @@ function CinematicHud({ onSkip }) {
 function LegacyOSOverlay({
   progress,
   active,
+  visible,
   locked,
   onLoadCinematic,
   onLoadNormal,
@@ -1598,26 +1602,24 @@ function LegacyOSOverlay({
 
   useEffect(() => {
     setLoaded(false);
-  }, [active, overlaySrc]);
+  }, [overlaySrc]);
 
   return (
     <section
-      className={`legacy-os-overlay ${active ? "is-visible" : ""} ${loaded ? "is-loaded" : ""} ${locked ? "is-locked" : "is-cinematic"}`}
+      className={`legacy-os-overlay ${visible ?? active ? "is-visible" : ""} ${loaded ? "is-loaded" : ""} ${locked ? "is-locked" : "is-cinematic"}`}
       style={{
         opacity: progress
       }}
-      aria-hidden={!active}
+      aria-hidden={!(visible ?? active)}
     >
       <div className="legacy-os-shell">
-        {active && (
-          <iframe
-            key={overlaySrc}
-            className={`legacy-os-frame ${loaded ? "is-loaded" : ""}`}
-            src={overlaySrc}
-            title="Interactive Mac OS portfolio desktop"
-            onLoad={() => setLoaded(true)}
-          />
-        )}
+        <iframe
+          key={overlaySrc}
+          className={`legacy-os-frame ${loaded ? "is-loaded" : ""}`}
+          src={overlaySrc}
+          title="Interactive Mac OS portfolio desktop"
+          onLoad={() => setLoaded(true)}
+        />
       </div>
       <nav className="legacy-action-bar" aria-label="Portfolio actions">
         <a href="/Maksym-CV.pdf" download>

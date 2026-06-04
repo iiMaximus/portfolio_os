@@ -432,10 +432,6 @@ button {
   pointer-events: none;
 }
 
-.legacy-os-overlay.is-loaded {
-  background: #111;
-}
-
 .legacy-os-overlay.is-visible {
   user-select: text;
   overscroll-behavior: contain;
