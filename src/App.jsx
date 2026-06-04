@@ -43,16 +43,43 @@ function mixArray(start, end, t) {
   ];
 }
 
+function getDiskPayload(disk) {
+  return disk
+    ? {
+        id: disk.id,
+        label: disk.label,
+        status: disk.status,
+        color: disk.color,
+        accent: disk.accent
+      }
+    : null;
+}
+
+function setLegacyFrameDisk(iframe, disk) {
+  const payload = getDiskPayload(disk);
+  const win = iframe?.contentWindow;
+  if (!win) return;
+
+  if (typeof win.setMountedPortfolioDisk === "function") {
+    win.setMountedPortfolioDisk(payload);
+    return;
+  }
+
+  win.postMessage({ type: "portfolio-disk", disk: payload }, window.location.origin);
+}
+
 function notifyLegacyOS(disk) {
   document.querySelectorAll(".mac-screen-frame, .legacy-os-frame").forEach((iframe) => {
+    setLegacyFrameDisk(iframe, disk);
+
     const doc = iframe.contentDocument;
     const alertBox = doc?.getElementById("desktop-alert");
     const diskLabel = doc?.querySelector(".disk-icon span:last-child");
 
-    if (diskLabel) diskLabel.textContent = `${disk.label} Disk`;
+    if (diskLabel) diskLabel.textContent = disk ? `${disk.label} Disk` : "No Disk";
     if (!alertBox) return;
 
-    alertBox.textContent = disk.status;
+    alertBox.textContent = disk ? disk.status : "Disk ejected. Hidden folder unmounted.";
     alertBox.classList.add("show");
     window.setTimeout(() => alertBox.classList.remove("show"), 1900);
   });
@@ -215,9 +242,10 @@ function App() {
   }
 
   function selectDisk(disk) {
+    const nextDisk = insertedDiskId === disk.id ? null : disk;
     setActiveDisk(disk);
-    setInsertedDiskId(disk.id);
-    window.setTimeout(() => notifyLegacyOS(disk), 180);
+    setInsertedDiskId(nextDisk ? disk.id : null);
+    window.setTimeout(() => notifyLegacyOS(nextDisk), 180);
   }
 
   function loadCinematic() {
@@ -255,6 +283,7 @@ function App() {
   if (mode === "terminal") {
     return (
       <TerminalDesktop
+        mountedDisk={insertedDiskId ? activeDisk : null}
         onLoadCinematic={loadCinematic}
         onLoadNormal={loadNormal}
         onLoadFreePlay={loadFreePlay}
@@ -311,6 +340,7 @@ function App() {
           active
           visible={legacyActive}
           locked={terminalLocked}
+          mountedDisk={insertedDiskId ? activeDisk : null}
           onLoadCinematic={loadCinematic}
           onLoadNormal={loadNormal}
           onLoadFreePlay={loadFreePlay}
@@ -488,6 +518,7 @@ function WorkbenchScene({
         <RetroComputer
           onFocus={onOpenComputer}
           screenLive={screenLive}
+          mountedDisk={insertedDiskId ? activeDisk : null}
           terminalProgressSource={getTerminalProgress}
         />
         <BlueprintStack progressRef={progressRef} onFocus={onOpenProjects} />
@@ -649,7 +680,7 @@ function PegGrid() {
   );
 }
 
-function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = () => 0 }) {
+function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, terminalProgressSource = () => 0 }) {
   const screenMaterialRef = useRef();
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
@@ -715,7 +746,7 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
           scale={0.06}
           zIndexRange={[120, 0]}
         >
-          <MacScreenFrame />
+          <MacScreenFrame mountedDisk={mountedDisk} />
         </Html>
       )}
 
@@ -731,16 +762,26 @@ function RetroComputer({ onFocus, screenLive = true, terminalProgressSource = ()
   );
 }
 
-function MacScreenFrame() {
+function MacScreenFrame({ mountedDisk }) {
+  const iframeRef = useRef();
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!loaded || !iframeRef.current) return;
+    setLegacyFrameDisk(iframeRef.current, mountedDisk);
+  }, [loaded, mountedDisk]);
 
   return (
     <div className="mac-screen-viewport">
       <iframe
+        ref={iframeRef}
         className={`mac-screen-frame ${loaded ? "is-loaded" : ""}`}
         src={LEGACY_SCREEN_SRC}
         title="Mac OS portfolio preview"
-        onLoad={() => setLoaded(true)}
+        onLoad={() => {
+          setLoaded(true);
+          window.requestAnimationFrame(() => setLegacyFrameDisk(iframeRef.current, mountedDisk));
+        }}
       />
     </div>
   );
@@ -922,15 +963,16 @@ function FloppyDisk({ disk, index, active, onSelect }) {
     ];
     return new THREE.Vector3(...spots[index]);
   }, [index]);
-  const inserted = useMemo(() => new THREE.Vector3(-0.37, 0.98, -0.32), []);
+  const inserted = useMemo(() => new THREE.Vector3(0.82, 0.985, -0.31), []);
   useCursor(hovered);
 
   useFrame((_, delta) => {
     if (!ref.current) return;
     target.copy(active ? inserted : resting);
-    ref.current.position.lerp(target, 1 - Math.exp(-delta * 7.5));
-    ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, active ? -0.08 : 0, 0.08);
-    ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, active ? 0 : -0.05 + index * 0.025, 0.08);
+    const ease = 1 - Math.exp(-delta * 8.5);
+    ref.current.position.lerp(target, ease);
+    ref.current.rotation.x = THREE.MathUtils.lerp(ref.current.rotation.x, 0, ease);
+    ref.current.rotation.z = THREE.MathUtils.lerp(ref.current.rotation.z, active ? 0 : -0.05 + index * 0.025, ease);
   });
 
   return (
@@ -1827,10 +1869,12 @@ function LegacyOSOverlay({
   active,
   visible,
   locked,
+  mountedDisk,
   onLoadCinematic,
   onLoadNormal,
   onLoadFreePlay
 }) {
+  const iframeRef = useRef();
   const { width, height } = useViewportSize();
   const [loaded, setLoaded] = useState(false);
   const screenFitScale = Math.max(1, width / LEGACY_SCREEN_WIDTH, height / LEGACY_SCREEN_HEIGHT);
@@ -1839,6 +1883,11 @@ function LegacyOSOverlay({
   useEffect(() => {
     setLoaded(false);
   }, [overlaySrc]);
+
+  useEffect(() => {
+    if (!loaded || !iframeRef.current) return;
+    setLegacyFrameDisk(iframeRef.current, mountedDisk);
+  }, [loaded, mountedDisk, overlaySrc]);
 
   return (
     <section
@@ -1850,11 +1899,15 @@ function LegacyOSOverlay({
     >
       <div className="legacy-os-shell">
         <iframe
+          ref={iframeRef}
           key={overlaySrc}
           className={`legacy-os-frame ${loaded ? "is-loaded" : ""}`}
           src={overlaySrc}
           title="Interactive Mac OS portfolio desktop"
-          onLoad={() => setLoaded(true)}
+          onLoad={() => {
+            setLoaded(true);
+            window.requestAnimationFrame(() => setLegacyFrameDisk(iframeRef.current, mountedDisk));
+          }}
         />
       </div>
       <nav className="legacy-action-bar" aria-label="Portfolio actions">
@@ -1875,13 +1928,14 @@ function LegacyOSOverlay({
   );
 }
 
-function TerminalDesktop({ onLoadCinematic, onLoadNormal, onLoadFreePlay }) {
+function TerminalDesktop({ mountedDisk, onLoadCinematic, onLoadNormal, onLoadFreePlay }) {
   return (
     <main className="terminal-app">
       <LegacyOSOverlay
         progress={1}
         active
         locked
+        mountedDisk={mountedDisk}
         onLoadCinematic={onLoadCinematic}
         onLoadNormal={onLoadNormal}
         onLoadFreePlay={onLoadFreePlay}
@@ -1935,8 +1989,8 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
       <aside className="bench-status">
         <span className="status-light" style={{ "--disk-color": activeDisk.color }} />
         <div>
-          <strong>{activeDisk.label} Disk</strong>
-          <span>{activeDisk.status}</span>
+          <strong>{insertedDiskId ? `${activeDisk.label} Disk inserted` : "No disk inserted"}</strong>
+          <span>{insertedDiskId ? activeDisk.status : "Click a floppy to mount the hidden disk contents."}</span>
         </div>
       </aside>
     </main>

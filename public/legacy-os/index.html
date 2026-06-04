@@ -62,9 +62,9 @@
       <nav class="dropdown" data-dropdown="file" aria-label="File menu">
         <button type="button" class="menu-item" data-open-window="apps">Open Apps Folder</button>
         <button type="button" class="menu-item" data-open-window="projects">Open Projects Folder</button>
-        <button type="button" class="menu-item" data-open-window="readme">Open README.md</button>
-        <button type="button" class="menu-item" data-open-window="games">Open Do Not Open</button>
+        <button type="button" class="menu-item" data-open-window="cv">Open CV Packet</button>
         <button type="button" class="menu-item" data-open-window="contact">Open Contact Card</button>
+        <button type="button" class="menu-item disk-mounted-only" data-open-window="games">Open Do Not Open</button>
         <span class="menu-rule"></span>
         <button type="button" class="menu-item" data-action="new-note">New Note</button>
       </nav>
@@ -112,19 +112,19 @@
           <span>Contact</span>
         </button>
 
-        <button type="button" class="desktop-icon document-icon readme-icon" data-open-window="readme" style="--x: 34px; --y: 384px">
+        <button type="button" class="desktop-icon document-icon cv-icon" data-open-window="cv" style="--x: 34px; --y: 384px">
           <span class="readme-art" aria-hidden="true"></span>
-          <span>README.md</span>
+          <span>CV</span>
         </button>
 
-        <button type="button" class="desktop-icon folder-icon danger-folder" data-open-window="games" style="--x: 132px; --y: 72px">
+        <button type="button" class="desktop-icon folder-icon danger-folder disk-mounted-only" data-open-window="games" style="--x: calc(100% - 210px); --y: 54px">
           <span class="folder-art warning" aria-hidden="true"></span>
           <span>Do Not Open</span>
         </button>
 
-        <button type="button" class="desktop-icon disk-icon" data-open-window="untitled" style="--x: calc(100% - 96px); --y: 54px">
+        <button type="button" class="desktop-icon disk-icon disk-mounted-only" data-open-window="untitled" style="--x: calc(100% - 96px); --y: 54px">
           <span class="disk-art" aria-hidden="true"></span>
-          <span>Untitled</span>
+          <span>No Disk</span>
         </button>
 
         <button type="button" class="desktop-icon trash-icon" data-open-window="trash" style="--x: calc(100% - 86px); --y: calc(100% - 92px)">
@@ -229,6 +229,24 @@
             <h2>Maksym</h2>
             <p>Builder of apps, systems, physical prototypes, and portfolio concepts with a little theatrical machinery inside.</p>
             <a class="classic-link" href="mailto:hello@example.com">hello@example.com</a>
+          </div>
+        </section>
+
+        <section class="window mini-window" data-window="cv" style="--left: 382px; --top: 146px; --width: 318px">
+          <div class="title-bar">
+            <button class="close-window" type="button" aria-label="Close CV"></button>
+            <span class="title-lines" aria-hidden="true"></span>
+            <strong>CV Packet</strong>
+            <span class="title-lines" aria-hidden="true"></span>
+            <button class="zoom-window" type="button" aria-label="Zoom CV"></button>
+          </div>
+          <div class="window-body printer-body">
+            <span class="printer-machine" aria-hidden="true"></span>
+            <div>
+              <p><strong>Maksym CV</strong></p>
+              <p>Mechanical engineering portfolio packet.</p>
+              <a class="classic-button cv-download-link" href="/Maksym-CV.pdf" download>Download CV</a>
+            </div>
           </div>
         </section>
 
@@ -455,7 +473,7 @@ Projects become little worlds.</pre>
             <button type="button" data-open-window="terminal"><span class="list-icon list-terminal"></span><span>Terminal</span><em>commands and shortcuts</em></button>
             <button type="button" data-open-window="fpv-detail"><span class="list-icon list-drone"></span><span>FPV Drone CAD</span><em>hardware viewer</em></button>
             <button type="button" data-open-window="email"><span class="list-icon list-email"></span><span>Email</span><em>contact draft</em></button>
-            <button type="button" data-open-window="games"><span class="list-icon list-game"></span><span>Do Not Open</span><em>tiny games</em></button>
+            <button type="button" class="disk-mounted-only" data-open-window="games"><span class="list-icon list-game"></span><span>Do Not Open</span><em>tiny games</em></button>
           </div>
         </section>
 

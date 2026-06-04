@@ -9,16 +9,17 @@
   let topZ = 50;
   let alertTimer = 0;
   let audioContext = null;
+  let mountedDisk = null;
 
   const defaultMessage = "That command is wired for the next pass.";
-  const desktopIconStorageKey = "maksym-os.desktop-icons.v2";
+  const desktopIconStorageKey = "maksym-os.desktop-icons.v3";
   const desktopIconDefaults = {
     apps: { x: "34px", y: "72px" },
     projects: { x: "34px", y: "150px" },
     about: { x: "34px", y: "228px" },
     contact: { x: "34px", y: "306px" },
-    readme: { x: "34px", y: "384px" },
-    games: { x: "132px", y: "72px" },
+    cv: { x: "34px", y: "384px" },
+    games: { x: "calc(100% - 210px)", y: "54px" },
     untitled: { x: "calc(100% - 96px)", y: "54px" },
     trash: { x: "calc(100% - 86px)", y: "calc(100% - 92px)" }
   };
@@ -39,6 +40,7 @@
     contact: "contact",
     controls: "control-panels",
     "control-panels": "control-panels",
+    cv: "cv",
     drone: "fpv-detail",
     email: "email",
     find: "find",
@@ -66,8 +68,10 @@
     tasks: "tasks",
     terminal: "terminal",
     trash: "trash",
-    untitled: "untitled"
+    untitled: "untitled",
+    resume: "cv"
   };
+  const diskLockedWindows = new Set(["games", "flappy-game", "snake-game", "minesweeper-game"]);
 
   function getDesktopScale() {
     const shellRect = shell.getBoundingClientRect();
@@ -90,6 +94,44 @@
       alertBox.classList.remove("show");
     }, 1800);
   }
+
+  function isDiskMounted() {
+    return Boolean(mountedDisk);
+  }
+
+  function updateMountedDiskUI() {
+    document.body.classList.toggle("disk-mounted", isDiskMounted());
+    shell.dataset.mountedDisk = mountedDisk?.id || "";
+    document.querySelectorAll(".disk-mounted-only").forEach((item) => {
+      item.toggleAttribute("aria-hidden", !isDiskMounted());
+    });
+    document.querySelectorAll(".disk-icon span:last-child").forEach((label) => {
+      label.textContent = mountedDisk ? `${mountedDisk.label} Disk` : "No Disk";
+    });
+  }
+
+  function setMountedPortfolioDisk(disk) {
+    const nextDisk = disk || null;
+    const previousId = mountedDisk?.id || "";
+    const nextId = nextDisk?.id || "";
+    mountedDisk = nextDisk;
+    updateMountedDiskUI();
+    if (!mountedDisk) {
+      diskLockedWindows.forEach((name) => {
+        const win = document.querySelector(`[data-window="${name}"]`);
+        if (win) closeWindow(win);
+      });
+    }
+    if (previousId !== nextId) {
+      showAlert(mountedDisk ? mountedDisk.status : "Disk ejected. Hidden folder unmounted.");
+    }
+  }
+
+  window.setMountedPortfolioDisk = setMountedPortfolioDisk;
+  window.addEventListener("message", (event) => {
+    if (event.origin !== window.location.origin || event.data?.type !== "portfolio-disk") return;
+    setMountedPortfolioDisk(event.data.disk || null);
+  });
 
   function getAudioContext() {
     if (audioContext) {
@@ -324,14 +366,20 @@
   }
 
   function openWindow(name) {
+    if (diskLockedWindows.has(name) && !isDiskMounted()) {
+      showAlert("Insert a floppy disk to mount Do Not Open.");
+      return "locked";
+    }
+
     const win = document.querySelector(`[data-window="${name}"]`);
     if (!win) {
       showAlert(defaultMessage);
-      return;
+      return false;
     }
     win.classList.add("open");
     activateWindow(win);
     win.dispatchEvent(new CustomEvent("window-opened"));
+    return true;
   }
 
   function clearWindows() {
@@ -356,8 +404,7 @@
     const cleaned = name.toLowerCase().replace(/\.md$/, "").trim();
     const target = launchAliases[cleaned];
     if (!target) return false;
-    openWindow(target);
-    return true;
+    return openWindow(target);
   }
 
   function setSelectedIconLabel(labelClass) {
@@ -845,11 +892,11 @@
       { label: "Projects", target: "projects", type: "folder", keywords: "projects personality hardware software" },
       { label: "FPV Drone CAD", target: "fpv-detail", type: "project", keywords: "drone cad hardware blueprint mechanical" },
       { label: "Juice Maker", target: "juice-detail", type: "project", keywords: "juice machine product prototype" },
+      { label: "CV Packet", target: "cv", type: "document", keywords: "cv resume download mechanical engineering" },
       { label: "Terminal", target: "terminal", type: "app", keywords: "command shell terminal print fun" },
       { label: "Email", target: "email", type: "app", keywords: "contact send message email" },
-      { label: "README.md", target: "readme", type: "document", keywords: "readme intro portfolio markdown" },
-      { label: "Do Not Open", target: "games", type: "folder", keywords: "games snake flappy minesweeper mines" },
-      { label: "Minesweeper", target: "minesweeper-game", type: "game", keywords: "minesweeper mines logic grid game" },
+      { label: "Do Not Open", target: "games", type: "folder", keywords: "games snake flappy minesweeper mines", requiresDisk: true },
+      { label: "Minesweeper", target: "minesweeper-game", type: "game", keywords: "minesweeper mines logic grid game", requiresDisk: true },
       { label: "Control Panels", target: "control-panels", type: "utility", keywords: "settings controls dither icons sound" }
     ];
 
@@ -857,6 +904,7 @@
       const stopWords = new Set(["a", "and", "for", "of", "the", "to", "with"]);
       const terms = input.value.toLowerCase().trim().split(/\s+/).filter((term) => term && !stopWords.has(term));
       const matches = items.filter((item) => {
+        if (item.requiresDisk && !isDiskMounted()) return false;
         const haystack = `${item.label} ${item.type} ${item.keywords}`.toLowerCase();
         return terms.every((term) => haystack.includes(term));
       }).slice(0, 5);
@@ -864,7 +912,9 @@
       results.textContent = "";
       if (!matches.length) {
         const empty = document.createElement("p");
-        empty.textContent = "No matches. Try drone, apps, email, games, or readme.";
+        empty.textContent = isDiskMounted()
+          ? "No matches. Try drone, apps, email, games, or CV."
+          : "No matches. Try drone, apps, email, contact, or CV.";
         results.appendChild(empty);
         return;
       }
@@ -972,7 +1022,7 @@
           "  ls / dir          list desktop things",
           "  open <name>       open apps, drone, email, minesweeper, controls...",
           "  projects          show project folders",
-          "  games             show game folder contents",
+          "  games             show mounted game disk contents",
           "  cat <file>        read readme, contact, projects",
           "  print <text>      print text to the terminal",
           "  launch drone      open the CAD window with fake boot logs",
@@ -988,15 +1038,16 @@
       }
 
       if (normalized === "ls" || normalized === "dir") {
-        writeBlock([
+        const desktopThings = [
           "Applications/",
           "Projects/",
-          "Do Not Open/",
-          "README.md",
+          "CV Packet",
           "Contact.card",
           "Email.app",
           "Terminal.app"
-        ]);
+        ];
+        if (isDiskMounted()) desktopThings.splice(2, 0, "Do Not Open/");
+        writeBlock(desktopThings);
         return;
       }
 
@@ -1024,6 +1075,10 @@
       }
 
       if (normalized === "games") {
+        if (!isDiskMounted()) {
+          appendLine("Insert a floppy disk first. The hidden games folder is not mounted.", "error");
+          return;
+        }
         writeBlock([
           "Flappy Byte           open flappy",
           "Snake                 open snake",
@@ -1034,7 +1089,12 @@
 
       if (normalized === "open" || normalized === "run" || normalized === "start") {
         const targetName = rest.toLowerCase().replace(/\.md$/, "");
-        if (launchTarget(targetName)) {
+        const launchResult = launchTarget(targetName);
+        if (launchResult === "locked") {
+          appendLine("Insert a floppy disk first. The hidden folder is offline.", "error");
+          return;
+        }
+        if (launchResult) {
           appendLine(`Opening ${rest || targetName}...`, "system");
           return;
         }
@@ -1131,8 +1191,8 @@
       }
 
       if (normalized === "cv" || normalized === "resume") {
-        openWindow("contact");
-        appendLine("CV download hook is ready for the real PDF.", "system");
+        openWindow("cv");
+        appendLine("Opening CV packet...", "system");
         return;
       }
 
@@ -2047,6 +2107,7 @@
   initFlappyGame();
   initSnakeGame();
   initMinesweeperGame();
+  updateMountedDiskUI();
   setClock();
   window.setInterval(setClock, 15000);
 })();

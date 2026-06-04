@@ -163,6 +163,19 @@ html.screen-surface .os-shell {
   opacity: 0;
 }
 
+.disk-mounted-only {
+  display: none !important;
+}
+
+body.disk-mounted .desktop-icon.disk-mounted-only {
+  display: grid !important;
+}
+
+body.disk-mounted .menu-item.disk-mounted-only,
+body.disk-mounted .finder-list .disk-mounted-only {
+  display: flex !important;
+}
+
 .menu-bar {
   position: relative;
   z-index: 1000;
@@ -2093,12 +2106,16 @@ html.screen-surface .os-shell {
 }
 
 .classic-button {
+  display: inline-grid;
+  place-items: center;
   min-height: 24px;
   padding: 3px 9px 2px;
   background: #fff;
   border: 2px solid var(--black);
+  color: var(--black);
   box-shadow: inset -2px -2px 0 #9a9a9a, inset 2px 2px 0 #fff;
   line-height: 1;
+  text-decoration: none;
 }
 
 .classic-button:active {
