@@ -277,8 +277,8 @@ function App() {
         <Canvas
           className="workbench-canvas"
           camera={{ position: [-0.12, 1.24, 5.2], fov: 38, near: 0.08, far: 80 }}
-          dpr={1}
-          gl={{ antialias: false, powerPreference: "high-performance" }}
+          dpr={[1, 1.25]}
+          shadows
         >
           <SceneAtmosphere progressRef={progressRef} />
           <Suspense fallback={<SceneFallback />}>
@@ -1415,8 +1415,8 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
       <Canvas
         className="workbench-canvas"
         camera={{ position: freePlayCamera.position, fov: freePlayCamera.fov, near: 0.08, far: 80 }}
-        dpr={1}
-        gl={{ antialias: false, powerPreference: "high-performance" }}
+        dpr={[1, 1.25]}
+        shadows
       >
         <color attach="background" args={["#0c0f10"]} />
         <fog attach="fog" args={["#0c0f10", 6.2, 11]} />
