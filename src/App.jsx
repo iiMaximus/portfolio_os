@@ -9,7 +9,8 @@ import {
   freePlayCamera,
   mobileApps,
   softwareProjects,
-  timelineStops
+  timelineStops,
+  workbenchProjects
 } from "./portfolioContent";
 
 const LEGACY_SCREEN_WIDTH = 960;
@@ -119,6 +120,7 @@ function useScrollTimeline() {
     let lastTime = 0;
     let lastUiProgress = progressRef.current;
     let lastUiTime = 0;
+    let lastCssProgress = -1;
 
     function readTarget() {
       const doc = document.documentElement;
@@ -130,16 +132,22 @@ function useScrollTimeline() {
       const delta = lastTime ? Math.min(0.05, (time - lastTime) / 1000) : 0.016;
       const ease = 1 - Math.exp(-delta * 6.4);
       lastTime = time;
+      readTarget();
 
       const current = THREE.MathUtils.lerp(progressRef.current, targetRef.current, ease);
       progressRef.current = Math.abs(current - targetRef.current) < 0.00035 ? targetRef.current : current;
-      document.documentElement.style.setProperty("--scroll-progress", progressRef.current.toFixed(4));
+      if (Math.abs(progressRef.current - lastCssProgress) > 0.0002) {
+        lastCssProgress = progressRef.current;
+        document.documentElement.style.setProperty("--scroll-progress", progressRef.current.toFixed(4));
+      }
 
       const needsFineUi = progressRef.current > 0.93 || targetRef.current > 0.93;
+      const uiDelta = Math.abs(progressRef.current - lastUiProgress);
+      const settled = progressRef.current === targetRef.current;
       const shouldUpdateUi =
-        Math.abs(progressRef.current - lastUiProgress) > (needsFineUi ? 0.0025 : 0.025) ||
-        time - lastUiTime > (needsFineUi ? 34 : 240) ||
-        progressRef.current === targetRef.current;
+        uiDelta > (needsFineUi ? 0.0025 : 0.025) ||
+        (uiDelta > 0.0005 && time - lastUiTime > (needsFineUi ? 48 : 240)) ||
+        (settled && uiDelta > 0);
 
       if (shouldUpdateUi) {
         lastUiProgress = progressRef.current;
@@ -147,26 +155,20 @@ function useScrollTimeline() {
         setUiProgress(progressRef.current);
       }
 
-      if (progressRef.current !== targetRef.current) {
-        frame = window.requestAnimationFrame(tick);
-      } else {
-        frame = 0;
-        lastTime = 0;
-      }
+      frame = window.requestAnimationFrame(tick);
     }
 
     function queueRead() {
       readTarget();
-      if (!frame) {
-        frame = window.requestAnimationFrame(tick);
-      }
     }
 
     readTarget();
     progressRef.current = targetRef.current;
     lastUiProgress = targetRef.current;
+    lastCssProgress = targetRef.current;
     document.documentElement.style.setProperty("--scroll-progress", targetRef.current.toFixed(4));
     setUiProgress(targetRef.current);
+    frame = window.requestAnimationFrame(tick);
     window.addEventListener("scroll", queueRead, { passive: true });
     window.addEventListener("resize", queueRead);
 
@@ -515,6 +517,10 @@ function WorkbenchScene({
   const getEnvironmentOpacity = () => smoothRange(progressRef.current, 0.26, 0.44);
   const getSceneOpacity = () => getEnvironmentOpacity() * (1 - smoothRange(progressRef.current, 0.96, 0.998));
   const getTerminalProgress = () => smoothRange(progressRef.current, 0.91, 0.995);
+  const openWorkbenchProject = (id) => {
+    const project = workbenchProjects.find((item) => item.id === id);
+    onOpenProjects?.(project);
+  };
 
   useFrame(() => {
     const environmentOpacity = getEnvironmentOpacity();
@@ -550,7 +556,7 @@ function WorkbenchScene({
       <pointLight ref={warmPointRef} position={[1.3, 1.9, 1.5]} intensity={0.08} color="#ffe2a8" />
       <pointLight ref={coolPointRef} position={[-1.6, 1.3, 2.2]} intensity={0} color="#83d7ff" />
 
-      <DroneAssembly progressRef={progressRef} />
+      <DroneAssembly progressRef={progressRef} onFocus={() => openWorkbenchProject("drone")} />
 
       <FadeGroup opacitySource={getSceneOpacity}>
         <WorkbenchBase />
@@ -560,9 +566,9 @@ function WorkbenchScene({
           mountedDisk={insertedDiskId ? activeDisk : null}
           terminalProgressSource={getTerminalProgress}
         />
-        <BlueprintStack progressRef={progressRef} onFocus={onOpenProjects} />
-        <PhysicalProjects onFocus={onOpenProjects} />
-        <MobilePhoneShowcase onFocus={onOpenProjects} />
+        <BlueprintStack progressRef={progressRef} onFocus={() => openWorkbenchProject("blueprints")} />
+        <PhysicalProjects onFocus={openWorkbenchProject} />
+        <MobilePhoneShowcase onFocus={() => openWorkbenchProject("mobile")} />
 
         {disks.map((disk, index) => (
           <FloppyDisk
@@ -724,13 +730,23 @@ function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, termina
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
+  function handleFocusClick(event) {
+    event.stopPropagation();
+    onFocus?.();
+  }
+
   useFrame(() => {
     if (!screenMaterialRef.current) return;
     screenMaterialRef.current.emissiveIntensity = 0.18 + terminalProgressSource() * 0.85;
   });
 
   return (
-    <group position={[0.18, 0.64, -0.86]}>
+    <group
+      position={[0.18, 0.64, -0.86]}
+      onClick={handleFocusClick}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
       <mesh position={[0, 0.08, 0.32]} castShadow receiveShadow>
         <boxGeometry args={[1.72, 0.18, 0.86]} />
         <meshStandardMaterial color="#d6cfb7" roughness={0.64} />
@@ -753,10 +769,13 @@ function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, termina
         <meshStandardMaterial color="#221f1c" roughness={0.42} />
       </mesh>
       <mesh
+        position={[0, 1.03, 0.34]}
+      >
+        <boxGeometry args={[1.88, 1.44, 0.06]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
+      <mesh
         position={[0, 1.03, 0.252]}
-        onClick={onFocus}
-        onPointerOver={() => setHovered(true)}
-        onPointerOut={() => setHovered(false)}
       >
         <boxGeometry args={[1.62, 1.2, 0.035]} />
         <meshStandardMaterial
@@ -1461,8 +1480,9 @@ function PhoneAppTile({ app, index }) {
   );
 }
 
-function DroneAssembly({ progressRef }) {
+function DroneAssembly({ progressRef, onFocus }) {
   const ref = useRef();
+  const [hovered, setHovered] = useState(false);
   const targetPosition = useMemo(() => new THREE.Vector3(), []);
   const targetScale = useMemo(() => new THREE.Vector3(), []);
   const landedPosition = [-3.02, 0.83, 1.37];
@@ -1473,6 +1493,7 @@ function DroneAssembly({ progressRef }) {
   const getDroneOpacity = () => 1 - smoothRange(progressRef.current, 0.96, 1);
 
   useFadedMaterials(ref, getDroneOpacity);
+  useCursor(hovered);
 
   useFrame((_, delta) => {
     if (!ref.current) return;
@@ -1509,7 +1530,25 @@ function DroneAssembly({ progressRef }) {
   ];
 
   return (
-    <group ref={ref} position={voidPosition} rotation={[0.04, -0.22, 0.02]} scale={1.02}>
+    <group
+      ref={ref}
+      position={voidPosition}
+      rotation={[0.04, -0.22, 0.02]}
+      scale={1.02}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.();
+      }}
+      onPointerOver={(event) => {
+        event.stopPropagation();
+        setHovered(true);
+      }}
+      onPointerOut={() => setHovered(false)}
+    >
+      <mesh position={[0, 0.04, 0]}>
+        <boxGeometry args={[1.34, 0.38, 1.08]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
       <AnimatedPart
         start={[0, 0.88, 0]}
         end={[0, 0, 0]}
@@ -1667,7 +1706,10 @@ function JuiceMachinePlaceholder({ position, onFocus }) {
     <group
       position={position}
       rotation={[0, 0.38, 0]}
-      onClick={onFocus}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.("juice");
+      }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -1699,10 +1741,17 @@ function ExplodedAssembly({ position, onFocus }) {
     <group
       position={position}
       rotation={[0, 0.24, 0]}
-      onClick={onFocus}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.("drone");
+      }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
+      <mesh position={[0, 0.22, 0]}>
+        <boxGeometry args={[1.12, 0.78, 1.02]} />
+        <meshBasicMaterial transparent opacity={0} depthWrite={false} />
+      </mesh>
       <mesh position={[0, 0.08, 0]} castShadow>
         <boxGeometry args={[0.32, 0.32, 0.32]} />
         <meshStandardMaterial color="#94b8ff" roughness={0.4} metalness={0.15} />
@@ -1760,7 +1809,10 @@ function FixturePrototype({ position, onFocus }) {
     <group
       position={position}
       rotation={[0, -0.42, 0]}
-      onClick={onFocus}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.("fixture");
+      }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -1807,7 +1859,10 @@ function GearboxPlaceholder({ position, onFocus }) {
     <group
       position={position}
       rotation={[0, 0.32, 0]}
-      onClick={onFocus}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.("gearbox");
+      }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -1853,7 +1908,10 @@ function LinearActuatorPlaceholder({ position, onFocus }) {
     <group
       position={position}
       rotation={[0, -0.18, -0.04]}
-      onClick={onFocus}
+      onClick={(event) => {
+        event.stopPropagation();
+        onFocus?.("actuator");
+      }}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -1983,8 +2041,139 @@ function TerminalDesktop({ mountedDisk, onLoadCinematic, onLoadNormal, onLoadFre
   );
 }
 
+function FreePlayComputerFocusRig({ active, onProgress, onComplete }) {
+  const { camera, controls } = useThree();
+  const screenTarget = useMemo(() => new THREE.Vector3(0.18, 1.67, -0.61), []);
+  const cameraTarget = useMemo(() => new THREE.Vector3(0.18, 1.64, 0.62), []);
+  const startDistance = useRef(1);
+  const completed = useRef(false);
+  const lastProgress = useRef(-1);
+
+  useFrame((_, delta) => {
+    if (!active) {
+      completed.current = false;
+      startDistance.current = Math.max(0.001, camera.position.distanceTo(cameraTarget));
+      if (Math.abs(camera.fov - freePlayCamera.fov) > 0.05) {
+        camera.fov = THREE.MathUtils.damp(camera.fov, freePlayCamera.fov, 5, delta);
+        camera.updateProjectionMatrix();
+      }
+      return;
+    }
+
+    const ease = 1 - Math.exp(-delta * 3.8);
+    camera.position.lerp(cameraTarget, ease);
+    camera.fov = THREE.MathUtils.damp(camera.fov, 24, 5.5, delta);
+    camera.lookAt(screenTarget);
+    camera.updateProjectionMatrix();
+
+    if (controls?.target) {
+      controls.target.lerp(screenTarget, ease);
+      controls.update();
+    }
+
+    const remaining = camera.position.distanceTo(cameraTarget);
+    const progress = 1 - clamp(remaining / startDistance.current);
+    if (Math.abs(progress - lastProgress.current) > 0.015 || progress > 0.995) {
+      lastProgress.current = progress;
+      onProgress(progress);
+    }
+
+    if (!completed.current && progress > 0.985) {
+      completed.current = true;
+      onComplete();
+    }
+  });
+
+  return null;
+}
+
+function FreePlaySelectionTracker({ selectedProject, onAnchorChange }) {
+  const { camera, size } = useThree();
+  const projected = useMemo(() => new THREE.Vector3(), []);
+  const lastAnchor = useRef(null);
+
+  useEffect(() => {
+    if (!selectedProject) {
+      lastAnchor.current = null;
+      onAnchorChange(null);
+    }
+  }, [onAnchorChange, selectedProject]);
+
+  useFrame(() => {
+    if (!selectedProject?.anchor) return;
+
+    projected.set(...selectedProject.anchor).project(camera);
+    const anchor = {
+      x: (projected.x * 0.5 + 0.5) * size.width,
+      y: (-projected.y * 0.5 + 0.5) * size.height
+    };
+    const previous = lastAnchor.current;
+    if (!previous || Math.abs(previous.x - anchor.x) > 1 || Math.abs(previous.y - anchor.y) > 1) {
+      lastAnchor.current = anchor;
+      onAnchorChange(anchor);
+    }
+  });
+
+  return null;
+}
+
+function ProjectInspector({ project, anchor, onClose }) {
+  const { width, height } = useViewportSize();
+  if (!project) return null;
+
+  const safeAnchor = anchor || { x: width * 0.5, y: height * 0.5 };
+  const panelX = Math.max(24, width - 390);
+  const panelY = height * 0.5;
+
+  return (
+    <>
+      <svg className="inspect-connector" aria-hidden="true">
+        <line
+          x1={clamp(safeAnchor.x, 0, width)}
+          y1={clamp(safeAnchor.y, 0, height)}
+          x2={panelX}
+          y2={panelY}
+        />
+        <circle cx={clamp(safeAnchor.x, 0, width)} cy={clamp(safeAnchor.y, 0, height)} r="4" />
+      </svg>
+      <aside className="project-inspector" aria-live="polite">
+        <button className="inspector-close" type="button" aria-label="Close project details" onClick={onClose}>
+          x
+        </button>
+        <span>{project.eyebrow}</span>
+        <h2>{project.title}</h2>
+        <p>{project.detail}</p>
+        <ul>
+          {project.stats.map((stat) => (
+            <li key={stat}>{stat}</li>
+          ))}
+        </ul>
+      </aside>
+    </>
+  );
+}
+
 function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCinematic, onLoadNormal }) {
   const freePlayProgressRef = useRef(0.55);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [projectAnchor, setProjectAnchor] = useState(null);
+  const [computerFocusActive, setComputerFocusActive] = useState(false);
+  const [computerFocusProgress, setComputerFocusProgress] = useState(0);
+  const [osOpen, setOsOpen] = useState(false);
+
+  function openComputerFromWorkbench() {
+    setSelectedProject(null);
+    setProjectAnchor(null);
+    setOsOpen(false);
+    setComputerFocusProgress(0);
+    setComputerFocusActive(true);
+  }
+
+  function closeFreePlayOS() {
+    setOsOpen(false);
+    setComputerFocusActive(false);
+    setComputerFocusProgress(0);
+  }
 
   return (
     <main className="freeplay-app">
@@ -2003,12 +2192,21 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
             progressRef={freePlayProgressRef}
             screenLive
             onSelectDisk={onSelectDisk}
-            onOpenComputer={() => {}}
-            onOpenProjects={() => {}}
+            onOpenComputer={openComputerFromWorkbench}
+            onOpenProjects={(project) => {
+              if (project) setSelectedProject(project);
+            }}
           />
+          <FreePlaySelectionTracker selectedProject={selectedProject} onAnchorChange={setProjectAnchor} />
         </Suspense>
+        <FreePlayComputerFocusRig
+          active={computerFocusActive && !osOpen}
+          onProgress={setComputerFocusProgress}
+          onComplete={() => setOsOpen(true)}
+        />
         <OrbitControls
           makeDefault
+          enabled={!computerFocusActive && !osOpen}
           enableDamping
           minDistance={1.25}
           maxDistance={8.4}
@@ -2025,6 +2223,7 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
           Normal portfolio
         </button>
       </nav>
+      <ProjectInspector project={selectedProject} anchor={projectAnchor} onClose={() => setSelectedProject(null)} />
       <aside className="bench-status">
         <span className="status-light" style={{ "--disk-color": activeDisk.color }} />
         <div>
@@ -2032,6 +2231,16 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
           <span>{insertedDiskId ? activeDisk.status : "Click a floppy to mount the hidden disk contents."}</span>
         </div>
       </aside>
+      <LegacyOSOverlay
+        progress={osOpen ? 1 : smoothRange(computerFocusProgress, 0.72, 1)}
+        active
+        visible={computerFocusActive || osOpen}
+        locked={osOpen}
+        mountedDisk={insertedDiskId ? activeDisk : null}
+        onLoadCinematic={onLoadCinematic}
+        onLoadNormal={onLoadNormal}
+        onLoadFreePlay={closeFreePlayOS}
+      />
     </main>
   );
 }

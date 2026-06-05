@@ -91,6 +91,65 @@ export const blueprintProjects = [
   }
 ];
 
+export const workbenchProjects = [
+  {
+    id: "drone",
+    title: "FPV Drone Prototype",
+    eyebrow: "Physical build",
+    detail: "A compact drone assembly used to show frame layout, prop clearance, electronics packaging, and CAD-to-bench thinking.",
+    anchor: [-3.02, 1.0, 1.37],
+    stats: ["Frame and rotor layout", "Assembly order study", "CAD viewer planned"]
+  },
+  {
+    id: "blueprints",
+    title: "Blueprint Stack",
+    eyebrow: "Design documentation",
+    detail: "A rotating set of drawings for favorite mechanical projects. This will become the place to inspect real CAD drawings and notes.",
+    anchor: [-2.42, 0.78, 0.1],
+    stats: ["3 project sheets", "Expandable drawing stack", "Future drawing picker"]
+  },
+  {
+    id: "fixture",
+    title: "Fixture Jig",
+    eyebrow: "Manufacturing aid",
+    detail: "A placeholder for locating pins, clamp travel, and repeatable assembly setups. Good for showing practical engineering judgment.",
+    anchor: [0.92, 1.02, 1.02],
+    stats: ["Locating surfaces", "Clamp clearance", "Repeatability story"]
+  },
+  {
+    id: "gearbox",
+    title: "Gearbox Study",
+    eyebrow: "Mechanism concept",
+    detail: "A small mechanism placeholder for gear trains, tolerances, and motion-transfer decisions.",
+    anchor: [2.38, 1.0, 0.62],
+    stats: ["Gear placement", "Housing concept", "Motion path"]
+  },
+  {
+    id: "juice",
+    title: "Juice Machine",
+    eyebrow: "Product mechanism",
+    detail: "A machine concept for rollers, feed path, enclosure layout, and service access. This can become a polished product case study.",
+    anchor: [3.32, 1.12, -1.36],
+    stats: ["Roller path", "Enclosure sketch", "Service access"]
+  },
+  {
+    id: "actuator",
+    title: "Linear Actuator",
+    eyebrow: "Motion hardware",
+    detail: "A bench artifact for guided linear motion, rod support, brackets, and mechanical packaging decisions.",
+    anchor: [1.78, 0.82, -1.2],
+    stats: ["Rod support", "Bracket geometry", "Motion envelope"]
+  },
+  {
+    id: "mobile",
+    title: "Mobile App Showcase",
+    eyebrow: "Software projects",
+    detail: "A phone on the workbench for mobile products like Allergify, Absorb, and Quarter, without forcing every visitor into the OS.",
+    anchor: [3.05, 0.88, 1.02],
+    stats: ["App portfolio", "Product decisions", "Software side quests"]
+  }
+];
+
 export const cameraKeyframes = [
   {
     t: 0,
