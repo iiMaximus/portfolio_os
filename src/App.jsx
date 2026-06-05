@@ -5,9 +5,14 @@ import * as THREE from "three";
 import {
   blueprintProjects,
   cameraKeyframes,
+  computerPortfolioContents,
+  contactLinks,
   disks,
+  engineeringProjectCards,
   freePlayCamera,
+  mediaPortfolio,
   mobileApps,
+  normalPortfolioStats,
   softwareProjects,
   timelineStops,
   workbenchProjects
@@ -2320,7 +2325,7 @@ function NormalPortfolio({ standalone = false, onLoadCinematic }) {
   return (
     <Shell className={`normal-portfolio ${standalone ? "normal-portfolio--standalone" : ""}`}>
       <header className="normal-topbar">
-        <div className="topbar-title">
+        <a className="topbar-title" href="#top" aria-label="Maksym portfolio home">
           <span className="topbar-mark" aria-hidden="true">
             <i />
             <i />
@@ -2330,60 +2335,197 @@ function NormalPortfolio({ standalone = false, onLoadCinematic }) {
             <strong>Maksym</strong>
             <span>Mechanical Engineering Portfolio</span>
           </div>
+        </a>
+        <nav className="normal-nav" aria-label="Portfolio sections">
+          <a href="#projects">Projects</a>
+          <a href="#apps">Apps</a>
+          <a href="#media">Media</a>
+          <a href="#computer">Computer</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <div className="normal-actions">
+          <a href="/Maksym-CV.pdf" download>
+            Download CV
+          </a>
+          {onLoadCinematic && (
+            <button className="load-cinematic" type="button" onClick={onLoadCinematic}>
+              3D intro
+            </button>
+          )}
         </div>
-        {onLoadCinematic && (
-          <button className="load-cinematic" type="button" onClick={onLoadCinematic}>
-            Load 3D intro
-          </button>
-        )}
       </header>
 
-      <section className="payload-hero" aria-label="Portfolio actions">
-        <div>
-          <span className="payload-label">CV packet</span>
-          <h1>Mechanical engineer building real hardware with clean digital systems.</h1>
+      <section className="normal-hero" id="top" aria-label="Portfolio overview">
+        <div className="normal-hero-copy">
+          <span className="payload-label">Mechanical engineering / CAD / prototypes / software</span>
+          <h1>Hardware portfolio with the receipts: CAD, builds, apps, media, and contact in one place.</h1>
           <p>
-            CAD assemblies, prototypes, test rigs, embedded-adjacent tooling, and software side projects in one place.
+            A fast, readable version of the interactive workbench. Recruiters can grab the CV, scan the strongest
+            mechanical projects, inspect planned CAD deliverables, and jump into the software or media work without
+            wrestling the 3D scene.
           </p>
+          <div className="normal-hero-actions">
+            <a className="download-cv" href="/Maksym-CV.pdf" download>
+              Download CV
+            </a>
+            <a className="secondary-link" href="#projects">
+              View projects
+            </a>
+          </div>
         </div>
-        <a className="download-cv" href="/Maksym-CV.pdf" download>
-          Download CV
-        </a>
+        <div className="normal-hero-panel" aria-label="Portfolio snapshot">
+          <div className="normal-blueprint" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+          <dl className="normal-stats">
+            {normalPortfolioStats.map((stat) => (
+              <div key={stat.value}>
+                <dt>{stat.value}</dt>
+                <dd>{stat.label}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
       </section>
 
-      <section className="payload-grid" aria-label="Portfolio payload">
-        <section className="contact-block" id="contact">
+      <section className="normal-section normal-cv-strip" aria-label="CV and focus areas">
+        <div>
+          <span className="payload-label">CV packet</span>
+          <h2>What the CV should prove quickly</h2>
+        </div>
+        <ul>
+          <li>Mechanical design judgment across CAD, assemblies, drawings, and prototyping.</li>
+          <li>Project communication through clean visuals, build notes, and engineering rationale.</li>
+          <li>Range: physical hardware, mobile apps, photography, video, and interactive presentation.</li>
+        </ul>
+      </section>
+
+      <section className="normal-section" id="projects" aria-labelledby="projects-heading">
+        <div className="section-heading">
+          <span className="payload-label">Physical projects</span>
+          <h2 id="projects-heading">Mechanical workbench</h2>
+          <p>
+            Each project slot is ready for CAD files, drawings, image sets, and a concise explanation of the problem,
+            constraints, decisions, and final result.
+          </p>
+        </div>
+        <div className="project-card-grid">
+          {engineeringProjectCards.map((project, index) => (
+            <article className="project-card" key={project.id}>
+              <div className="project-card-visual" data-index={String(index + 1).padStart(2, "0")} aria-hidden="true">
+                <span />
+              </div>
+              <div className="project-card-body">
+                <span className="project-status">{project.status}</span>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+                <div className="pill-row">
+                  {project.deliverables.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </div>
+                <dl className="file-list">
+                  <dt>Files planned</dt>
+                  <dd>{project.files.join(" / ")}</dd>
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="normal-section split-section" id="apps" aria-labelledby="apps-heading">
+        <div className="section-heading">
+          <span className="payload-label">App portfolio</span>
+          <h2 id="apps-heading">Software side quests</h2>
+          <p>These sit in the Mac OS Apps folder and also deserve a clean normal-page scan path.</p>
+        </div>
+        <div className="app-list">
+          {softwareProjects.map((project) => (
+            <article key={project.name}>
+              <span>{project.status}</span>
+              <h3>{project.name}</h3>
+              <strong>{project.type}</strong>
+              <p>{project.detail}</p>
+              <div className="mini-link-row">
+                {project.links.map((link) => (
+                  <em key={link}>{link}</em>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="normal-section" id="media" aria-labelledby="media-heading">
+        <div className="section-heading">
+          <span className="payload-label">Photography / videography</span>
+          <h2 id="media-heading">Visual work</h2>
+          <p>Media gets a real section because engineering portfolios are stronger when the documentation is beautiful and clear.</p>
+        </div>
+        <div className="media-grid">
+          {mediaPortfolio.map((item) => (
+            <article key={item.title}>
+              <span>{item.type}</span>
+              <h3>{item.title}</h3>
+              <p>{item.detail}</p>
+              <ul>
+                {item.items.map((entry) => (
+                  <li key={entry}>{entry}</li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="normal-section computer-map-section" id="computer" aria-labelledby="computer-heading">
+        <div className="section-heading">
+          <span className="payload-label">Retro computer contents</span>
+          <h2 id="computer-heading">What the Mac OS will hold</h2>
+          <p>This maps the interactive desktop into folders, disks, commands, and portfolio payloads.</p>
+        </div>
+        <div className="computer-map">
+          {computerPortfolioContents.map((item) => (
+            <article key={item.folder}>
+              <div className="folder-glyph" aria-hidden="true" />
+              <h3>{item.folder}</h3>
+              <p>{item.description}</p>
+              <div className="pill-row">
+                {item.contents.map((content) => (
+                  <span key={content}>{content}</span>
+                ))}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="normal-section contact-section" id="contact" aria-labelledby="contact-heading">
+        <div>
           <span className="payload-label">Contact</span>
-          <h2>Open channels</h2>
-          <a href="mailto:hello@maksym.dev">hello@maksym.dev</a>
-          <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn</a>
-        </section>
-
-        <section className="artifact-block">
-          <span className="payload-label">Physical workbench</span>
-          <h2>Hardware artifacts</h2>
-          <ul>
-            <li>FPV drone assemblies and exploded CAD drawings</li>
-            <li>Juice maker mechanism concept and enclosure studies</li>
-            <li>Fixtures, caliper checks, quick prototypes, and design notes</li>
-          </ul>
-        </section>
-
-        <section className="software-folder" aria-label="Software side quests">
-          <span className="folder-tab" aria-hidden="true" />
-          <span className="payload-label">Software side-quests</span>
-          <h2>Projects folder</h2>
-          <div className="software-list">
-            {softwareProjects.map((project) => (
-              <article key={project.name}>
-                <strong>{project.name}</strong>
-                <span>{project.type}</span>
-                <p>{project.detail}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+          <h2 id="contact-heading">Open channels</h2>
+          <p>Best path for recruiters, collaborators, and anyone trying to inspect the work without the cinematic intro.</p>
+        </div>
+        <div className="contact-link-grid">
+          {contactLinks.map((link) => (
+            <a
+              href={link.href}
+              key={link.label}
+              target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+              rel={link.href.startsWith("mailto:") ? undefined : "noreferrer"}
+            >
+              <span>{link.label}</span>
+              <strong>{link.value}</strong>
+            </a>
+          ))}
+          <a href="/Maksym-CV.pdf" download>
+            <span>CV</span>
+            <strong>Download resume</strong>
+          </a>
+        </div>
       </section>
     </Shell>
   );

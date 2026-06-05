@@ -324,16 +324,117 @@ export const softwareProjects = [
   {
     name: "Allergify",
     type: "Food intelligence app",
-    detail: "Mobile-first product logic, scanning flows, and ingredient data."
+    detail: "Mobile-first product logic, scanning flows, and ingredient data.",
+    status: "Mobile app",
+    links: ["Product case study", "Interface flow", "Data model"]
   },
   {
     name: "Absorb",
     type: "Learning system",
-    detail: "Structured study tools with focused interface design."
+    detail: "Structured study tools with focused interface design.",
+    status: "Learning tool",
+    links: ["Study workflow", "UI system", "Product notes"]
   },
   {
     name: "Quarter",
     type: "Time-aware planner",
-    detail: "A practical scheduling app for planning the next block of work."
+    detail: "A practical scheduling app for planning the next block of work.",
+    status: "Planner",
+    links: ["Scheduling logic", "Mobile prototype", "Roadmap"]
   }
+];
+
+export const normalPortfolioStats = [
+  { value: "CAD", label: "assemblies, drawings, and mechanism studies" },
+  { value: "Build", label: "prototypes, fixtures, test rigs, and bench notes" },
+  { value: "Apps", label: "mobile products and small software systems" },
+  { value: "Media", label: "photography, videography, and visual storytelling" }
+];
+
+export const engineeringProjectCards = [
+  {
+    id: "fpv-drone",
+    title: "FPV Drone Prototype",
+    category: "Mechanical assembly",
+    summary:
+      "Frame layout, prop clearance, electronics packaging, assembly order, and CAD-to-bench iteration for a compact FPV drone.",
+    deliverables: ["CAD assembly", "Exploded view", "Blueprint sheet", "Build notes"],
+    files: ["STEP / Fusion archive", "Drawing packet", "Photo build log"],
+    status: "Hero project"
+  },
+  {
+    id: "juice-mechanism",
+    title: "Juice Mechanism",
+    category: "Product mechanism",
+    summary:
+      "Roller path, feed geometry, service access, enclosure thinking, and manufacturable layout studies for a machine concept.",
+    deliverables: ["Mechanism sketch", "CAD model", "Motion notes", "Service layout"],
+    files: ["CAD viewer", "Drawing sheet", "Design rationale"],
+    status: "Case study"
+  },
+  {
+    id: "fixture-jig",
+    title: "Fixture Jig",
+    category: "Manufacturing aid",
+    summary:
+      "Locating pins, clamp travel, repeatable assembly setup, and tolerance-aware decisions for holding parts accurately.",
+    deliverables: ["Fixture CAD", "Tolerance notes", "Process steps", "Hardware list"],
+    files: ["STEP file", "Dimensioned drawing", "Assembly notes"],
+    status: "Bench project"
+  }
+];
+
+export const mediaPortfolio = [
+  {
+    title: "Photography",
+    type: "Still image archive",
+    detail: "Product-style shots, build documentation, experiments, and visual studies that show craft and attention to detail.",
+    items: ["Project photos", "Detail shots", "Edited sets"]
+  },
+  {
+    title: "Videography",
+    type: "Motion and process",
+    detail: "Short videos for build progress, prototype movement, cinematic edits, and social-friendly project storytelling.",
+    items: ["Assembly clips", "Mechanism demos", "Edited reels"]
+  },
+  {
+    title: "Visual Documentation",
+    type: "Engineering communication",
+    detail: "Blueprints, annotated screenshots, CAD captures, diagrams, and clean explanations for technical readers.",
+    items: ["CAD renders", "Annotated drawings", "Explainer panels"]
+  }
+];
+
+export const computerPortfolioContents = [
+  {
+    folder: "CV",
+    description: "The direct recruiter payload: resume download, quick bio, skills, and contact links.",
+    contents: ["Download CV", "About Me", "Contact"]
+  },
+  {
+    folder: "Projects",
+    description: "Mechanical case studies with CAD viewers, CAD file downloads, drawings, photos, and engineering notes.",
+    contents: ["FPV Drone", "Juice Mechanism", "Fixture Jig"]
+  },
+  {
+    folder: "Apps",
+    description: "Software side projects and mobile products, separated from the physical workbench but still easy to reach.",
+    contents: ["Allergify", "Absorb", "Quarter"]
+  },
+  {
+    folder: "Media",
+    description: "Photography and videography work for visual craft, product documentation, and project storytelling.",
+    contents: ["Photo Sets", "Video Reels", "Visual Studies"]
+  },
+  {
+    folder: "Terminal",
+    description: "A playful command-line layer for easter eggs, quick links, and hidden portfolio shortcuts.",
+    contents: ["help", "print cv", "open apps", "whoami"]
+  }
+];
+
+export const contactLinks = [
+  { label: "Email", value: "hello@maksym.dev", href: "mailto:hello@maksym.dev" },
+  { label: "GitHub", value: "github.com/iiMaximus", href: "https://github.com/iiMaximus" },
+  { label: "LinkedIn", value: "linkedin.com", href: "https://www.linkedin.com/" }
 ];
