@@ -48,8 +48,8 @@ export const timelineStops = [
     id: "mobile",
     start: 0.83,
     end: 0.925,
-    title: "Mobile Apps",
-    detail: "A phone on the bench pauses the tour for app projects and product work."
+    title: "Palm Pilot Apps",
+    detail: "A retro PDA on the bench pauses the tour for app projects and product work."
   },
   {
     id: "media",
@@ -142,11 +142,11 @@ export const workbenchProjects = [
   },
   {
     id: "mobile",
-    title: "Mobile App Showcase",
-    eyebrow: "Software projects",
-    detail: "A phone on the workbench for mobile products like Allergify, Absorb, and Quarter, without forcing every visitor into the OS.",
+    title: "Palm Pilot App Showcase",
+    eyebrow: "Retro software projects",
+    detail: "A Palm-style PDA on the workbench for mobile products like Allergify, Absorb, and Quarter, without forcing every visitor into the OS.",
     anchor: [3.05, 0.88, 1.02],
-    stats: ["App portfolio", "Product decisions", "Software side quests"]
+    stats: ["Mobile app portfolio", "Product decisions", "Retro PDA wrapper"]
   }
 ];
 

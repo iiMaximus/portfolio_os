@@ -574,7 +574,7 @@ function WorkbenchScene({
         />
         <BlueprintStack progressRef={progressRef} onFocus={() => openWorkbenchProject("blueprints")} />
         <PhysicalProjects onFocus={openWorkbenchProject} />
-        <MobilePhoneShowcase onFocus={() => openWorkbenchProject("mobile")} />
+        <PalmPilotShowcase onFocus={() => openWorkbenchProject("mobile")} />
 
         {disks.map((disk, index) => (
           <FloppyDisk
@@ -1407,7 +1407,7 @@ function PhysicalProjects({ onFocus }) {
   );
 }
 
-function MobilePhoneShowcase({ onFocus }) {
+function PalmPilotShowcase({ onFocus }) {
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -1419,70 +1419,93 @@ function MobilePhoneShowcase({ onFocus }) {
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <mesh position={[0.03, -0.008, -0.025]} receiveShadow>
-        <boxGeometry args={[0.72, 0.018, 1.08]} />
+      <mesh position={[0.04, -0.008, -0.02]} receiveShadow>
+        <boxGeometry args={[0.76, 0.018, 1.14]} />
         <meshStandardMaterial color="#171b1d" roughness={0.7} transparent opacity={0.26} />
       </mesh>
       <mesh castShadow receiveShadow>
-        <boxGeometry args={[0.64, 0.052, 1.02]} />
-        <meshStandardMaterial color="#16191d" roughness={0.34} metalness={0.2} />
+        <boxGeometry args={[0.66, 0.07, 1.04]} />
+        <meshStandardMaterial color="#34383a" roughness={0.55} metalness={0.04} />
       </mesh>
-      <mesh position={[0, 0.031, 0]} castShadow>
-        <boxGeometry args={[0.56, 0.012, 0.9]} />
+      <mesh position={[0, 0.043, -0.49]} castShadow>
+        <boxGeometry args={[0.56, 0.032, 0.12]} />
+        <meshStandardMaterial color="#242729" roughness={0.48} />
+      </mesh>
+      <mesh position={[0.35, 0.047, 0.02]}>
+        <boxGeometry args={[0.035, 0.016, 0.86]} />
+        <meshStandardMaterial color="#17191a" roughness={0.42} />
+      </mesh>
+      <mesh position={[0.38, 0.064, 0.02]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.012, 0.012, 0.75, 12]} />
+        <meshStandardMaterial color="#c8ced0" roughness={0.25} metalness={0.3} />
+      </mesh>
+      <mesh position={[0, 0.048, -0.18]}>
+        <boxGeometry args={[0.5, 0.012, 0.47]} />
+        <meshStandardMaterial color="#0e1510" roughness={0.4} />
+      </mesh>
+      <mesh position={[0, 0.057, -0.18]}>
+        <boxGeometry args={[0.44, 0.008, 0.39]} />
         <meshStandardMaterial
-          color="#12283a"
-          roughness={0.22}
-          metalness={0.08}
-          emissive="#1a5f7d"
-          emissiveIntensity={0.42}
+          color="#9eb58a"
+          roughness={0.62}
+          emissive="#6d8a5a"
+          emissiveIntensity={0.22}
+          toneMapped={false}
         />
-      </mesh>
-      <mesh position={[0, 0.041, 0.4]}>
-        <boxGeometry args={[0.18, 0.006, 0.018]} />
-        <meshStandardMaterial color="#d8f4ff" roughness={0.36} emissive="#7bc7ff" emissiveIntensity={0.25} />
-      </mesh>
-      <mesh position={[0.2, 0.04, 0.4]}>
-        <cylinderGeometry args={[0.018, 0.018, 0.008, 16]} />
-        <meshStandardMaterial color="#0a0d10" roughness={0.2} />
-      </mesh>
-
-      <mesh position={[-0.13, 0.042, 0.29]}>
-        <boxGeometry args={[0.2, 0.007, 0.025]} />
-        <meshStandardMaterial color="#f4fbff" roughness={0.35} emissive="#d8f4ff" emissiveIntensity={0.18} />
-      </mesh>
-      <mesh position={[0.12, 0.042, 0.29]}>
-        <boxGeometry args={[0.12, 0.007, 0.018]} />
-        <meshStandardMaterial color="#67e08a" roughness={0.35} emissive="#67e08a" emissiveIntensity={0.28} />
       </mesh>
 
       {mobileApps.map((app, index) => (
-        <PhoneAppTile key={app.name} app={app} index={index} />
+        <PalmAppRow key={app.name} app={app} index={index} />
       ))}
+
+      <mesh position={[0, 0.058, 0.15]}>
+        <boxGeometry args={[0.44, 0.008, 0.16]} />
+        <meshStandardMaterial color="#c8c8be" roughness={0.58} />
+      </mesh>
+      <mesh position={[-0.11, 0.067, 0.13]}>
+        <boxGeometry args={[0.18, 0.008, 0.018]} />
+        <meshStandardMaterial color="#4d5a4f" roughness={0.4} />
+      </mesh>
+      <mesh position={[0.1, 0.067, 0.18]}>
+        <boxGeometry args={[0.16, 0.008, 0.016]} />
+        <meshStandardMaterial color="#4d5a4f" roughness={0.4} />
+      </mesh>
+
+      {[-0.2, -0.07, 0.07, 0.2].map((x, index) => (
+        <mesh key={x} position={[x, 0.069, 0.34]} castShadow>
+          <boxGeometry args={[0.095, 0.018, 0.075]} />
+          <meshStandardMaterial color={index % 2 ? "#2b2f31" : "#4c5153"} roughness={0.42} />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.073, 0.44]} castShadow>
+        <cylinderGeometry args={[0.055, 0.055, 0.018, 18]} />
+        <meshStandardMaterial color="#202426" roughness={0.4} />
+      </mesh>
     </group>
   );
 }
 
-function PhoneAppTile({ app, index }) {
-  const z = 0.14 - index * 0.23;
-  const y = 0.044 + index * 0.001;
+function PalmAppRow({ app, index }) {
+  const z = -0.3 + index * 0.12;
+  const y = 0.064 + index * 0.001;
 
   return (
     <group position={[0, y, z]}>
       <mesh>
-        <boxGeometry args={[0.46, 0.008, 0.16]} />
-        <meshStandardMaterial color="#e8f7ff" roughness={0.42} emissive="#8bdfff" emissiveIntensity={0.06} />
+        <boxGeometry args={[0.36, 0.006, 0.04]} />
+        <meshStandardMaterial color="#6f855f" roughness={0.58} emissive="#4e6d42" emissiveIntensity={0.16} />
       </mesh>
-      <mesh position={[-0.17, 0.006, 0]}>
-        <boxGeometry args={[0.09, 0.008, 0.09]} />
-        <meshStandardMaterial color={app.color} roughness={0.3} emissive={app.color} emissiveIntensity={0.34} />
+      <mesh position={[-0.16, 0.005, 0]}>
+        <boxGeometry args={[0.045, 0.006, 0.028]} />
+        <meshStandardMaterial color={app.color} roughness={0.48} emissive={app.color} emissiveIntensity={0.2} />
       </mesh>
-      <mesh position={[0.05, 0.007, 0.026]}>
-        <boxGeometry args={[0.22, 0.008, 0.018]} />
-        <meshStandardMaterial color="#14202a" roughness={0.38} />
+      <mesh position={[0.04, 0.006, 0.008]}>
+        <boxGeometry args={[0.2, 0.006, 0.008]} />
+        <meshStandardMaterial color="#243820" roughness={0.45} />
       </mesh>
-      <mesh position={[0.01, 0.007, -0.026]}>
-        <boxGeometry args={[0.15, 0.008, 0.014]} />
-        <meshStandardMaterial color="#49606b" roughness={0.38} />
+      <mesh position={[0.0, 0.006, -0.012]}>
+        <boxGeometry args={[0.14, 0.006, 0.007]} />
+        <meshStandardMaterial color="#405a37" roughness={0.45} />
       </mesh>
     </group>
   );
