@@ -69,6 +69,12 @@ function setLegacyFrameDisk(iframe, disk) {
   win.postMessage({ type: "portfolio-disk", disk: payload }, window.location.origin);
 }
 
+function setLegacyFrameScale(iframe, scale) {
+  const doc = iframe?.contentDocument;
+  if (!doc) return;
+  doc.documentElement.style.setProperty("--surface-scale", scale.toFixed(4));
+}
+
 function notifyLegacyOS(disk) {
   document.querySelectorAll(".mac-screen-frame, .legacy-os-frame").forEach((iframe) => {
     setLegacyFrameDisk(iframe, disk);
@@ -344,7 +350,7 @@ function App() {
     );
   }
 
-  const legacyOpacity = terminalLocked ? 1 : smoothRange(uiProgress, 0.956, 0.963);
+  const legacyOpacity = terminalLocked ? 1 : smoothRange(uiProgress, 0.976, 0.992);
   const legacyActive = terminalLocked || legacyOpacity > 0.001;
 
   return (
@@ -362,7 +368,7 @@ function App() {
               activeDisk={activeDisk}
               insertedDiskId={insertedDiskId}
               progressRef={progressRef}
-              screenLive={uiProgress > 0.25 && legacyOpacity < 0.08}
+              screenLive={uiProgress > 0.25}
               onSelectDisk={selectDisk}
               onOpenComputer={() => scrollToProgress(1)}
               onOpenProjects={() => scrollToProgress(0.5)}
@@ -727,6 +733,7 @@ function PegGrid() {
 
 function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, terminalProgressSource = () => 0 }) {
   const screenMaterialRef = useRef();
+  const screenTexture = useMacScreenTexture(mountedDisk);
   const [hovered, setHovered] = useState(false);
   useCursor(hovered);
 
@@ -787,6 +794,12 @@ function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, termina
           toneMapped={false}
         />
       </mesh>
+      {screenLive && (
+        <mesh position={[0, 1.03, 0.292]}>
+          <planeGeometry args={[1.62, 1.2]} />
+          <meshBasicMaterial map={screenTexture} toneMapped={false} />
+        </mesh>
+      )}
       <mesh position={[0, 1.03, 0.282]}>
         <boxGeometry args={[1.64, 1.22, 0.012]} />
         <meshStandardMaterial
@@ -796,17 +809,6 @@ function RetroComputer({ onFocus, screenLive = true, mountedDisk = null, termina
           roughness={0.05}
         />
       </mesh>
-
-      {screenLive && (
-        <Html
-          transform
-          position={[0, 1.03, 0.306]}
-          scale={0.06}
-          zIndexRange={[120, 0]}
-        >
-          <MacScreenFrame mountedDisk={mountedDisk} />
-        </Html>
-      )}
 
       <mesh position={[0.64, 0.28, 0.55]} castShadow>
         <boxGeometry args={[0.46, 0.06, 0.22]} />
@@ -845,12 +847,13 @@ function MacScreenFrame({ mountedDisk }) {
   );
 }
 
-function useMacScreenTexture() {
+function useMacScreenTexture(mountedDisk) {
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
     canvas.width = LEGACY_SCREEN_WIDTH;
     canvas.height = LEGACY_SCREEN_HEIGHT;
     const ctx = canvas.getContext("2d");
+    const hasDisk = Boolean(mountedDisk);
 
     ctx.imageSmoothingEnabled = false;
     ctx.fillStyle = "#2f9f9d";
@@ -866,18 +869,23 @@ function useMacScreenTexture() {
     drawMenuText(ctx, "View", 122, 13, false);
     drawMenuText(ctx, "Label", 168, 13, false);
     drawMenuText(ctx, "Special", 222, 13, true);
-    drawMenuText(ctx, "10:39 PM", 846, 13, true);
+    drawMenuText(ctx, "1:02 AM", 854, 13, true);
 
-    [
+    const icons = [
       { kind: "folder", label: "Apps", x: 58, y: 86 },
-      { kind: "hazard", label: "Do Not Open", x: 154, y: 86 },
       { kind: "striped", label: "Projects", x: 58, y: 164 },
       { kind: "doc", label: "About Me", x: 58, y: 242 },
       { kind: "contact", label: "Contact", x: 58, y: 320 },
-      { kind: "readme", label: "README.md", x: 58, y: 398 },
-      { kind: "disk", label: "Untitled", x: 848, y: 74 },
+      { kind: "readme", label: "CV", x: 58, y: 398 },
       { kind: "trash", label: "Trash", x: 858, y: 620 }
-    ].forEach((icon) => drawDesktopPreviewIcon(ctx, icon));
+    ];
+
+    if (hasDisk) {
+      icons.splice(1, 0, { kind: "hazard", label: "Do Not Open", x: 154, y: 86 });
+      icons.push({ kind: "disk", label: `${mountedDisk.label} Disk`, x: 820, y: 74 });
+    }
+
+    icons.forEach((icon) => drawDesktopPreviewIcon(ctx, icon));
 
     drawControlStrip(ctx);
 
@@ -888,7 +896,7 @@ function useMacScreenTexture() {
     nextTexture.generateMipmaps = false;
     nextTexture.needsUpdate = true;
     return nextTexture;
-  }, []);
+  }, [mountedDisk]);
 
   useEffect(() => () => texture.dispose(), [texture]);
 
@@ -1975,16 +1983,17 @@ function LegacyOSOverlay({
   const { width, height } = useViewportSize();
   const [loaded, setLoaded] = useState(false);
   const screenFitScale = Math.max(1, width / LEGACY_SCREEN_WIDTH, height / LEGACY_SCREEN_HEIGHT);
-  const overlaySrc = `${LEGACY_SCREEN_SRC}&scale=${screenFitScale.toFixed(4)}`;
+  const overlaySrc = LEGACY_SCREEN_SRC;
 
   useEffect(() => {
-    setLoaded(false);
-  }, [overlaySrc]);
+    if (!loaded || !iframeRef.current) return;
+    setLegacyFrameScale(iframeRef.current, screenFitScale);
+  }, [loaded, screenFitScale]);
 
   useEffect(() => {
     if (!loaded || !iframeRef.current) return;
     setLegacyFrameDisk(iframeRef.current, mountedDisk);
-  }, [loaded, mountedDisk, overlaySrc]);
+  }, [loaded, mountedDisk]);
 
   return (
     <section
@@ -1997,13 +2006,13 @@ function LegacyOSOverlay({
       <div className="legacy-os-shell">
         <iframe
           ref={iframeRef}
-          key={overlaySrc}
           className={`legacy-os-frame ${loaded ? "is-loaded" : ""}`}
           src={overlaySrc}
           title="Interactive Mac OS portfolio desktop"
           onLoad={() => {
-            setLoaded(true);
-            window.requestAnimationFrame(() => setLegacyFrameDisk(iframeRef.current, mountedDisk));
+            setLegacyFrameScale(iframeRef.current, screenFitScale);
+            setLegacyFrameDisk(iframeRef.current, mountedDisk);
+            window.requestAnimationFrame(() => setLoaded(true));
           }}
         />
       </div>
@@ -2232,7 +2241,7 @@ function FreePlayWorkbench({ activeDisk, insertedDiskId, onSelectDisk, onLoadCin
         </div>
       </aside>
       <LegacyOSOverlay
-        progress={osOpen ? 1 : smoothRange(computerFocusProgress, 0.72, 1)}
+        progress={osOpen ? 1 : smoothRange(computerFocusProgress, 0.88, 1)}
         active
         visible={computerFocusActive || osOpen}
         locked={osOpen}
