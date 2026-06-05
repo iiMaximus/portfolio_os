@@ -16,6 +16,7 @@ import {
 const LEGACY_SCREEN_WIDTH = 960;
 const LEGACY_SCREEN_HEIGHT = 720;
 const LEGACY_SCREEN_SRC = "/legacy-os/index.html?surface=screen";
+const TERMINAL_REENTRY_PROGRESS = 0.94;
 
 function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -111,8 +112,17 @@ function isAtScrollEnd() {
 function retreatFromScrollEnd(deltaY = -180) {
   const doc = document.documentElement;
   const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-  const retreat = Math.min(maxScroll * 0.038, Math.max(130, Math.abs(deltaY) * 1.15));
-  window.scrollTo({ top: Math.max(0, maxScroll - retreat), left: 0, behavior: "auto" });
+  const wheelBoost = clamp(Math.abs(deltaY) / 900, 0, 0.018);
+  const targetProgress = Math.max(0, TERMINAL_REENTRY_PROGRESS - wheelBoost);
+  window.scrollTo({ top: maxScroll * targetProgress, left: 0, behavior: "auto" });
+  window.dispatchEvent(new Event("scroll"));
+}
+
+function nudgeScrollFromOverlay(deltaY = -180) {
+  const doc = document.documentElement;
+  const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
+  const retreat = Math.min(maxScroll * 0.075, Math.max(180, Math.abs(deltaY) * 2.4));
+  window.scrollTo({ top: Math.max(0, window.scrollY - retreat), left: 0, behavior: "auto" });
   window.dispatchEvent(new Event("scroll"));
 }
 
@@ -258,7 +268,13 @@ function App() {
   }
 
   function reverseOutOfTerminal(deltaY = -180) {
-    if (mode !== "cinematic" || !terminalLocked) return;
+    if (mode !== "cinematic") return;
+
+    if (!terminalLocked) {
+      nudgeScrollFromOverlay(deltaY);
+      return;
+    }
+
     releaseTerminalLock();
     setTerminalLocked(false);
     retreatFromScrollEnd(deltaY);
@@ -266,9 +282,10 @@ function App() {
   }
 
   useEffect(() => {
-    if (mode !== "cinematic" || !terminalLocked) return undefined;
+    if (mode !== "cinematic") return undefined;
 
     function handleWheel(event) {
+      if (!terminalLocked && uiProgress < 0.94) return;
       if (event.deltaY >= -8) return;
       event.preventDefault();
       reverseOutOfTerminal(event.deltaY);
@@ -276,6 +293,7 @@ function App() {
 
     function handleMessage(event) {
       if (event.origin !== window.location.origin || event.data?.type !== "portfolio-os-reverse-scroll") return;
+      if (!terminalLocked && uiProgress < 0.94) return;
       reverseOutOfTerminal(event.data.deltaY);
     }
 
@@ -286,7 +304,7 @@ function App() {
       window.removeEventListener("wheel", handleWheel, { capture: true });
       window.removeEventListener("message", handleMessage);
     };
-  }, [mode, terminalLocked]);
+  }, [mode, terminalLocked, uiProgress]);
 
   function selectDisk(disk) {
     const nextDisk = insertedDiskId === disk.id ? null : disk;
@@ -1518,9 +1536,11 @@ function DroneAssembly({ progressRef, onFocus }) {
   const targetScale = useMemo(() => new THREE.Vector3(), []);
   const landedPosition = [-3.02, 0.83, 1.37];
   const voidPosition = [-2.8, 1.0, 1.24];
+  const landingStartPosition = [-2.8, 1.3, 1.24];
 
   const getAssemblyProgress = () => smoothRange(progressRef.current, 0.01, 0.23);
-  const getLandingProgress = () => smoothRange(progressRef.current, 0.28, 0.45);
+  const getPreLandingLift = () => smoothRange(progressRef.current, 0.23, 0.29);
+  const getLandingProgress = () => smoothRange(progressRef.current, 0.27, 0.48);
   const getDroneOpacity = () => 1 - smoothRange(progressRef.current, 0.96, 1);
 
   useFadedMaterials(ref, getDroneOpacity);
@@ -1534,12 +1554,13 @@ function DroneAssembly({ progressRef, onFocus }) {
     const landing = clamp(landingProgress);
     const lateralTravel = smoothRange(landing, 0.1, 0.72);
     const verticalTravel = smoother(landing);
+    const approachY = mix(voidPosition[1], landingStartPosition[1], getPreLandingLift());
     const groupPosition = [
       mix(voidPosition[0], landedPosition[0], lateralTravel),
-      mix(voidPosition[1], landedPosition[1], verticalTravel),
+      mix(approachY, landedPosition[1], verticalTravel),
       mix(voidPosition[2], landedPosition[2], lateralTravel)
     ];
-    groupPosition[1] += Math.sin(landing * Math.PI) * 0.045;
+    groupPosition[1] += Math.sin(landing * Math.PI) * 0.06;
     const scale = mix(1.02, 0.78, landingProgress);
     const rotationY = mix(-0.22, -0.58, landingProgress);
 

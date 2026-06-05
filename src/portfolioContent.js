@@ -189,21 +189,21 @@ export const cameraKeyframes = [
   },
   {
     t: 0.5,
-    position: [-3.28, 1.62, 2.48],
+    position: [-3.42, 1.76, 2.82],
     target: [-2.42, 0.7, 0.1],
-    fov: 39
+    fov: 43
   },
   {
     t: 0.54,
-    position: [-2.52, 2.58, 0.66],
+    position: [-2.68, 3.08, 1.08],
     target: [-2.42, 0.68, 0.1],
-    fov: 30
+    fov: 42
   },
   {
     t: 0.6,
-    position: [-1.32, 1.38, 1.7],
+    position: [-1.12, 1.58, 2.02],
     target: [-2.42, 0.68, 0.1],
-    fov: 35
+    fov: 41
   },
   {
     t: 0.65,
