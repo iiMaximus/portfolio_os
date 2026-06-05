@@ -1971,6 +1971,7 @@ function LinearActuatorPlaceholder({ position, onFocus }) {
 function CinematicHud({ progress, onSkip }) {
   const activeStop = getTimelineStop(progress);
   const activeIndex = Math.max(0, timelineStops.findIndex((stop) => stop.id === activeStop.id));
+  const hudTone = progress < 0.44 ? "is-void" : "is-bench";
 
   return (
     <>
@@ -1978,7 +1979,7 @@ function CinematicHud({ progress, onSkip }) {
         skip this bullshit and load normal portfolio
       </button>
 
-      <div className="tour-progress" aria-live="polite">
+      <div className={`tour-progress ${hudTone}`} aria-live="polite">
         <div className="tour-progress-copy" key={activeStop.id}>
           <span>{String(activeIndex + 1).padStart(2, "0")}</span>
           <strong>{activeStop.title}</strong>
