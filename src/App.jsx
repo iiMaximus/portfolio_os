@@ -51,6 +51,10 @@ function mixArray(start, end, t) {
   ];
 }
 
+function formatLegacyClock(date = new Date()) {
+  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+}
+
 function getDiskPayload(disk) {
   return disk
     ? {
@@ -255,6 +259,13 @@ function App() {
   }, []);
 
   useEffect(() => {
+    document.documentElement.dataset.portfolioMode = mode;
+    return () => {
+      delete document.documentElement.dataset.portfolioMode;
+    };
+  }, [mode]);
+
+  useEffect(() => {
     if (mode === "cinematic" && uiProgress > 0.998 && isAtScrollEnd()) {
       setTerminalLocked(true);
       terminalReverseInFlightRef.current = false;
@@ -388,7 +399,8 @@ function App() {
     );
   }
 
-  const legacyOpacity = terminalLocked ? 1 : smoothRange(uiProgress, 0.976, 0.992);
+  const terminalApproachActive = uiProgress > 0.945;
+  const legacyOpacity = terminalLocked ? 1 : smoothRange(uiProgress, 0.992, 0.998);
   const legacyActive = terminalLocked || legacyOpacity > 0.001;
 
   return (
@@ -416,7 +428,7 @@ function App() {
           <ShadowMapController progressRef={progressRef} freezeAfter={0.52} />
         </Canvas>
 
-        {!legacyActive && (
+        {!legacyActive && !terminalApproachActive && (
           <CinematicHud progress={uiProgress} onSkip={loadNormal} />
         )}
 
@@ -907,20 +919,22 @@ function useMacScreenTexture(mountedDisk) {
     drawMenuText(ctx, "View", 122, 13, false);
     drawMenuText(ctx, "Label", 168, 13, false);
     drawMenuText(ctx, "Special", 222, 13, true);
-    drawMenuText(ctx, "1:02 AM", 854, 13, true);
+    ctx.textAlign = "right";
+    drawMenuText(ctx, formatLegacyClock(), LEGACY_SCREEN_WIDTH - 32, 13, true);
+    ctx.textAlign = "left";
 
     const icons = [
-      { kind: "folder", label: "Apps", x: 58, y: 86 },
-      { kind: "striped", label: "Projects", x: 58, y: 164 },
-      { kind: "doc", label: "About Me", x: 58, y: 242 },
-      { kind: "contact", label: "Contact", x: 58, y: 320 },
-      { kind: "readme", label: "CV", x: 58, y: 398 },
-      { kind: "trash", label: "Trash", x: 858, y: 620 }
+      { kind: "folder", label: "Apps", x: 34, y: 72 },
+      { kind: "striped", label: "Projects", x: 34, y: 150 },
+      { kind: "doc", label: "About Me", x: 34, y: 228 },
+      { kind: "contact", label: "Contact", x: 34, y: 306 },
+      { kind: "readme", label: "CV", x: 34, y: 384 },
+      { kind: "trash", label: "Trash", x: 874, y: 626 }
     ];
 
     if (hasDisk) {
-      icons.splice(1, 0, { kind: "hazard", label: "Do Not Open", x: 154, y: 86 });
-      icons.push({ kind: "disk", label: `${mountedDisk.label} Disk`, x: 820, y: 74 });
+      icons.splice(1, 0, { kind: "hazard", label: "Do Not Open", x: 148, y: 72 });
+      icons.push({ kind: "disk", label: `${mountedDisk.label} Disk`, x: 820, y: 72 });
     }
 
     icons.forEach((icon) => drawDesktopPreviewIcon(ctx, icon));
@@ -975,16 +989,29 @@ function drawDesktopPreviewIcon(ctx, { kind, label, x, y }) {
     ctx.strokeRect(0, 8, 40, 28);
     ctx.strokeRect(0, 4, 18, 8);
     if (kind === "striped") {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(0, 8, 40, 28);
+      ctx.clip();
       ctx.fillStyle = "#ffec59";
-      for (let stripe = -20; stripe < 48; stripe += 13) {
-        ctx.fillRect(stripe, 9, 7, 36);
+      for (let stripe = -26; stripe < 58; stripe += 14) {
+        ctx.save();
+        ctx.translate(stripe, 8);
+        ctx.rotate(Math.PI / 4);
+        ctx.fillRect(0, -18, 7, 72);
+        ctx.restore();
       }
+      ctx.restore();
     }
   } else if (kind === "hazard") {
     ctx.fillStyle = "#ffec59";
     ctx.fillRect(0, 0, 40, 32);
     ctx.strokeStyle = "#050505";
     ctx.strokeRect(0, 0, 40, 32);
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, 40, 32);
+    ctx.clip();
     ctx.fillStyle = "#050505";
     for (let stripe = -18; stripe < 54; stripe += 14) {
       ctx.save();
@@ -993,6 +1020,7 @@ function drawDesktopPreviewIcon(ctx, { kind, label, x, y }) {
       ctx.fillRect(0, 0, 8, 62);
       ctx.restore();
     }
+    ctx.restore();
     ctx.fillStyle = "#ff5a87";
     ctx.fillRect(25, 19, 10, 10);
   } else if (kind === "disk") {

@@ -13,6 +13,17 @@ html {
   background: #0c0f10;
 }
 
+html[data-portfolio-mode="cinematic"] {
+  scrollbar-width: none;
+}
+
+html[data-portfolio-mode="cinematic"]::-webkit-scrollbar,
+html[data-portfolio-mode="cinematic"] body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 body {
   overflow-x: hidden;
   background: #0c0f10;
@@ -585,7 +596,7 @@ button {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
-  transition-delay: 420ms;
+  transition: none;
 }
 
 .legacy-action-bar a,
