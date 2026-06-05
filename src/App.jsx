@@ -1536,11 +1536,11 @@ function DroneAssembly({ progressRef, onFocus }) {
   const targetScale = useMemo(() => new THREE.Vector3(), []);
   const landedPosition = [-3.02, 0.83, 1.37];
   const voidPosition = [-2.8, 1.0, 1.24];
-  const landingStartPosition = [-2.8, 1.3, 1.24];
+  const landingStartPosition = [-2.8, 1.48, 1.24];
 
   const getAssemblyProgress = () => smoothRange(progressRef.current, 0.01, 0.23);
-  const getPreLandingLift = () => smoothRange(progressRef.current, 0.23, 0.29);
-  const getLandingProgress = () => smoothRange(progressRef.current, 0.27, 0.48);
+  const getPreLandingLift = () => smoothRange(progressRef.current, 0.22, 0.31);
+  const getLandingProgress = () => smoothRange(progressRef.current, 0.26, 0.51);
   const getDroneOpacity = () => 1 - smoothRange(progressRef.current, 0.96, 1);
 
   useFadedMaterials(ref, getDroneOpacity);
@@ -1560,7 +1560,7 @@ function DroneAssembly({ progressRef, onFocus }) {
       mix(approachY, landedPosition[1], verticalTravel),
       mix(voidPosition[2], landedPosition[2], lateralTravel)
     ];
-    groupPosition[1] += Math.sin(landing * Math.PI) * 0.06;
+    groupPosition[1] += Math.sin(landing * Math.PI) * 0.075;
     const scale = mix(1.02, 0.78, landingProgress);
     const rotationY = mix(-0.22, -0.58, landingProgress);
 
