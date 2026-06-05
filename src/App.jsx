@@ -16,7 +16,8 @@ import {
 const LEGACY_SCREEN_WIDTH = 960;
 const LEGACY_SCREEN_HEIGHT = 720;
 const LEGACY_SCREEN_SRC = "/legacy-os/index.html?surface=screen";
-const TERMINAL_REENTRY_PROGRESS = 0.94;
+const TERMINAL_REENTRY_PROGRESS = 0.958;
+const TERMINAL_REVERSE_COOLDOWN_MS = 760;
 
 function clamp(value, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
@@ -121,8 +122,13 @@ function retreatFromScrollEnd(deltaY = -180) {
 function nudgeScrollFromOverlay(deltaY = -180) {
   const doc = document.documentElement;
   const maxScroll = Math.max(1, doc.scrollHeight - window.innerHeight);
-  const retreat = Math.min(maxScroll * 0.075, Math.max(180, Math.abs(deltaY) * 2.4));
-  window.scrollTo({ top: Math.max(0, window.scrollY - retreat), left: 0, behavior: "auto" });
+  const currentProgress = clamp(window.scrollY / maxScroll);
+  const retreatProgress = clamp(Math.abs(deltaY) / 18000, 0.006, 0.018);
+  const targetProgress =
+    currentProgress > TERMINAL_REENTRY_PROGRESS
+      ? Math.max(TERMINAL_REENTRY_PROGRESS, currentProgress - retreatProgress)
+      : Math.max(0, currentProgress - retreatProgress);
+  window.scrollTo({ top: maxScroll * targetProgress, left: 0, behavior: "auto" });
   window.dispatchEvent(new Event("scroll"));
 }
 
@@ -223,6 +229,8 @@ function App() {
   const [activeDisk, setActiveDisk] = useState(disks[0]);
   const [insertedDiskId, setInsertedDiskId] = useState(null);
   const [terminalLocked, setTerminalLocked] = useState(false);
+  const terminalReverseCooldownRef = useRef(0);
+  const terminalReverseInFlightRef = useRef(false);
   const [mode, setMode] = useState(() => {
     if (typeof window === "undefined") return "cinematic";
     return window.matchMedia("(max-width: 760px)").matches ? "normal" : "cinematic";
@@ -244,6 +252,7 @@ function App() {
   useEffect(() => {
     if (mode === "cinematic" && uiProgress > 0.998 && isAtScrollEnd()) {
       setTerminalLocked(true);
+      terminalReverseInFlightRef.current = false;
     }
   }, [mode, uiProgress]);
 
@@ -270,11 +279,17 @@ function App() {
   function reverseOutOfTerminal(deltaY = -180) {
     if (mode !== "cinematic") return;
 
+    const now = window.performance?.now?.() ?? Date.now();
     if (!terminalLocked) {
+      if (now < terminalReverseCooldownRef.current) return;
+      terminalReverseCooldownRef.current = now + TERMINAL_REVERSE_COOLDOWN_MS;
       nudgeScrollFromOverlay(deltaY);
       return;
     }
 
+    if (terminalReverseInFlightRef.current) return;
+    terminalReverseInFlightRef.current = true;
+    terminalReverseCooldownRef.current = now + TERMINAL_REVERSE_COOLDOWN_MS;
     releaseTerminalLock();
     setTerminalLocked(false);
     retreatFromScrollEnd(deltaY);
@@ -285,8 +300,8 @@ function App() {
     if (mode !== "cinematic") return undefined;
 
     function handleWheel(event) {
-      if (!terminalLocked && uiProgress < 0.94) return;
-      if (event.deltaY >= -8) return;
+      if (!terminalLocked) return;
+      if (event.deltaY >= -2) return;
       event.preventDefault();
       reverseOutOfTerminal(event.deltaY);
     }

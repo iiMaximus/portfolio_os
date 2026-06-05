@@ -129,13 +129,17 @@
 
   function requestParentReverseScroll(deltaY) {
     if (window.parent === window) return;
+    const now = window.performance?.now?.() || Date.now();
+    if (now - lastReverseScrollRequestAt < 320) return;
+    lastReverseScrollRequestAt = now;
     window.parent.postMessage({ type: "portfolio-os-reverse-scroll", deltaY }, window.location.origin);
   }
 
   let reverseTouchStartY = 0;
+  let lastReverseScrollRequestAt = 0;
 
   window.addEventListener("wheel", (event) => {
-    if (event.deltaY < -8) requestParentReverseScroll(event.deltaY);
+    if (event.deltaY < -2) requestParentReverseScroll(event.deltaY);
   }, { passive: true });
 
   window.addEventListener("touchstart", (event) => {
