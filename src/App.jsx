@@ -2012,7 +2012,7 @@ function LinearActuatorPlaceholder({ position, onFocus }) {
 function CinematicHud({ progress, onSkip }) {
   const activeStop = getTimelineStop(progress);
   const activeIndex = Math.max(0, timelineStops.findIndex((stop) => stop.id === activeStop.id));
-  const hudTone = progress < 0.44 ? "is-void" : "is-bench";
+  const hudTone = progress < 0.31 ? "is-void" : "is-bench";
 
   return (
     <>
