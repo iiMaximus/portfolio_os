@@ -502,7 +502,7 @@
       return;
     }
     if (action === "print-cv") {
-      showAlert("CV printer queued. Add the real PDF and this becomes a download.");
+      showAlert("The CV draft is available in the CV folder.");
       return;
     }
     showAlert(defaultMessage);
@@ -1134,14 +1134,14 @@
             "# README.md",
             "STATUS: portfolio shell 0.4",
             "MOOD: desktop utilities waking up",
-            "NEXT: wire real case studies, CV, and email endpoint"
+            "NEXT: aerospace master’s applications; CV draft available"
           ], "system");
           return;
         }
         if (file === "contact" || file === "contact.card") {
           writeBlock([
             "Contact.card",
-            "Email: connect endpoint later",
+            "Email: [address to be added]; GitHub: github.com/iiMaximus",
             "Mode: mechanical engineering portfolio with software side quests"
           ], "system");
           return;
@@ -1174,10 +1174,10 @@
 
       if (normalized === "skills") {
         writeBlock([
-          "Mechanical: CAD, prototyping, mechanisms, assemblies",
-          "Hardware: FPV builds, electronics packaging, testing",
-          "Software: React, mobile apps, interactive portfolio systems",
-          "Taste: tactile interfaces, weird-but-useful UX, polished details"
+          "Study: Mechanical Engineering at Politecnico di Torino",
+          "Current projects: drone geometry and mobile apps",
+          "Next direction: master’s in Aerospace Engineering",
+          "Specific tool proficiencies: to be confirmed in the CV"
         ], "system");
         return;
       }
@@ -1357,7 +1357,10 @@
       }
 
       if (!sendEndpoint) {
-        setStatus("Draft saved locally. Send link not connected yet.", "draft");
+        try {
+          localStorage.setItem("maksym-os.email-draft", JSON.stringify(data));
+          setStatus("Draft saved in this browser. No email has been sent.", "draft");
+        } catch { setStatus("Draft could not be saved. No email has been sent.", "error"); }
         return;
       }
 
@@ -1374,7 +1377,13 @@
       }
     });
 
+    try {
+      const saved = JSON.parse(localStorage.getItem("maksym-os.email-draft") || "null");
+      if (saved) { nameInput.value = saved.name || ""; replyInput.value = saved.replyTo || ""; subjectInput.value = saved.subject || ""; messageInput.value = saved.message || ""; }
+    } catch { /* Storage is optional. */ }
+
     clearButton?.addEventListener("click", () => {
+      try { localStorage.removeItem("maksym-os.email-draft"); } catch { /* Storage is optional. */ }
       form.reset();
       subjectInput.value = "Portfolio hello";
       messageInput.value = "";

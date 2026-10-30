@@ -146,11 +146,11 @@
             </div>
             <div>
               <h1>Maksym OS</h1>
-              <p>Front-page portfolio shell, version 0.1. Built for apps, experiments, hardware projects, and odd little side quests.</p>
+              <p>Mechanical engineering student at Politecnico di Torino. Preparing for a master’s in aerospace engineering. A personal desktop for projects, documents, and a few side quests.</p>
               <dl class="spec-list">
-                <div><dt>Memory</dt><dd>Curiosity: 4096K</dd></div>
-                <div><dt>Status</dt><dd>Under construction</dd></div>
-                <div><dt>Mode</dt><dd>Classic desktop</dd></div>
+                <div><dt>Education</dt><dd>Politecnico di Torino</dd></div>
+                <div><dt>Degree</dt><dd>Mechanical Engineering BSc, in progress</dd></div>
+                <div><dt>Next</dt><dd>Master’s in Aerospace Engineering</dd></div>
               </dl>
             </div>
           </div>
@@ -172,7 +172,7 @@
             <button type="button" class="file-card" data-open-window="app-detail">
               <span class="mini-app color-bars" aria-hidden="true"></span>
               <strong>Mobile Apps</strong>
-              <small>shipping work</small>
+              <small>ongoing development</small>
             </button>
             <button type="button" class="file-card" data-open-window="portfolio-detail">
               <span class="mini-app terminal" aria-hidden="true"></span>
@@ -210,7 +210,7 @@
             <span class="title-lines" aria-hidden="true"></span>
             <button class="zoom-window" type="button" aria-label="Zoom Projects"></button>
           </div>
-          <div class="window-body finder-list">
+          <div class="window-body finder-list"><button type="button" data-portfolio-section="work"><span class="list-icon list-drone"></span><span>Current portfolio</span><em>Drone, apps &amp; planned rocket</em></button>
             <button type="button" data-open-window="app-detail"><span class="list-icon list-app"></span><span>Apps</span><em>product, iOS, Android</em></button>
             <button type="button" data-open-window="fpv-detail"><span class="list-icon list-drone"></span><span>FPV drone</span><em>electronics and flight</em></button>
             <button type="button" data-open-window="juice-detail"><span class="list-icon list-juice"></span><span>Juice maker</span><em>prototype machine</em></button>
@@ -227,8 +227,8 @@
           </div>
           <div class="window-body">
             <h2>Maksym</h2>
-            <p>Builder of apps, systems, physical prototypes, and portfolio concepts with a little theatrical machinery inside.</p>
-            <a class="classic-link" href="mailto:hello@example.com">hello@example.com</a>
+            <p>Bachelor’s student in Mechanical Engineering at Politecnico di Torino. Open to conversations about aerospace, engineering projects, and further study.</p>
+            <p><strong>Email:</strong> [Email address to be added]</p><p><strong>LinkedIn:</strong> [Profile to be added]</p><a class="classic-link" href="https://github.com/iiMaximus" target="_blank" rel="noreferrer">GitHub / iiMaximus ↗</a>
           </div>
         </section>
 
@@ -244,8 +244,8 @@
             <span class="printer-machine" aria-hidden="true"></span>
             <div>
               <p><strong>Maksym CV</strong></p>
-              <p>Mechanical engineering portfolio packet.</p>
-              <a class="classic-button cv-download-link" href="/Maksym-CV.pdf" download>Download CV</a>
+              <p>One-page CV draft. Complete the bracketed fields before applying.</p>
+              <a class="classic-button cv-download-link" href="/resume/Maksym-CV-draft.pdf" download>Download CV draft</a>
             </div>
           </div>
         </section>
@@ -261,9 +261,9 @@
           <div class="window-body readme-body">
             <pre># README.md
 
-STATUS: portfolio shell 0.2
-MOOD: classic desktop, weird machine
-NEXT: arcade drawer
+STATUS: personal archive, restored
+STUDY: mechanical engineering / PoliTo
+NEXT: master’s in aerospace engineering
 
 Folders become projects.
 Projects become little worlds.</pre>
@@ -381,9 +381,9 @@ Projects become little worlds.</pre>
             <button class="zoom-window" type="button" aria-label="Zoom Profiler"></button>
           </div>
           <div class="window-body">
-            <p><strong>Primary Drive:</strong> portfolio concepts</p>
-            <p><strong>Current Shell:</strong> Old-school OS prototype</p>
-            <p><strong>Next Concept:</strong> Arcade cabinet</p>
+            <p><strong>University:</strong> Politecnico di Torino</p>
+            <p><strong>Current degree:</strong> Bachelor’s in Mechanical Engineering</p>
+            <p><strong>Next chapter:</strong> Master’s in Aerospace Engineering</p><p><strong>Applications:</strong> preparing for November–December 2026</p>
           </div>
         </section>
 
@@ -455,8 +455,8 @@ Projects become little worlds.</pre>
             <span class="printer-machine" aria-hidden="true"></span>
             <div>
               <p><strong>Portfolio Printer</strong></p>
-              <p>Status: waiting for CV.pdf</p>
-              <button class="classic-button" type="button" data-action="print-cv">Print CV</button>
+              <p>Status: one-page CV draft available</p>
+              <a class="classic-button" href="/resume/Maksym-CV-draft.pdf" target="_blank">Open CV PDF</a>
             </div>
           </div>
         </section>
@@ -503,8 +503,8 @@ Projects become little worlds.</pre>
           </div>
           <div class="window-body project-body">
             <h2>Apps</h2>
-            <p>A cabinet for shipped mobile apps, experiments, and product polish notes.</p>
-            <button class="classic-button" type="button" data-action="desktop-message">Open Case Study</button>
+            <p>Allergify, Absorb, and Quarter: three mobile app projects in ongoing development.</p>
+            <button class="classic-button" type="button" data-portfolio-section="apps">Explore the apps ↗</button>
           </div>
         </section>
 
@@ -519,7 +519,7 @@ Projects become little worlds.</pre>
           <div class="window-body project-body">
             <h2>Portfolio</h2>
             <p>The interface itself is part of the project: a desktop metaphor for browsing work.</p>
-            <button class="classic-button" type="button" data-action="desktop-message">View Build Log</button>
+            <button class="classic-button" type="button" data-portfolio-section="work">Explore the portfolio ↗</button>
           </div>
         </section>
 
@@ -534,8 +534,8 @@ Projects become little worlds.</pre>
           <div class="window-body project-body cad-project-body">
             <div>
               <h2>FPV Drone</h2>
-              <p>Flight hardware, tuning notes, controller setup, and whatever survives testing.</p>
-              <button class="classic-button" type="button" data-action="desktop-message">Inspect Parts</button>
+              <p>A custom 5-inch drone, reconstructed from five DXF cut profiles. This archived cube viewer is an interface experiment; see the current portfolio for the actual frame geometry and component layout.</p>
+              <button class="classic-button" type="button" data-portfolio-section="work">Open the drone project ↗</button>
             </div>
             <div class="cad-viewer" data-cad-viewer>
               <div class="cad-toolbar">
@@ -570,8 +570,8 @@ Projects become little worlds.</pre>
           </div>
           <div class="window-body project-body">
             <h2>Juice Maker</h2>
-            <p>A physical product/prototype folder for the machine concept and interaction flow.</p>
-            <button class="classic-button" type="button" data-action="desktop-message">Open Sketches</button>
+            <p>An archived machine concept from the original desktop. Sketches and project documentation have not been added yet.</p>
+            <button class="classic-button" type="button" data-portfolio-section="archive">Open the notebook ↗</button>
           </div>
         </section>
 
@@ -661,9 +661,7 @@ Projects become little worlds.</pre>
             <button class="zoom-window" type="button" aria-label="Zoom Scrapbook"></button>
           </div>
           <div class="window-body scrapbook-body">
-            <span class="scrap scrap-one"></span>
-            <span class="scrap scrap-two"></span>
-            <span class="scrap scrap-three"></span>
+            <h2>Media &amp; sketches</h2><p>Photography, process footage, and drawings. These collections are being prepared; no files have been added yet.</p><button class="classic-button" data-portfolio-section="archive">Open the visual archive ↗</button>
           </div>
         </section>
 
@@ -676,7 +674,7 @@ Projects become little worlds.</pre>
             <button class="zoom-window" type="button" aria-label="Zoom Stickies"></button>
           </div>
           <div class="window-body sticky-body">
-            <p>Second concept: old-school arcade.</p>
+            <p>Next chapter: master’s in aerospace engineering. Universities still to be selected.</p>
           </div>
         </section>
 
@@ -725,10 +723,10 @@ Projects become little worlds.</pre>
                 <textarea data-email-message>Hey Maksym, I found your portfolio OS.</textarea>
               </label>
               <div class="email-actions">
-                <button class="classic-button" type="submit">Send</button>
+                <button class="classic-button" type="submit">Save draft</button>
                 <button class="classic-button" type="button" data-email-clear>Clear</button>
               </div>
-              <p class="email-status" data-email-status>Draft ready.</p>
+              <p class="email-status" data-email-status>Local draft only. Email delivery is not configured.</p>
             </form>
           </div>
         </section>
@@ -777,5 +775,6 @@ Projects become little worlds.</pre>
     </div>
 
     <script src="script.js"></script>
+    <script src="portfolio-bridge.js"></script>
   </body>
 </html>

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "vite preview --host 127.0.0.1",
+    "build:drone": "python3 scripts/convert_drone_dxf.py && node scripts/build_drone_stl.mjs && node scripts/verify_drone_geometry.mjs && python3 scripts/package_drone_stl.py",
+    "test:geometry": "node scripts/verify_drone_geometry.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.6",

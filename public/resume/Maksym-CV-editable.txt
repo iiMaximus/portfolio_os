@@ -1,0 +1,36 @@
+Maksym [Surname]
+Mechanical engineering undergraduate
+[Email address]
+[Phone, optional]
+https://github.com/iiMaximus
+
+Bachelor’s student in mechanical engineering at Politecnico di Torino, preparing to apply for a master’s in aerospace engineering. Developing a drone project and mobile apps alongside my studies.
+
+EDUCATION
+Politecnico di Torino
+Bachelor’s in Mechanical Engineering
+[Start year] - [Expected graduation]
+[Add relevant coursework, thesis or academic projects, and grades if appropriate.]
+
+SELECTED PROJECTS
+Drone development - Ongoing
+Developing a custom 5-inch carbon-fibre drone using DXF cutting profiles, with separate flight-controller and ESC mounting positions. An interactive reconstruction documents the frame and component layout.
+[Add your role, CAD tools, design decisions, build photographs, and measured test results.]
+
+Allergify, Absorb & Quarter - Ongoing
+Continuing work on three mobile app projects exploring food information, learning, and time planning.
+[Add technologies, individual contributions, development dates, and working demos or repositories.]
+
+ACADEMIC DIRECTION
+Master’s study in aerospace engineering. Universities to be selected; preparing applications for November-December 2026.
+
+TECHNICAL SKILLS
+[Add verified CAD, engineering analysis, programming, manufacturing, and laboratory tools.]
+
+LANGUAGES
+[Add languages and proficiency levels.]
+
+EXPERIENCE & ACTIVITIES
+[Add relevant employment, internships, student teams, awards, or volunteering, if applicable.]
+
+WORKING DRAFT - October 2026. Complete all bracketed fields before applying.

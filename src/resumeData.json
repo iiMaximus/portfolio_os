@@ -1,0 +1,35 @@
+{
+  "name": "Maksym [Surname]",
+  "title": "Mechanical engineering undergraduate",
+  "summary": "Bachelor’s student in mechanical engineering at Politecnico di Torino, preparing to apply for a master’s in aerospace engineering. Developing a drone project and mobile apps alongside my studies.",
+  "email": "[Email address]",
+  "phone": "[Phone, optional]",
+  "github": "https://github.com/iiMaximus",
+  "education": {
+    "institution": "Politecnico di Torino",
+    "degree": "Bachelor’s in Mechanical Engineering",
+    "status": "In progress",
+    "dates": "[Start year] - [Expected graduation]",
+    "details": "[Add relevant coursework, thesis or academic projects, and grades if appropriate.]"
+  },
+  "projects": [
+    {
+      "name": "Drone development",
+      "status": "Ongoing",
+      "description": "Developing a custom 5-inch carbon-fibre drone using DXF cutting profiles, with separate flight-controller and ESC mounting positions. An interactive reconstruction documents the frame and component layout.",
+      "evidence": "[Add your role, CAD tools, design decisions, build photographs, and measured test results.]"
+    },
+    {
+      "name": "Allergify, Absorb & Quarter",
+      "status": "Ongoing",
+      "description": "Continuing work on three mobile app projects exploring food information, learning, and time planning.",
+      "evidence": "[Add technologies, individual contributions, development dates, and working demos or repositories.]"
+    }
+  ],
+  "direction": "Master’s study in aerospace engineering. Universities to be selected; preparing applications for November-December 2026.",
+  "skills": "[Add verified CAD, engineering analysis, programming, manufacturing, and laboratory tools.]",
+  "languages": "[Add languages and proficiency levels.]",
+  "experience": "[Add relevant employment, internships, student teams, awards, or volunteering, if applicable.]",
+  "updated": "October 2026",
+  "draft": true
+}
