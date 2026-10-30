@@ -1,0 +1,5 @@
+# Keep CAD sources and generated assets byte-for-byte, without text conversion.
+*.[dD][xX][fF] binary
+*.stl binary
+*.pdf binary
+*.zip binary
