@@ -1,36 +1,39 @@
 Maksym [Surname]
-Mechanical engineering undergraduate
+Third-year Mechanical Engineering student
 [Email address]
 [Phone, optional]
 https://github.com/iiMaximus
 
-Bachelor’s student in mechanical engineering at Politecnico di Torino, preparing to apply for a master’s in aerospace engineering. Developing a drone project and mobile apps alongside my studies.
+Third-year Mechanical Engineering student at Politecnico di Torino, expecting to graduate in July 2027. Independent work spans a custom carbon-fibre FPV drone designed in SolidWorks and three mobile apps. Longstanding interest in aircraft and aerospace.
 
 EDUCATION
 Politecnico di Torino
 Bachelor’s in Mechanical Engineering
-[Start year] - [Expected graduation]
-[Add relevant coursework, thesis or academic projects, and grades if appropriate.]
+Expected graduation: July 2027
+[Add relevant coursework, thesis topic and academic results.]
 
 SELECTED PROJECTS
-Drone development - Ongoing
-Developing a custom 5-inch carbon-fibre drone using DXF cutting profiles, with separate flight-controller and ESC mounting positions. An interactive reconstruction documents the frame and component layout.
-[Add your role, CAD tools, design decisions, build photographs, and measured test results.]
+Custom 5-inch FPV drone - Ongoing
+Independently designed the frame and complete component layout in SolidWorks, then had the parts machined from carbon fibre. Integrated off-the-shelf propulsion, control and video components, with adjacent FC and ESC mounts.
+[Add build photographs, measured mass and validated test results.]
 
-Allergify, Absorb & Quarter - Ongoing
-Continuing work on three mobile app projects exploring food information, learning, and time planning.
-[Add technologies, individual contributions, development dates, and working demos or repositories.]
+Allergify, Absorb & Quarter - Development & distribution
+Independently developed Allergify, Absorb and Quarter with AI-assisted coding. Now working on distribution of the food-information, study and planning apps.
+[Add live links, release dates and verified usage figures when available.]
 
-ACADEMIC DIRECTION
-Master’s study in aerospace engineering. Universities to be selected; preparing applications for November-December 2026.
+STUDENT TEAM EXPERIENCE
+Squadra Corse PoliTO - Cost & Manufacturing
+Second year · 7–8 months
+Worked on bills of materials, manufacturing cost calculations and Excel documentation for the Formula Student team.
+
+DRAFT PoliTO - Micro project
+First year · 1 year
+Contributed to basic drone design within the Micro project of the university’s drone team.
 
 TECHNICAL SKILLS
-[Add verified CAD, engineering analysis, programming, manufacturing, and laboratory tools.]
+SolidWorks; component layout and mechanical integration; manufacturing cost calculations; bills of materials; Excel; AI-assisted app development.
 
 LANGUAGES
-[Add languages and proficiency levels.]
-
-EXPERIENCE & ACTIVITIES
-[Add relevant employment, internships, student teams, awards, or volunteering, if applicable.]
+[Languages and proficiency levels to be added.]
 
 WORKING DRAFT - October 2026. Complete all bracketed fields before applying.

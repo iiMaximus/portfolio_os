@@ -27,6 +27,17 @@ export function carbonTexture() {
 
 export function makeMaterials(wireframe = false) {
   const weave = carbonTexture();
+  const grainData = new Uint8Array(64 * 64 * 4);
+  for (let i = 0; i < 64 * 64; i++) {
+    const v = 105 + ((i * 73 + (i % 64) * 19) % 43);
+    grainData.set([v, v, v, 255], i * 4);
+  }
+  const grain = new THREE.DataTexture(grainData, 64, 64);
+  grain.wrapS = grain.wrapT = THREE.RepeatWrapping;
+  grain.repeat.set(8, 8);
+  grain.needsUpdate = true;
+  const physical = (color, roughness, extra = {}) =>
+    new THREE.MeshPhysicalMaterial({ color, roughness, wireframe, ...extra });
   const standard = (color, roughness, metalness, extra = {}) =>
     new THREE.MeshStandardMaterial({
       color,
@@ -36,7 +47,10 @@ export function makeMaterials(wireframe = false) {
       ...extra,
     });
   return {
-    carbon: standard("#b2b5b6", 0.48, 0.55, {
+    carbon: physical("#a3a8aa", 0.4, {
+      metalness: 0.32,
+      clearcoat: 0.38,
+      clearcoatRoughness: 0.28,
       map: weave,
       bumpMap: weave,
       bumpScale: 0.018,
@@ -48,18 +62,48 @@ export function makeMaterials(wireframe = false) {
     silver: standard("#b6bec1", 0.25, 0.92),
     copper: standard("#c98b53", 0.3, 0.85),
     pcb: standard("#244d42", 0.62, 0.25),
-    propeller: standard("#3c4141", 0.24, 0.55, {
-      transparent: true,
-      opacity: 0.88,
+    propeller: physical("#535852", 0.28, {
+      metalness: 0.04,
+      clearcoat: 0.65,
+      clearcoatRoughness: 0.2,
       side: THREE.DoubleSide,
     }),
-    lens: standard("#16373c", 0.08, 0.75),
+    lens: physical("#142e38", 0.075, {
+      metalness: 0.08,
+      transparent: true,
+      opacity: 0.32,
+      depthWrite: false,
+      envMapIntensity: 0.6,
+      clearcoat: 1,
+      clearcoatRoughness: 0.025,
+      iridescence: 0.35,
+      iridescenceIOR: 1.3,
+    }),
+    optic: physical("#102429", 0.16, { metalness: 0.25, clearcoat: 0.6 }),
+    camera: physical("#343939", 0.52, {
+      metalness: 0.12,
+      bumpMap: grain,
+      bumpScale: 0.055,
+    }),
+    shrink: physical("#293333", 0.34, {
+      metalness: 0.08,
+      clearcoat: 0.45,
+      clearcoatRoughness: 0.3,
+      bumpMap: grain,
+      bumpScale: 0.04,
+    }),
+    foil: standard("#999d99", 0.38, 0.65),
+    fabric: standard("#343b35", 0.94, 0, { bumpMap: grain, bumpScale: 0.18 }),
+    tpu: standard("#bd4a29", 0.8, 0, { bumpMap: grain, bumpScale: 0.12 }),
+    connector: standard("#cb9a2e", 0.54, 0.02),
+    red: standard("#b33929", 0.4, 0.05),
     white: standard("#e8e3d7", 0.4, 0.3),
     dispose() {
       Object.values(this).forEach((value) => {
         if (value?.isMaterial) value.dispose();
       });
       weave.dispose();
+      grain.dispose();
     },
   };
 }

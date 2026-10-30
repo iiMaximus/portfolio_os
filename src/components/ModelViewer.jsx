@@ -28,6 +28,18 @@ function SceneFallback() {
   );
 }
 
+function ContextHealth({ onLost }) {
+  const gl = useThree((state) => state.gl);
+  useEffect(() => {
+    const handle = () => onLost(true);
+    gl.domElement.addEventListener("webglcontextlost", handle);
+    // R3F deliberately loses the old context on unmount. Remove our handler
+    // first so a hot reload cannot mark a new, healthy canvas as failed.
+    return () => gl.domElement.removeEventListener("webglcontextlost", handle);
+  }, [gl, onLost]);
+  return null;
+}
+
 function RenderUpdates({ signature, reducedMotion }) {
   const invalidate = useThree((state) => state.invalidate);
   useEffect(() => {
@@ -156,13 +168,9 @@ export default function ModelViewer({
               onCreated={({ gl }) => {
                 gl.toneMapping = THREE.ACESFilmicToneMapping;
                 gl.toneMappingExposure = 1.15;
-                gl.domElement.addEventListener(
-                  "webglcontextlost",
-                  () => setLost(true),
-                  { once: true },
-                );
               }}
             >
+              <ContextHealth onLost={setLost} />
               <ambientLight intensity={0.65} />
               <directionalLight
                 position={[3, 6, 4]}
@@ -171,10 +179,10 @@ export default function ModelViewer({
                 shadow-mapSize={[1024, 1024]}
                 shadow-bias={-0.0005}
                 shadow-normalBias={0.03}
-                shadow-camera-left={-5}
-                shadow-camera-right={5}
-                shadow-camera-top={5}
-                shadow-camera-bottom={-5}
+                shadow-camera-left={-3.5}
+                shadow-camera-right={3.5}
+                shadow-camera-top={3.5}
+                shadow-camera-bottom={-3.5}
               />
               <directionalLight
                 position={[-4, 1, -2]}
@@ -218,7 +226,7 @@ export default function ModelViewer({
                 {kind === "drone" && (
                   <mesh
                     rotation={[-Math.PI / 2, 0, 0]}
-                    position={[0, -1.0, 0]}
+                    position={[0, -0.24, 0]}
                     receiveShadow
                   >
                     <planeGeometry args={[20, 20]} />

@@ -33,10 +33,10 @@ def paragraph(text, size=9.5, color=INK, leading=14, after=8, font='Helvetica'):
 
 def heading(text):
     global y
-    y -= 9
+    y -= 6
     c.setStrokeColor(LINE); c.setLineWidth(.6); c.line(left, y, right, y)
-    y -= 19
-    paragraph(text.upper(), size=8, color=ACCENT, leading=10, after=11, font='Helvetica-Bold')
+    y -= 17
+    paragraph(text.upper(), size=8, color=ACCENT, leading=10, after=8, font='Helvetica-Bold')
 
 def row(title, status):
     global y
@@ -46,11 +46,11 @@ def row(title, status):
 
 c.setFillColor(ACCENT); c.setFont('Helvetica-Bold', 7.5); c.drawString(left, y, 'CURRICULUM VITAE / WORKING DRAFT')
 y -= 38
-paragraph(data['name'], 30, INK, 34, 7, 'Helvetica-Bold')
-paragraph(data['title'], 12, MUTED, 16, 11)
-paragraph(data['email'] + '   |   github.com/iiMaximus', 8.5, MUTED, 12, 18)
-c.linkURL(data['github'], (left+115,y+18,right,y+30), relative=0)
-paragraph(data['summary'], 10, INK, 15, 2)
+paragraph(data['name'], 28, INK, 32, 5, 'Helvetica-Bold')
+paragraph(data['title'], 11, MUTED, 15, 7)
+paragraph(data['email'] + '   |   github.com/iiMaximus', 8.5, MUTED, 12, 12)
+c.linkURL(data['github'], (left+115,y+12,right,y+24), relative=0)
+paragraph(data['summary'], 9.5, INK, 13.5, 2)
 heading('Education')
 row(data['education']['institution'], data['education']['status'])
 paragraph(data['education']['degree'], 9.5, INK, 14, 3)
@@ -60,14 +60,15 @@ heading('Selected projects')
 for project in data['projects']:
     row(project['name'], project['status'])
     paragraph(project['description'], 9, INK, 13, 4)
-    paragraph(project['evidence'], 8.2, MUTED, 11.5, 10)
-heading('Academic direction')
-paragraph(data['direction'], 9, INK, 13, 2)
+    paragraph(project['evidence'], 8.2, MUTED, 11.5, 5)
+heading('Student team experience')
+for item in data['experience']:
+    row(item['name'], item['period'])
+    paragraph(item['role'], 8.5, ACCENT, 11, 3, 'Helvetica-Bold')
+    paragraph(item['description'], 9, INK, 12.5, 6)
 heading('Technical skills & languages')
-paragraph(data['skills'], 8.5, MUTED, 12, 5)
-paragraph(data['languages'], 8.5, MUTED, 12, 2)
-heading('Experience & activities')
-paragraph(data['experience'], 8.5, MUTED, 12, 2)
+paragraph(data['skills'], 9, INK, 12.5, 4)
+paragraph(data['languages'], 8.2, MUTED, 11.5, 2)
 if y < 63:
     raise ValueError(f'CV content exceeds one-page layout: y={y}')
 c.setStrokeColor(LINE); c.line(left, 46, right, 46)
@@ -81,6 +82,9 @@ public = ROOT / 'public/resume'; public.mkdir(parents=True, exist_ok=True)
 lines = [data['name'], data['title'], data['email'], data['phone'], data['github'], '', data['summary'], '', 'EDUCATION', data['education']['institution'], data['education']['degree'], data['education']['dates'], data['education']['details'], '', 'SELECTED PROJECTS']
 for project in data['projects']:
     lines.extend([project['name'] + ' - ' + project['status'], project['description'], project['evidence'], ''])
-lines.extend(['ACADEMIC DIRECTION', data['direction'], '', 'TECHNICAL SKILLS', data['skills'], '', 'LANGUAGES', data['languages'], '', 'EXPERIENCE & ACTIVITIES', data['experience'], '', 'WORKING DRAFT - October 2026. Complete all bracketed fields before applying.'])
+lines.extend(['STUDENT TEAM EXPERIENCE'])
+for item in data['experience']:
+    lines.extend([item['name'] + ' - ' + item['role'], item['period'], item['description'], ''])
+lines.extend(['TECHNICAL SKILLS', data['skills'], '', 'LANGUAGES', data['languages'], '', 'WORKING DRAFT - October 2026. Complete all bracketed fields before applying.'])
 (public / 'Maksym-CV-editable.txt').write_text('\n'.join(lines) + '\n')
 print(f'Created {OUT.name}; content ends at {y:.1f} pt.')

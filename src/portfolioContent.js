@@ -3,7 +3,7 @@ export const profile = {
   github: "https://github.com/iiMaximus",
   university: "Politecnico di Torino",
   degree: "Bachelor’s in Mechanical Engineering",
-  nextDegree: "Master’s in Aerospace Engineering",
+  graduation: "July 2027",
 };
 
 export const apps = [
@@ -50,10 +50,12 @@ export const projects = [
     discipline: "Mechanical engineering",
     status: "In development",
     summary:
-      "Taking a drone from a digital assembly to a physical machine. An ongoing exploration of how individual parts become a working system.",
+      "A 5-inch FPV drone I designed from scratch in SolidWorks: carbon-fibre frame, component placement, and integration of the complete assembly.",
     intro:
-      "A custom 5-inch carbon-fibre drone. The frame shown here is reconstructed from my five original DXF cutting files, retaining the outlines, holes, and slots. The electronics and upper payload are visual representations of the build.",
+      "I designed the frame and complete component layout in SolidWorks, then had the parts machined from carbon fibre. The motors, electronics, and video system are off-the-shelf components that I selected and integrated. The frame shown here is reconstructed from my five original DXF cutting files, retaining the outlines, holes, and slots. The electronics and upper payload are visual representations of the build.",
     facts: [
+      ["My role", "Frame design & complete component integration"],
+      ["CAD", "SolidWorks"],
       ["Stage", "Ongoing build"],
       ["Frame", "5 original DXF profiles → extruded STL"],
       ["Carbon stock", "2 mm plates / 6 mm arms (provisional)"],
@@ -89,10 +91,11 @@ export const projects = [
     summary:
       "Allergify, Absorb, and Quarter. Three ongoing apps exploring food, learning, and how we spend our time.",
     intro:
-      "Alongside hardware, I keep building software. These apps give me a different way to explore systems: through information, interaction, and the decisions a person makes on a small screen.",
+      "I developed all three apps independently with substantial help from AI coding tools. I’m now working on distribution. The handheld here shows illustrative interfaces; it is a way to explore the projects, rather than a live app demo.",
     facts: [
       ["Projects", "Allergify / Absorb / Quarter"],
-      ["Stage", "Ongoing development"],
+      ["My role", "Independent development, with AI assistance"],
+      ["Stage", "Development & distribution"],
       ["Focus", "Mobile products & interfaces"],
     ],
     notes: [

@@ -1134,7 +1134,7 @@
             "# README.md",
             "STATUS: portfolio shell 0.4",
             "MOOD: desktop utilities waking up",
-            "NEXT: aerospace master’s applications; CV draft available"
+            "EDUCATION: third year; graduation July 2027; CV draft available"
           ], "system");
           return;
         }
@@ -1176,7 +1176,7 @@
         writeBlock([
           "Study: Mechanical Engineering at Politecnico di Torino",
           "Current projects: drone geometry and mobile apps",
-          "Next direction: master’s in Aerospace Engineering",
+          "Year: third year; expected graduation July 2027",
           "Specific tool proficiencies: to be confirmed in the CV"
         ], "system");
         return;

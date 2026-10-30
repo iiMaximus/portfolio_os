@@ -1,35 +1,49 @@
 {
   "name": "Maksym [Surname]",
-  "title": "Mechanical engineering undergraduate",
-  "summary": "Bachelor’s student in mechanical engineering at Politecnico di Torino, preparing to apply for a master’s in aerospace engineering. Developing a drone project and mobile apps alongside my studies.",
+  "title": "Third-year Mechanical Engineering student",
+  "summary": "Third-year Mechanical Engineering student at Politecnico di Torino, expecting to graduate in July 2027. Independent work spans a custom carbon-fibre FPV drone designed in SolidWorks and three mobile apps. Longstanding interest in aircraft and aerospace.",
   "email": "[Email address]",
   "phone": "[Phone, optional]",
   "github": "https://github.com/iiMaximus",
   "education": {
     "institution": "Politecnico di Torino",
     "degree": "Bachelor’s in Mechanical Engineering",
-    "status": "In progress",
-    "dates": "[Start year] - [Expected graduation]",
-    "details": "[Add relevant coursework, thesis or academic projects, and grades if appropriate.]"
+    "status": "Third year",
+    "dates": "Expected graduation: July 2027",
+    "details": "[Add relevant coursework, thesis topic and academic results.]"
   },
   "projects": [
     {
-      "name": "Drone development",
+      "name": "Custom 5-inch FPV drone",
       "status": "Ongoing",
-      "description": "Developing a custom 5-inch carbon-fibre drone using DXF cutting profiles, with separate flight-controller and ESC mounting positions. An interactive reconstruction documents the frame and component layout.",
-      "evidence": "[Add your role, CAD tools, design decisions, build photographs, and measured test results.]"
+      "description": "Independently designed the frame and complete component layout in SolidWorks, then had the parts machined from carbon fibre. Integrated off-the-shelf propulsion, control and video components, with adjacent FC and ESC mounts.",
+      "evidence": "[Add build photographs, measured mass and validated test results.]"
     },
     {
       "name": "Allergify, Absorb & Quarter",
-      "status": "Ongoing",
-      "description": "Continuing work on three mobile app projects exploring food information, learning, and time planning.",
-      "evidence": "[Add technologies, individual contributions, development dates, and working demos or repositories.]"
+      "status": "Development & distribution",
+      "description": "Independently developed Allergify, Absorb and Quarter with AI-assisted coding. Now working on distribution of the food-information, study and planning apps.",
+      "evidence": "[Add live links, release dates and verified usage figures when available.]"
     }
   ],
-  "direction": "Master’s study in aerospace engineering. Universities to be selected; preparing applications for November-December 2026.",
-  "skills": "[Add verified CAD, engineering analysis, programming, manufacturing, and laboratory tools.]",
-  "languages": "[Add languages and proficiency levels.]",
-  "experience": "[Add relevant employment, internships, student teams, awards, or volunteering, if applicable.]",
+  "skills": "SolidWorks; component layout and mechanical integration; manufacturing cost calculations; bills of materials; Excel; AI-assisted app development.",
+  "languages": "[Languages and proficiency levels to be added.]",
+  "experience": [
+    {
+      "name": "Squadra Corse PoliTO",
+      "role": "Cost & Manufacturing",
+      "period": "Second year · 7–8 months",
+      "description": "Worked on bills of materials, manufacturing cost calculations and Excel documentation for the Formula Student team.",
+      "url": "https://www.squadracorsepolito.com/"
+    },
+    {
+      "name": "DRAFT PoliTO",
+      "role": "Micro project",
+      "period": "First year · 1 year",
+      "description": "Contributed to basic drone design within the Micro project of the university’s drone team.",
+      "url": "https://www.draftpolito.it/"
+    }
+  ],
   "updated": "October 2026",
   "draft": true
 }

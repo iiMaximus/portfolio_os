@@ -205,6 +205,7 @@ export default function Drone({
                 materials={materials}
                 spin={moving && !reducedMotion}
                 phase={i * 0.61}
+                handedness={i === 0 || i === 3 ? 1 : -1}
               />
             </group>
           ))}

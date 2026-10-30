@@ -3127,7 +3127,6 @@ h2 em {
   .site-header nav {
     gap: 19px;
   }
-  .site-header nav .nav-about,
   .nav-desktop {
     display: none !important;
   }
@@ -3466,4 +3465,310 @@ h2 em {
 
 .project-download {
   margin: 4px 0 24px;
+}
+
+/* A clear reading order: work, person, document, contact. */
+.future-note {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  align-items: center;
+  gap: 36px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background: #e7e8df;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.future-note > p {
+  max-width: 550px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+.future-note .text-link {
+  margin: 0;
+  white-space: nowrap;
+}
+.about-section {
+  gap: 70px 9%;
+  padding-top: 105px;
+  padding-bottom: 85px;
+}
+.about-section h2 em {
+  font-style: normal;
+  color: var(--orange);
+}
+.about-copy {
+  padding-top: 38px;
+}
+.about-copy > p:not(.about-lead) {
+  font-size: 14px;
+  line-height: 1.9;
+  margin-bottom: 20px;
+}
+.education-card {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  margin-top: 50px;
+  max-width: 360px;
+}
+.education-card .eyebrow {
+  color: var(--muted);
+  font-size: 8px;
+}
+.education-card h3 {
+  font-weight: 500;
+  font-size: 20px;
+  letter-spacing: -0.5px;
+  margin: 15px 0 9px;
+}
+.education-card > p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+.education-card dl {
+  margin: 24px 0 0;
+}
+.education-card dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  font-size: 11px;
+}
+.education-card dt {
+  color: var(--muted);
+}
+.education-card dd {
+  margin: 0;
+  font-weight: 500;
+}
+.about-interests {
+  border-top: 1px solid var(--line);
+  padding-top: 21px;
+  margin-top: 28px;
+}
+.about-interests .eyebrow {
+  color: var(--muted);
+  font-size: 8px;
+}
+.about-interests p {
+  font-size: 12px;
+  margin-top: 12px;
+  line-height: 1.8;
+}
+.experience-block {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1.12fr;
+  gap: 9%;
+  border-top: 1px solid var(--line);
+  padding-top: 35px;
+}
+.experience-heading > p:last-child {
+  font-size: 20px;
+  line-height: 1.5;
+  letter-spacing: -0.5px;
+  margin-top: 17px;
+}
+.experience-entries {
+  display: grid;
+  gap: 30px;
+}
+.experience-entries article + article {
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
+}
+.experience-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  color: var(--muted);
+}
+.experience-meta > span {
+  font-size: 9px;
+}
+.experience-entries h3 {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.6px;
+  margin: 12px 0;
+}
+.experience-entries h3 a:hover {
+  color: var(--orange);
+}
+.experience-entries h3 span {
+  margin-left: 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.experience-entries article > p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.85;
+  max-width: 500px;
+}
+.resume-section {
+  background: #e6e8de;
+  border-top: 1px solid var(--line);
+  padding-top: 75px;
+  padding-bottom: 75px;
+  gap: 12%;
+}
+.resume-section-copy h2 {
+  font-size: clamp(38px, 4.1vw, 62px);
+}
+.personal-corner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 50px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  align-items: center;
+}
+.personal-corner h2 {
+  font-size: 25px;
+  letter-spacing: -0.7px;
+  margin: 14px 0;
+  font-weight: 500;
+}
+.personal-corner p {
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 440px;
+}
+.personal-actions {
+  min-width: 240px;
+}
+.personal-actions > button {
+  width: 100%;
+}
+.personal-actions details {
+  margin-top: 18px;
+  font-size: 11px;
+}
+.personal-actions summary {
+  cursor: pointer;
+  color: var(--muted);
+}
+.personal-actions details > div {
+  padding-top: 18px;
+}
+.personal-actions details button {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  width: 100%;
+  text-align: left;
+}
+.personal-actions details p {
+  font-size: 10px;
+  margin-top: 12px;
+}
+@media (max-width: 1000px) {
+  .future-note {
+    grid-template-columns: 1fr auto;
+    gap: 14px 30px;
+  }
+  .future-note > .eyebrow {
+    grid-column: 1 / -1;
+  }
+  .about-section {
+    gap: 50px 6%;
+  }
+  .experience-block {
+    gap: 6%;
+  }
+}
+@media (max-width: 760px) {
+  .site-header nav .nav-about {
+    display: inline-flex;
+  }
+  .site-header nav > a.nav-contact {
+    display: inline-flex;
+    border: 0;
+    padding: 0;
+    margin-left: 0;
+  }
+  .site-header nav > a.nav-contact svg {
+    display: none;
+  }
+  .site-header nav {
+    gap: 18px;
+  }
+  .site-header nav > a {
+    font-size: 11px;
+  }
+  .future-note {
+    grid-template-columns: 1fr;
+    padding-top: 26px;
+    padding-bottom: 26px;
+    gap: 16px;
+  }
+  .future-note .text-link {
+    justify-self: start;
+  }
+  .about-section {
+    display: block;
+    padding-top: 65px;
+    padding-bottom: 60px;
+  }
+  .about-section h2 {
+    font-size: clamp(42px, 9vw, 60px);
+    letter-spacing: -2px;
+  }
+  .about-section h2 > br {
+    display: block;
+  }
+  .education-card {
+    max-width: none;
+    margin-top: 30px;
+  }
+  .about-copy {
+    padding-top: 40px;
+    max-width: none;
+  }
+  .about-copy > p:not(.about-lead) {
+    font-size: 13px;
+  }
+  .about-lead {
+    font-size: 22px;
+  }
+  .experience-block {
+    display: block;
+    margin-top: 40px;
+    padding-top: 30px;
+  }
+  .experience-heading {
+    margin-bottom: 30px;
+  }
+  .experience-heading > p:last-child {
+    font-size: 18px;
+  }
+  .resume-section {
+    padding-top: 55px;
+    padding-bottom: 55px;
+  }
+  .personal-corner {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
+  .personal-actions {
+    max-width: 360px;
+  }
+}
+@media (max-width: 420px) {
+  .site-header .wordmark > span:last-child {
+    display: none;
+  }
+  .site-header nav {
+    gap: 19px;
+  }
 }

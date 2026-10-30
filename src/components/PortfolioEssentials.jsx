@@ -46,17 +46,23 @@ export function ResumeDocument() {
         ))}
       </section>
       <section>
-        <h3>Academic direction</h3>
-        <p>{resume.direction}</p>
-      </section>
-      <section>
         <h3>Technical skills & languages</h3>
-        <p className="resume-placeholder">{resume.skills}</p>
+        <p>{resume.skills}</p>
         <p className="resume-placeholder">{resume.languages}</p>
       </section>
       <section>
         <h3>Experience & activities</h3>
-        <p className="resume-placeholder">{resume.experience}</p>
+        {resume.experience.map((item) => (
+          <div className="resume-project" key={item.name}>
+            <div className="resume-entry-head">
+              <strong>
+                {item.name} · {item.role}
+              </strong>
+              <span>{item.period}</span>
+            </div>
+            <p>{item.description}</p>
+          </div>
+        ))}
       </section>
       <footer>
         Draft · {resume.updated} · Bracketed fields need to be completed before
@@ -66,81 +72,19 @@ export function ResumeDocument() {
   );
 }
 
-export function AcademicProfile() {
-  return (
-    <section
-      id="education"
-      className="academic-section section-pad"
-      data-section
-    >
-      <div className="academic-intro">
-        <p className="eyebrow">05 — EDUCATION & DIRECTION</p>
-        <h2>
-          Grounded in mechanics.
-          <br />
-          <em>Looking towards flight.</em>
-        </h2>
-        <p>
-          Building the foundations now. Preparing for the next chapter in
-          aerospace.
-        </p>
-      </div>
-      <div className="academic-path">
-        <article>
-          <span className="path-marker" />
-          <div className="path-meta">
-            <span className="eyebrow">CURRENTLY</span>
-            <span className="status">
-              <i /> In progress
-            </span>
-          </div>
-          <h3>Politecnico di Torino</h3>
-          <p className="degree-name">Bachelor’s in Mechanical Engineering</p>
-          <p>
-            My current academic home, and the foundation for the engineering
-            work in this portfolio.
-          </p>
-        </article>
-        <article>
-          <span className="path-marker path-marker-future" />
-          <div className="path-meta">
-            <span className="eyebrow">NEXT CHAPTER</span>
-            <span className="eyebrow">APPLICATIONS IN PREPARATION</span>
-          </div>
-          <h3>Master’s in Aerospace Engineering</h3>
-          <p className="degree-name">Exploring programmes and universities</p>
-          <p>
-            I’m preparing applications for November–December 2026. My next step
-            is to take the mechanical engineering foundation further into
-            aerospace.
-          </p>
-        </article>
-      </div>
-      <div className="focus-strip">
-        <span className="eyebrow">AREAS I’M EXPLORING</span>
-        <span>CAD & physical assembly</span>
-        <span>Flight & aerospace</span>
-        <span>Software & product</span>
-      </div>
-    </section>
-  );
-}
-
 export function ResumeSection({ onOpen }) {
   return (
     <section id="resume" className="resume-section section-pad" data-section>
       <div className="resume-section-copy">
-        <p className="eyebrow">06 — THE ESSENTIALS</p>
+        <p className="eyebrow">03 — CURRICULUM VITAE</p>
         <h2>
-          The work.
+          My background,
           <br />
-          The background.
-          <br />
-          <em>One document.</em>
+          <em>on one page.</em>
         </h2>
         <p>
-          A concise CV alongside the projects: education, current work, and the
-          direction I want to take next.
+          Education, independent projects, student-team experience, and the
+          tools I’ve used.
         </p>
         <div className="resume-actions">
           <a
@@ -155,8 +99,8 @@ export function ResumeSection({ onOpen }) {
           </button>
         </div>
         <p className="document-note">
-          Working draft · Identity, dates, and further experience to be
-          completed.
+          Working draft · Contact details, academic results, and project
+          evidence still to be completed.
         </p>
         <a
           className="editable-link"
@@ -184,15 +128,15 @@ export function ResumeSection({ onOpen }) {
         <span className="paper-rule" />
         <span className="preview-section-label">EDUCATION</span>
         <strong>Politecnico di Torino</strong>
-        <span>Bachelor’s in Mechanical Engineering · In progress</span>
+        <span>Third year · Expected graduation July 2027</span>
         <span className="preview-section-label">SELECTED WORK</span>
         <strong>Drone development</strong>
-        <span>CAD geometry · Ongoing physical build</span>
+        <span>SolidWorks · Frame design & integration</span>
         <strong>Allergify, Absorb & Quarter</strong>
-        <span>Mobile software · Ongoing development</span>
-        <span className="preview-section-label">NEXT CHAPTER</span>
-        <strong>Aerospace engineering</strong>
-        <span>Preparing for master’s applications</span>
+        <span>Independent apps · Development & distribution</span>
+        <span className="preview-section-label">TEAM EXPERIENCE</span>
+        <strong>Squadra Corse · DRAFT PoliTO</strong>
+        <span>Cost & Manufacturing · Drone design</span>
         <div className="paper-bottomline">
           <span>WORKING DRAFT / OCT 2026</span>
           <span>↗</span>
@@ -228,68 +172,30 @@ const collections = [
 
 export function ArchiveSection({ onOpenDesktop, onOpenMedia }) {
   return (
-    <section id="archive" className="archive-section section-pad" data-section>
-      <div className="section-heading">
-        <div>
-          <p className="eyebrow">07 — THE REST OF THE DESK</p>
-          <h2>A little beyond engineering.</h2>
-        </div>
+    <section id="archive" className="personal-corner section-pad">
+      <div>
+        <span className="eyebrow">TAKE THE SCENIC ROUTE</span>
+        <h2>A little more of my world.</h2>
         <p>
-          The visual work, the early ideas,
-          <br />
-          and the personality behind the projects.
+          The original desktop is still here: projects, documents, a terminal,
+          and a few distractions.
         </p>
       </div>
-      <div className="archive-layout">
-        <div className="archive-collections">
-          {collections.map((item) => (
-            <button key={item.id} onClick={() => onOpenMedia(item.id)}>
-              <span className="eyebrow">{item.number}</span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.detail}</p>
-                <span className="collection-status">
-                  Collection being prepared
-                </span>
-              </div>
-              <Arrow />
-            </button>
-          ))}
-        </div>
-        <button className="desktop-invitation" onClick={onOpenDesktop}>
-          <div className="desktop-miniature" aria-hidden="true">
-            <div className="mini-os-menu">
-              m↗ <span>File &nbsp; Edit &nbsp; Special</span>
-            </div>
-            <div className="mini-os-folders">
-              <span>
-                ▱<small>Projects</small>
-              </span>
-              <span>
-                ▤<small>CV</small>
-              </span>
-              <span>
-                ▱<small>Media</small>
-              </span>
-            </div>
-            <div className="mini-os-window">
-              <i />
-              <span>Welcome back.</span>
-              <small>EVERYTHING HAS A PLACE.</small>
-            </div>
-          </div>
-          <div className="desktop-invitation-label">
-            <span className="eyebrow">A WINDOW INTO MY WORLD</span>
-            <h3>
-              There’s more on the computer. <Arrow />
-            </h3>
-            <p>
-              CV, folders, terminal, and a few distractions.
-              <br />
-              Open Maksym OS.
-            </p>
-          </div>
+      <div className="personal-actions">
+        <button className="solid-button" onClick={onOpenDesktop}>
+          Open Maksym OS <Arrow />
         </button>
+        <details>
+          <summary>Browse the personal archive</summary>
+          <div>
+            {collections.map((item) => (
+              <button key={item.id} onClick={() => onOpenMedia(item.id)}>
+                {item.title} <Arrow />
+              </button>
+            ))}
+            <p>Collections are being prepared.</p>
+          </div>
+        </details>
       </div>
     </section>
   );

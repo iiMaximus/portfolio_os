@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { apps, profile, projects } from "./portfolioContent";
+import AboutSection from "./components/AboutSection";
 import DroneDrawing from "./components/FrameDrawing";
 import ResourceDialog, {
-  AcademicProfile,
   ResumeSection,
   ArchiveSection,
   ContactDetails,
@@ -279,7 +279,7 @@ export default function App() {
             }
             href="#work"
           >
-            Selected work <span>03</span>
+            Work
           </a>
           <a
             className={`nav-about ${activeSection === "about" ? "active" : ""}`}
@@ -293,11 +293,8 @@ export default function App() {
           >
             CV
           </a>
-          <button className="nav-desktop" onClick={() => openDesktop()}>
-            Desktop <Icon name="diagonal" size={13} />
-          </button>
           <a className="nav-contact" href="#contact">
-            Let’s connect <Icon name="diagonal" size={16} />
+            Contact <Icon name="diagonal" size={16} />
           </a>
         </nav>
       </header>
@@ -316,8 +313,9 @@ export default function App() {
               </span>
             </h1>
             <p className="hero-intro">
-              I’m Maksym, a mechanical engineering student at Politecnico di
-              Torino. Building things now. Looking towards aerospace next.
+              I’m Maksym, a third-year Mechanical Engineering student at
+              Politecnico di Torino. I design physical things and build digital
+              ones.
             </p>
             <div className="hero-actions">
               <button
@@ -458,25 +456,6 @@ export default function App() {
           </div>
         </section>
 
-        <div className="identity-strip section-pad">
-          <div>
-            <span className="eyebrow">CURRENTLY STUDYING</span>
-            <strong>Mechanical Engineering</strong>
-            <span>Politecnico di Torino · Bachelor’s</span>
-          </div>
-          <div>
-            <span className="eyebrow">THE NEXT CHAPTER</span>
-            <strong>Aerospace Engineering</strong>
-            <span>Preparing for master’s applications</span>
-          </div>
-          <a href="#resume">
-            <span className="eyebrow">THE ESSENTIALS</span>
-            <strong>
-              Read my CV <Icon name="diagonal" size={17} />
-            </strong>
-            <span>Education, projects &amp; background</span>
-          </a>
-        </div>
         <section id="work" className="work-section section-pad" data-section>
           <div className="section-heading">
             <div>
@@ -514,9 +493,7 @@ export default function App() {
                 <i />
                 In development
               </span>
-              <p className="eyebrow project-category">
-                01 / MECHANICAL ENGINEERING
-              </p>
+              <p className="eyebrow project-category">MECHANICAL ENGINEERING</p>
               <h3>
                 The flight <br />
                 project.
@@ -539,16 +516,16 @@ export default function App() {
 
         <section id="apps" className="apps-section section-pad" data-section>
           <div className="apps-copy">
-            <p className="eyebrow">02 / SOFTWARE & PRODUCT</p>
+            <p className="eyebrow">SOFTWARE & PRODUCT</p>
             <h2>
               Different tools.
               <br />
               Same curiosity.
             </h2>
             <p className="section-description">
-              Sometimes the workbench fits in your hand. Three apps I’m
-              continuing to build, exploring the little things that shape
-              everyday life.
+              Three apps I’ve developed independently with AI-assisted coding.
+              Food information, studying, and time planning. My focus now is
+              distribution.
             </p>
             <div className="app-tabs" role="tablist" aria-label="App projects">
               {apps.map((item, i) => (
@@ -632,107 +609,17 @@ export default function App() {
           </div>
         </section>
 
-        <section id="rocket" className="rocket-section" data-section>
-          <div className="rocket-copy">
-            <span className="status status-dark">
-              <i />
-              On the horizon
-            </span>
-            <p className="eyebrow">03 / THE NEXT QUESTION</p>
-            <h2>
-              A new <br />
-              <em>trajectory.</em>
-            </h2>
-            <p>
-              A rocket is the next thing I want to build.
-              <br />A new set of questions. A lot still to learn.
-            </p>
-            <button
-              className="text-link light-link"
-              onClick={() => setProject(projects[2])}
-            >
-              The intention <Icon name="diagonal" size={18} />
-            </button>
-            <span className="rocket-note">
-              PLANNED EXPLORATION · TIMELINE OPEN
-            </span>
-          </div>
-          <div className="rocket-exhibit">
-            <div className="trajectory trajectory-one" />
-            <div className="trajectory trajectory-two" />
-            <div className="trajectory trajectory-three" />
-            <div className="rocket-stars" aria-hidden="true">
-              +<span>+</span>
-              <span>+</span>
-            </div>
-            <Model
-              className="rocket-model"
-              paused={
-                workbenchOpen ||
-                desktopOpen ||
-                Boolean(project) ||
-                Boolean(resource)
-              }
-              kind="rocket"
-              moving={false}
-              reducedMotion={reducedMotion}
-            />
-            <span className="rocket-caption eyebrow">
-              CONCEPT VISUAL / NOT A COMPLETED BUILD
-            </span>
-          </div>
-        </section>
-
-        <section id="about" className="about-section section-pad" data-section>
-          <div>
-            <p className="eyebrow">04 — THE PERSON BEHIND THE PARTS</p>
-            <h2>
-              Not just how. <br />
-              <em>Why?</em>
-            </h2>
-            <div className="about-mark" aria-hidden="true">
-              <span>m</span>
-              <Icon name="diagonal" size={50} />
-            </div>
-          </div>
-          <div className="about-copy">
-            <p className="about-lead">
-              I’m Maksym, a bachelor’s student in mechanical engineering at
-              Politecnico di Torino, preparing for a master’s in aerospace
-              engineering.
-            </p>
-            <p>
-              My work moves between physical builds and software. A drone asks
-              how parts fit together. An app asks how an experience should feel.
-              Both give me a reason to keep asking questions, making decisions,
-              and trying again.
-            </p>
-            <p>
-              I’m currently choosing where to take that next step, with master’s
-              applications planned for November–December 2026. This portfolio
-              brings together my ongoing projects, academic background, and the
-              work I want to pursue next.
-            </p>
-            <div className="approach-list">
-              <div>
-                <span>01</span>
-                <h3>Understand the system.</h3>
-                <p>Look at the relationships, not just the parts.</p>
-              </div>
-              <div>
-                <span>02</span>
-                <h3>Make the idea tangible.</h3>
-                <p>Move from a question to something I can explore.</p>
-              </div>
-              <div>
-                <span>03</span>
-                <h3>Keep the process visible.</h3>
-                <p>Share the progress, including what is still unresolved.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-        <AcademicProfile />
+        <aside id="rocket" className="future-note section-pad">
+          <span className="eyebrow">ON THE DRAWING BOARD</span>
+          <p>
+            A rocket is an idea for a future project. For now, my hands-on work
+            is the drone and the apps.
+          </p>
+          <button className="text-link" onClick={() => setProject(projects[2])}>
+            Rocket concept <Icon name="diagonal" size={16} />
+          </button>
+        </aside>
+        <AboutSection />
         <ResumeSection onOpen={() => setResource({ type: "resume" })} />
         <ArchiveSection
           onOpenDesktop={() => openDesktop()}
