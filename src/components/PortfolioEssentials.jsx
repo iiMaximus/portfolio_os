@@ -4,33 +4,29 @@ import { profile } from "../portfolioContent";
 
 const Arrow = () => <span aria-hidden="true">↗</span>;
 
+const cvUrl = "/resume/Maksym-CV-2026.pdf";
+const cvPreview = "/resume/Maksym-CV-2026.webp";
+
 export function ResumeDocument() {
   return (
     <article className="resume-document">
       <div className="resume-document-head">
         <div>
-          <span className="eyebrow">CURRICULUM VITAE / WORKING DRAFT</span>
+          <span className="eyebrow">CURRICULUM VITAE</span>
           <h2>{resume.name}</h2>
           <p>{resume.title}</p>
         </div>
-        <span className="resume-monogram">m↗</span>
       </div>
       <div className="resume-contact-line">
-        <span>{resume.email}</span>
-        <a href={resume.github} target="_blank" rel="noreferrer">
-          github.com/iiMaximus
-        </a>
+        {resume.contacts.map((contact) => contact.url ? (
+          <a key={contact.label} href={contact.url}>{contact.label}</a>
+        ) : <span key={contact.label}>{contact.label}</span>)}
       </div>
-      <p className="resume-summary">{resume.summary}</p>
       <section>
         <h3>Education</h3>
-        <div className="resume-entry-head">
-          <strong>{resume.education.institution}</strong>
-          <span>{resume.education.status}</span>
-        </div>
+        <strong>{resume.education.institution}</strong>
         <p>{resume.education.degree}</p>
-        <p className="resume-placeholder">{resume.education.dates}</p>
-        <p className="resume-placeholder">{resume.education.details}</p>
+        <p>{resume.education.dates}</p>
       </section>
       <section>
         <h3>Selected projects</h3>
@@ -38,36 +34,44 @@ export function ResumeDocument() {
           <div className="resume-project" key={item.name}>
             <div className="resume-entry-head">
               <strong>{item.name}</strong>
-              <span>{item.status}</span>
+              <span>{item.label}</span>
             </div>
-            <p>{item.description}</p>
-            <p className="resume-placeholder">{item.evidence}</p>
+            {item.bullets.map((bullet) => <p key={bullet}>{bullet}</p>)}
+            {item.links?.map((link) => (
+              <a className="resume-app-link" key={link.url} href={link.url} target="_blank" rel="noreferrer">
+                {link.label} on the App Store <Arrow />
+              </a>
+            ))}
           </div>
         ))}
       </section>
       <section>
-        <h3>Technical skills & languages</h3>
-        <p>{resume.skills}</p>
-        <p className="resume-placeholder">{resume.languages}</p>
+        <h3>Technical skills</h3>
+        {resume.skills.map(([label, value]) => (
+          <p key={label}><strong>{label}:</strong> {value}</p>
+        ))}
       </section>
       <section>
-        <h3>Experience & activities</h3>
+        <h3>Languages</h3>
+        <p>{resume.languages}</p>
+      </section>
+      <section>
+        <h3>University teams</h3>
         {resume.experience.map((item) => (
           <div className="resume-project" key={item.name}>
             <div className="resume-entry-head">
-              <strong>
-                {item.name} · {item.role}
-              </strong>
-              <span>{item.period}</span>
+              <strong>{item.name}</strong>
+              <span>{item.dates}</span>
             </div>
-            <p>{item.description}</p>
+            <p>{item.role}</p>
+            {item.bullets.map((bullet) => <p key={bullet}>{bullet}</p>)}
           </div>
         ))}
       </section>
-      <footer>
-        Draft · {resume.updated} · Bracketed fields need to be completed before
-        use.
-      </footer>
+      <section>
+        <h3>Interests</h3>
+        <p>{resume.interests}</p>
+      </section>
     </article>
   );
 }
@@ -77,70 +81,20 @@ export function ResumeSection({ onOpen }) {
     <section id="resume" className="resume-section section-pad" data-section>
       <div className="resume-section-copy">
         <p className="eyebrow">03 — CURRICULUM VITAE</p>
-        <h2>
-          My background,
-          <br />
-          <em>on one page.</em>
-        </h2>
-        <p>
-          Education, independent projects, student-team experience, and the
-          tools I’ve used.
-        </p>
+        <h2>My background,<br /><em>on one page.</em></h2>
+        <p>Education, selected projects, university-team experience, and the tools I’ve used.</p>
         <div className="resume-actions">
-          <a
-            className="solid-button"
-            href="/resume/Maksym-CV-draft.pdf"
-            download
-          >
-            Download CV draft <span>↓</span>
+          <a className="solid-button" href={cvUrl} download>
+            Download CV <span>↓</span>
           </a>
           <button className="text-link" onClick={onOpen}>
             Read the CV <Arrow />
           </button>
         </div>
-        <p className="document-note">
-          Working draft · Contact details, academic results, and project
-          evidence still to be completed.
-        </p>
-        <a
-          className="editable-link"
-          href="/resume/Maksym-CV-editable.txt"
-          download
-        >
-          Editable text version <Arrow />
-        </a>
+        <p className="document-note">One-page PDF · Updated November 2026</p>
       </div>
-      <button
-        className="resume-preview"
-        onClick={onOpen}
-        aria-label="Open résumé preview"
-      >
-        <div className="paper-topline">
-          <span>CURRICULUM VITAE</span>
-          <span>01 / 01</span>
-        </div>
-        <span className="preview-name">
-          Maksym<span>[Surname]</span>
-        </span>
-        <span className="preview-role">
-          Mechanical engineering undergraduate
-        </span>
-        <span className="paper-rule" />
-        <span className="preview-section-label">EDUCATION</span>
-        <strong>Politecnico di Torino</strong>
-        <span>Third year · Expected graduation July 2027</span>
-        <span className="preview-section-label">SELECTED WORK</span>
-        <strong>Drone development</strong>
-        <span>SolidWorks · Frame design & integration</span>
-        <strong>Allergify, Absorb & Quarter</strong>
-        <span>Independent apps · Development & distribution</span>
-        <span className="preview-section-label">TEAM EXPERIENCE</span>
-        <strong>Squadra Corse · DRAFT PoliTO</strong>
-        <span>Cost & Manufacturing · Drone design</span>
-        <div className="paper-bottomline">
-          <span>WORKING DRAFT / OCT 2026</span>
-          <span>↗</span>
-        </div>
+      <button className="resume-preview" onClick={onOpen} aria-label="Open résumé preview">
+        <img src={cvPreview} alt="Preview of Maksym Kacper Horoszczak’s one-page CV" width="1530" height="1980" loading="lazy" />
       </button>
     </section>
   );
@@ -209,14 +163,11 @@ export function ContactDetails() {
         <span>iiMaximus</span>
         <Arrow />
       </a>
-      <div>
+      <a href={`mailto:${profile.email}`}>
         <span className="contact-type">EMAIL</span>
-        <span className="contact-missing">[Email address to be added]</span>
-      </div>
-      <div>
-        <span className="contact-type">LINKEDIN</span>
-        <span className="contact-missing">[Profile to be added]</span>
-      </div>
+        <span>{profile.email}</span>
+        <Arrow />
+      </a>
       <div>
         <span className="contact-type">EDUCATION</span>
         <span>
@@ -274,13 +225,17 @@ export default function ResourceDialog({ resource, onClose }) {
         <>
           <div className="document-download-bar">
             <span>
-              Working draft · Complete the bracketed fields before applying.
+              One page · Updated November 2026
             </span>
-            <a href="/resume/Maksym-CV-draft.pdf" download>
+            <a href={cvUrl} download>
               Download PDF ↓
             </a>
           </div>
-          <ResumeDocument />
+          <img className="cv-page-image" src={cvPreview} alt="The one-page CV. A readable text version follows below." width="1530" height="1980" />
+          <details className="cv-text-version">
+            <summary>Read as text</summary>
+            <ResumeDocument />
+          </details>
         </>
       ) : (
         <div className="media-dialog-body">

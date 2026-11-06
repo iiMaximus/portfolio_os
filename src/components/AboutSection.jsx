@@ -1,5 +1,10 @@
 import resume from "../resumeData.json";
 
+const teamUrls = {
+  "Squadra Corse PoliTO": "https://www.squadracorsepolito.com/",
+  "DRAFT PoliTO": "https://www.draftpolito.it/",
+};
+
 export default function AboutSection() {
   return (
     <section id="about" className="about-section section-pad" data-section>
@@ -39,18 +44,20 @@ export default function AboutSection() {
         <p>
           I like having a whole design to think through. For my drone, I started
           with an empty SolidWorks assembly, designed the frame and where every
-          component would go, and had the parts cut from carbon fibre. The
-          electronics and motors are off the shelf; the mechanical design and
-          integration are my work.
+          component would go, and had the parts cut from carbon fibre. Then came
+          assembly, soldering, and the first flights. The electronics and motors
+          are off the shelf; the mechanical design and integration are my work.
         </p>
         <p>
-          Software is another part of that curiosity. I developed Allergify,
-          Absorb, and Quarter with help from AI coding tools, and I’m now
-          working on getting them into people’s hands.
+          Software is another part of that curiosity. I built and released
+          Lychee, a food and cosmetics scanner, and Absorb, a word-by-word
+          reading app, with help from AI coding tools. I handle Lychee’s
+          development and work with a friend on distribution, which is our
+          focus now.
         </p>
         <div className="about-interests">
-          <span className="eyebrow">WHAT KEEPS ME CURIOUS</span>
-          <p>Aircraft · Mechanical design · Building complete systems</p>
+          <span className="eyebrow">AWAY FROM THE WORKBENCH</span>
+          <p>{resume.interests}</p>
         </div>
       </div>
       <div className="experience-block">
@@ -66,15 +73,15 @@ export default function AboutSection() {
           {resume.experience.map((item) => (
             <article key={item.name}>
               <div className="experience-meta">
-                <span className="eyebrow">{item.period}</span>
+                <span className="eyebrow">{item.dates}</span>
                 <span>{item.role}</span>
               </div>
               <h3>
-                <a href={item.url} target="_blank" rel="noreferrer">
+                <a href={teamUrls[item.name]} target="_blank" rel="noreferrer">
                   {item.name} <span aria-hidden="true">↗</span>
                 </a>
               </h3>
-              <p>{item.description}</p>
+              <p>{item.bullets.join(" ")}</p>
             </article>
           ))}
         </div>

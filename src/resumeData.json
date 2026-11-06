@@ -1,49 +1,77 @@
 {
-  "name": "Maksym [Surname]",
-  "title": "Third-year Mechanical Engineering student",
-  "summary": "Third-year Mechanical Engineering student at Politecnico di Torino, expecting to graduate in July 2027. Independent work spans a custom carbon-fibre FPV drone designed in SolidWorks and three mobile apps. Longstanding interest in aircraft and aerospace.",
-  "email": "[Email address]",
-  "phone": "[Phone, optional]",
-  "github": "https://github.com/iiMaximus",
+  "name": "Maksym Kacper Horoszczak",
+  "title": "Mechanical Engineering Undergraduate",
+  "contacts": [
+    {
+      "label": "maksym14@onet.pl",
+      "url": "mailto:maksym14@onet.pl"
+    },
+    {
+      "label": "Turin, Italy"
+    }
+  ],
   "education": {
     "institution": "Politecnico di Torino",
-    "degree": "Bachelor’s in Mechanical Engineering",
-    "status": "Third year",
-    "dates": "Expected graduation: July 2027",
-    "details": "[Add relevant coursework, thesis topic and academic results.]"
+    "dates": "2024 - expected July 2027",
+    "degree": "Bachelor's in Mechanical Engineering | Third year"
   },
   "projects": [
     {
       "name": "Custom 5-inch FPV drone",
-      "status": "Ongoing",
-      "description": "Independently designed the frame and complete component layout in SolidWorks, then had the parts machined from carbon fibre. Integrated off-the-shelf propulsion, control and video components, with adjacent FC and ESC mounts.",
-      "evidence": "[Add build photographs, measured mass and validated test results.]"
+      "label": "Designed, built and flown",
+      "bullets": [
+        "Designed a dead-cat carbon-fibre frame in SolidWorks for agile flight and a forward-mounted camera. Prepared DXF cutting files and arranged manufacture.",
+        "Balanced the camera payload with rear battery placement, considering the centres of gravity and thrust. Designed component mounts and cut-outs to reduce frame material.",
+        "Assembled the drone, soldered its electronics and completed initial flights."
+      ]
     },
     {
-      "name": "Allergify, Absorb & Quarter",
-      "status": "Development & distribution",
-      "description": "Independently developed Allergify, Absorb and Quarter with AI-assisted coding. Now working on distribution of the food-information, study and planning apps.",
-      "evidence": "[Add live links, release dates and verified usage figures when available.]"
+      "name": "Lychee and Absorb",
+      "label": "Published iOS apps",
+      "bullets": [
+        "Built and released Lychee, a food and cosmetics barcode scanner with product scoring, and Absorb, a word-by-word RSVP reading app.",
+        "Manage product development, releases and distribution, with promotion currently focused on Lychee."
+      ],
+      "links": [
+        {
+          "label": "Lychee",
+          "url": "https://apps.apple.com/us/app/lychee-clean-food-scanner/id6755896152"
+        },
+        {
+          "label": "Absorb",
+          "url": "https://apps.apple.com/us/app/read-fast-absorb/id6759666710"
+        }
+      ]
     }
   ],
-  "skills": "SolidWorks; component layout and mechanical integration; manufacturing cost calculations; bills of materials; Excel; AI-assisted app development.",
-  "languages": "[Languages and proficiency levels to be added.]",
   "experience": [
     {
       "name": "Squadra Corse PoliTO",
-      "role": "Cost & Manufacturing",
-      "period": "Second year · 7–8 months",
-      "description": "Worked on bills of materials, manufacturing cost calculations and Excel documentation for the Formula Student team.",
-      "url": "https://www.squadracorsepolito.com/"
+      "dates": "2025 - 2026",
+      "role": "Cost and Manufacturing | Formula Student team",
+      "bullets": [
+        "Worked on bills of materials and manufacturing cost calculations for the Formula Student team, using Excel to organise component and cost documentation."
+      ]
     },
     {
       "name": "DRAFT PoliTO",
-      "role": "Micro project",
-      "period": "First year · 1 year",
-      "description": "Contributed to basic drone design within the Micro project of the university’s drone team.",
-      "url": "https://www.draftpolito.it/"
+      "dates": "2024 - 2025",
+      "role": "Micro project | University drone team",
+      "bullets": [
+        "Contributed to the mechanical design of the team's miniature drone, intended for autonomous flight."
+      ]
     }
   ],
-  "updated": "October 2026",
-  "draft": true
+  "skills": [
+    [
+      "Design and build",
+      "SolidWorks, 3D printing, soldering, basic electronics."
+    ],
+    [
+      "Cost analysis",
+      "Excel, bills of materials, cost calculations."
+    ]
+  ],
+  "languages": "Polish (native); English (bilingual, C2); Spanish (approx. B1); Chinese (HSK 3).",
+  "interests": "Skiing, sailing, scuba diving and model rocketry."
 }

@@ -20,7 +20,7 @@ function screenTexture(app) {
   c.fill();
   c.strokeStyle = "#30372f";
   c.lineWidth = 5;
-  if (app.id === "allergify") {
+  if (app.id === "lychee") {
     [
       [60, 134, 1, 1],
       [113, 134, -1, 1],
@@ -64,7 +64,7 @@ function screenTexture(app) {
   c.stroke();
   c.font = "20px monospace";
   c.fillStyle = "#69715f";
-  c.fillText("EXPLORING", 40, 424);
+  c.fillText("IN THE APP", 40, 424);
   app.focus.forEach((item, i) => {
     c.fillStyle = "#d9ddcf";
     c.beginPath();
@@ -77,7 +77,7 @@ function screenTexture(app) {
   });
   c.fillStyle = "#6d7566";
   c.font = "18px monospace";
-  c.fillText("INTERFACE STUDY / IN DEVELOPMENT", 38, 751);
+  c.fillText("PROJECT CARD / AVAILABLE ON iOS", 38, 751);
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;

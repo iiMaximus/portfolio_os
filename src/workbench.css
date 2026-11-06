@@ -2503,7 +2503,7 @@ h2 em {
 }
 .resume-preview {
   background: #fafaf4;
-  padding: 29px 32px 24px;
+  padding: 0;
   text-align: left;
   display: flex;
   flex-direction: column;
@@ -2522,6 +2522,58 @@ h2 em {
 .resume-preview:hover {
   transform: rotate(0deg) translateY(-4px);
   box-shadow: 8px 16px 50px #37452f22;
+}
+.resume-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.cv-page-image {
+  display: block;
+  width: calc(100% - 48px);
+  height: auto;
+  margin: 0 24px 24px;
+  box-shadow: 0 3px 12px #35452a12;
+}
+.cv-text-version > summary {
+  cursor: pointer;
+  padding: 18px 30px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.cv-text-version .resume-document {
+  margin: 0 24px 24px;
+  padding: clamp(20px, 4vw, 38px);
+}
+.cv-text-version .resume-document section p,
+.cv-text-version .resume-contact-line {
+  font-size: 13px;
+}
+.cv-text-version .resume-document h3 {
+  font-size: 11px;
+}
+.cv-text-version .resume-entry-head {
+  font-size: 14px;
+  flex-wrap: wrap;
+}
+.cv-text-version .resume-entry-head > span {
+  font-size: 11px;
+}
+.resume-app-link {
+  display: inline-block;
+  margin: 12px 18px 0 0;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.project-store-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  margin-top: 26px;
+}
+.app-details .app-store-link {
+  margin-top: 24px;
 }
 .paper-topline,
 .paper-bottomline {
@@ -3238,7 +3290,7 @@ h2 em {
   .resume-preview {
     max-width: 380px;
     justify-self: center;
-    padding: 25px;
+    padding: 0;
     transform: rotate(1.5deg);
   }
   .preview-name {

@@ -502,7 +502,7 @@
       return;
     }
     if (action === "print-cv") {
-      showAlert("The CV draft is available in the CV folder.");
+      showAlert("The current CV is available in the CV folder.");
       return;
     }
     showAlert(defaultMessage);
@@ -913,7 +913,7 @@
     if (!input || !button || !results) return;
 
     const items = [
-      { label: "Apps", target: "apps", type: "folder", keywords: "mobile apps allergify absorb quarter product" },
+      { label: "Apps", target: "apps", type: "folder", keywords: "mobile apps lychee absorb barcode cosmetics rsvp reading product" },
       { label: "Projects", target: "projects", type: "folder", keywords: "projects personality hardware software" },
       { label: "FPV Drone CAD", target: "fpv-detail", type: "project", keywords: "drone cad hardware blueprint mechanical" },
       { label: "Juice Maker", target: "juice-detail", type: "project", keywords: "juice machine product prototype" },
@@ -1080,9 +1080,8 @@
         openWindow("apps");
         writeBlock([
           "Opening Applications...",
-          "Allergify.app",
+          "Lychee.app",
           "Absorb.app",
-          "Quarter.app",
           "Terminal.app",
           "Email.app"
         ], "system");
@@ -1091,7 +1090,7 @@
 
       if (normalized === "projects") {
         writeBlock([
-          "Apps                  product, iOS, Android",
+          "Apps                  Lychee + Absorb, published on iOS",
           "This Portfolio        interface lab",
           "FPV Drone             hardware + CAD",
           "Juice Maker           machine concept"
@@ -1134,14 +1133,14 @@
             "# README.md",
             "STATUS: portfolio shell 0.4",
             "MOOD: desktop utilities waking up",
-            "EDUCATION: third year; graduation July 2027; CV draft available"
+            "EDUCATION: third year; graduation July 2027; CV available"
           ], "system");
           return;
         }
         if (file === "contact" || file === "contact.card") {
           writeBlock([
             "Contact.card",
-            "Email: [address to be added]; GitHub: github.com/iiMaximus",
+            "Email: maksym14@onet.pl; GitHub: github.com/iiMaximus",
             "Mode: mechanical engineering portfolio with software side quests"
           ], "system");
           return;
@@ -1149,9 +1148,9 @@
         if (file === "projects") {
           writeBlock([
             "Projects/",
-            "- FPV Drone: CAD, assembly, electronics",
+            "- FPV Drone: custom dead-cat frame; designed, built and flown",
             "- Juice Maker: product/mechanism concept",
-            "- Apps: Allergify, Absorb, Quarter",
+            "- Apps: Lychee (food/cosmetics scanning), Absorb (RSVP reading)",
             "- Portfolio OS: the interface you are inside"
           ], "system");
           return;
@@ -1177,7 +1176,7 @@
           "Study: Mechanical Engineering at Politecnico di Torino",
           "Current projects: drone geometry and mobile apps",
           "Year: third year; expected graduation July 2027",
-          "Specific tool proficiencies: to be confirmed in the CV"
+          "Tools: SolidWorks, 3D printing, soldering, basic electronics, Excel"
         ], "system");
         return;
       }

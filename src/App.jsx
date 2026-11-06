@@ -167,6 +167,15 @@ function ProjectDialog({ project, onClose }) {
           {project.download.label} <Icon name="down" size={16} />
         </a>
       )}
+      {project.links && (
+        <div className="project-store-links">
+          {project.links.map((link) => (
+            <a className="text-link" key={link.url} href={link.url} target="_blank" rel="noreferrer">
+              {link.label} <Icon name="diagonal" size={16} />
+            </a>
+          ))}
+        </div>
+      )}
       <div className="project-notes">
         {project.notes.map(([title, body], i) => (
           <section key={title}>
@@ -179,7 +188,7 @@ function ProjectDialog({ project, onClose }) {
         ))}
       </div>
       <div className="dialog-foot">
-        <span>Work in progress. Documented as it develops.</span>
+        <span>{project.status}</span>
         <button className="text-link" onClick={onClose}>
           Back to the portfolio <Icon name="arrow" size={17} />
         </button>
@@ -368,7 +377,7 @@ export default function App() {
               <span className="caption-rule" />
               <span>
                 FPV DRONE
-                <span>DXF frame · 2 / 6 mm provisional stock</span>
+                <span>Custom dead-cat frame · Built & flown</span>
               </span>
             </div>
             <div className="model-controls" aria-label="Drone model controls">
@@ -482,16 +491,16 @@ export default function App() {
                   TO SOMETHING THAT FLIES.
                 </span>
                 <span className="drawing-stamp">
-                  IN
+                  BUILT
                   <br />
-                  PROGRESS
+                  & FLOWN
                 </span>
               </div>
             </div>
             <div className="project-copy">
               <span className="status">
                 <i />
-                In development
+                {projects[0].status}
               </span>
               <p className="eyebrow project-category">MECHANICAL ENGINEERING</p>
               <h3>
@@ -523,9 +532,9 @@ export default function App() {
               Same curiosity.
             </h2>
             <p className="section-description">
-              Three apps I’ve developed independently with AI-assisted coding.
-              Food information, studying, and time planning. My focus now is
-              distribution.
+              Two apps, built and released on iOS. Product information with
+              Lychee, word-by-word reading with Absorb. My focus now is
+              distribution, especially for Lychee.
             </p>
             <div className="app-tabs" role="tablist" aria-label="App projects">
               {apps.map((item, i) => (
@@ -558,7 +567,7 @@ export default function App() {
               key={app.id}
             >
               <p className="eyebrow">
-                {app.category} <span>IN DEVELOPMENT</span>
+                {app.category} <span>{app.status}</span>
               </p>
               <h3>{app.verb}</h3>
               <p>{app.description}</p>
@@ -567,6 +576,9 @@ export default function App() {
                   <span key={focus}>{focus}</span>
                 ))}
               </div>
+              <a className="text-link app-store-link" href={app.url} target="_blank" rel="noreferrer">
+                View {app.name} on the App Store <Icon name="diagonal" size={18} />
+              </a>
             </div>
             <button
               className="text-link"
