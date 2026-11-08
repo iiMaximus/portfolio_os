@@ -135,7 +135,7 @@ function ProjectDialog({ project, onClose }) {
       }}
     >
       <div className="dialog-top">
-        <span className="eyebrow">PROJECT NOTES / {project.number}</span>
+        <span className="eyebrow">{project.discipline}</span>
         <button
           className="icon-button"
           aria-label="Close project notes"
@@ -177,9 +177,8 @@ function ProjectDialog({ project, onClose }) {
         </div>
       )}
       <div className="project-notes">
-        {project.notes.map(([title, body], i) => (
+        {project.notes.map(([title, body]) => (
           <section key={title}>
-            <span className="eyebrow">0{i + 1}</span>
             <div>
               <h3>{title}</h3>
               <p>{body}</p>
@@ -204,7 +203,7 @@ function Model({ className = "", ...props }) {
         fallback={
           <div className="model-loading">
             <span />
-            <span className="eyebrow">Preparing the exhibit</span>
+            <span className="eyebrow">Loading model</span>
           </div>
         }
       >
@@ -235,9 +234,10 @@ export default function App() {
     setDesktopOpen(true);
   };
   const [activeSection, setActiveSection] = useState("home");
-  const [interacted, setInteracted] = useState(false);
   const tabRefs = useRef([]);
   useEffect(() => {
+    const section = document.getElementById(window.location.hash.slice(1));
+    if (section) section.scrollIntoView({ behavior: "instant" });
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -310,21 +310,11 @@ export default function App() {
       <main>
         <section id="home" className="hero" data-section>
           <div className="hero-heading">
-            <p className="eyebrow">
-              <span className="orange-square" /> A WORK IN PROGRESS. BY DESIGN.
-            </p>
-            <h1>
-              Ideas take
-              <br />
-              <em>flight.</em>
-              <span className="heading-asterisk" aria-hidden="true">
-                ✳
-              </span>
-            </h1>
+            <p className="eyebrow">Mechanical engineering · Turin, Italy</p>
+            <h1>Maksym<br /><em>Horoszczak</em></h1>
             <p className="hero-intro">
-              I’m Maksym, a third-year Mechanical Engineering student at
-              Politecnico di Torino. I design physical things and build digital
-              ones.
+              I’m in my final year at Politecnico di Torino, graduating in July 2027.
+              I designed and flew the carbon-fibre drone shown here.
             </p>
             <div className="hero-actions">
               <button
@@ -337,16 +327,12 @@ export default function App() {
                 </span>
               </button>
               <a href="#work" className="hero-project-link">
-                Or, explore the projects <Icon name="down" size={12} />
+                View projects <Icon name="down" size={12} />
               </a>
             </div>
           </div>
           <div className="hero-exhibit">
             <div className="exhibit-grid" aria-hidden="true" />
-            <div className="exhibit-coordinate coordinate-top">
-              <span>EXHIBIT 001</span>
-              <span>MECHANICAL / DIGITAL</span>
-            </div>
             <span className="exhibit-cross cross-one" aria-hidden="true">
               +
             </span>
@@ -368,10 +354,7 @@ export default function App() {
               moving={moving}
               reducedMotion={reducedMotion}
               resetKey={resetKey}
-              onInteract={() => {
-                setInteracted(true);
-                setMoving(false);
-              }}
+              onInteract={() => setMoving(false)}
             />
             <div className="model-caption">
               <span className="caption-rule" />
@@ -447,53 +430,24 @@ export default function App() {
                 </button>
               </div>
             </div>
-            <p className="drag-hint">
-              {reducedMotion
-                ? "Reduced motion · drag to inspect"
-                : interacted
-                  ? "Your perspective. Keep exploring."
-                  : "Drag to explore the assembly"}
-            </p>
-          </div>
-          <div className="hero-bottom">
-            <span className="eyebrow">
-              CURIOUS BY NATURE. ENGINEER IN THE MAKING.
-            </span>
-            <a href="#work" className="scroll-link">
-              A closer look <Icon name="down" size={14} />
-            </a>
+            <p className="drag-hint">Drag to rotate the drone</p>
           </div>
         </section>
 
         <section id="work" className="work-section section-pad" data-section>
           <div className="section-heading">
-            <div>
-              <p className="eyebrow">01 — SELECTED WORK</p>
-              <h2>Thinking, made tangible.</h2>
-            </div>
-            <p>
-              A few things on my workbench.
-              <br />
-              Each one a different way of learning.
-            </p>
+            <h2>Selected projects</h2>
           </div>
           <article className="drone-project">
             <div className="blueprint-panel">
               <div className="panel-top eyebrow">
-                <span>FIELD NOTES / 001</span>
-                <span>TOP VIEW ↘</span>
+                <span>Frame drawing</span>
+                <span>Top view</span>
               </div>
               <DroneDrawing />
               <div className="panel-bottom">
                 <span className="eyebrow">
-                  FROM GEOMETRY
-                  <br />
-                  TO SOMETHING THAT FLIES.
-                </span>
-                <span className="drawing-stamp">
-                  BUILT
-                  <br />
-                  & FLOWN
+                  SolidWorks · DXF cutting profiles
                 </span>
               </div>
             </div>
@@ -502,22 +456,13 @@ export default function App() {
                 <i />
                 {projects[0].status}
               </span>
-              <p className="eyebrow project-category">MECHANICAL ENGINEERING</p>
-              <h3>
-                The flight <br />
-                project.
-              </h3>
+              <h3>{projects[0].title}</h3>
               <p>{projects[0].summary}</p>
-              <div className="tags">
-                <span>CAD & assembly</span>
-                <span>Physical prototyping</span>
-                <span>Systems thinking</span>
-              </div>
               <button
                 className="text-link"
                 onClick={() => setProject(projects[0])}
               >
-                Inside the project <Icon name="diagonal" size={18} />
+                Read the build notes <Icon name="diagonal" size={18} />
               </button>
             </div>
           </article>
@@ -525,16 +470,9 @@ export default function App() {
 
         <section id="apps" className="apps-section section-pad" data-section>
           <div className="apps-copy">
-            <p className="eyebrow">SOFTWARE & PRODUCT</p>
-            <h2>
-              Different tools.
-              <br />
-              Same curiosity.
-            </h2>
+            <h2>iOS apps</h2>
             <p className="section-description">
-              Two apps, built and released on iOS. Product information with
-              Lychee, word-by-word reading with Absorb. My focus now is
-              distribution, especially for Lychee.
+              I built Lychee and Absorb. Both are on the App Store.
             </p>
             <div className="app-tabs" role="tablist" aria-label="App projects">
               {apps.map((item, i) => (
@@ -566,16 +504,8 @@ export default function App() {
               className="app-details"
               key={app.id}
             >
-              <p className="eyebrow">
-                {app.category} <span>{app.status}</span>
-              </p>
               <h3>{app.verb}</h3>
               <p>{app.description}</p>
-              <div className="tags">
-                {app.focus.map((focus) => (
-                  <span key={focus}>{focus}</span>
-                ))}
-              </div>
               <a className="text-link app-store-link" href={app.url} target="_blank" rel="noreferrer">
                 View {app.name} on the App Store <Icon name="diagonal" size={18} />
               </a>
@@ -584,15 +514,10 @@ export default function App() {
               className="text-link"
               onClick={() => setProject(projects[1])}
             >
-              Software project notes <Icon name="diagonal" size={18} />
+              Development notes <Icon name="diagonal" size={18} />
             </button>
           </div>
           <div className="palm-exhibit">
-            <div className="palm-orbit" aria-hidden="true" />
-            <div className="palm-label eyebrow">
-              <span>THE POCKET WORKBENCH</span>
-              <span>↙ INTERACTIVE OBJECT</span>
-            </div>
             <Model
               className="palm-model"
               paused={
@@ -603,29 +528,21 @@ export default function App() {
               }
               kind="palm"
               app={app}
+              onAppSelect={setSelectedApp}
               moving={false}
               reducedMotion={reducedMotion}
             />
             <div className="palm-caption">
-              <span className="eyebrow">
-                OLD-SCHOOL OBJECT.
-                <br />
-                NEW IDEAS.
-              </span>
-              <span>
-                Illustrative interfaces
-                <br />
-                Select an app to explore
-              </span>
+              <span>{app.screenCaption}</span>
+              <span>Drag to rotate</span>
             </div>
           </div>
         </section>
 
         <aside id="rocket" className="future-note section-pad">
-          <span className="eyebrow">ON THE DRAWING BOARD</span>
+          <span className="eyebrow">Planned project</span>
           <p>
-            A rocket is an idea for a future project. For now, my hands-on work
-            is the drone and the apps.
+            I’d like to design a model rocket after I finish testing the drone.
           </p>
           <button className="text-link" onClick={() => setProject(projects[2])}>
             Rocket concept <Icon name="diagonal" size={16} />
@@ -644,29 +561,14 @@ export default function App() {
           className="contact-section section-pad"
           data-section
         >
-          <div className="contact-top">
-            <p className="eyebrow">
-              ALWAYS MORE TO LEARN. ALWAYS MORE TO MAKE.
-            </p>
-            <span className="availability">
-              <i /> Open to conversations
-            </span>
-          </div>
           <div className="contact-main">
-            <h2>
-              Let’s build
-              <br />
-              <em>what’s next.</em>
-            </h2>
+            <h2>Contact</h2>
             <ContactDetails />
           </div>
           <div className="footer-bottom">
             <a className="footer-name" href="#home">
-              Maksym<span>Engineering & software</span>
+              {profile.fullName}<span>Mechanical engineering</span>
             </a>
-            <span className="eyebrow">
-              BUILT WITH CURIOSITY / {new Date().getFullYear()}
-            </span>
             <a className="back-top" href="#home">
               Back to top <Icon name="arrow" size={15} />
             </a>

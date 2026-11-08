@@ -1094,7 +1094,7 @@ h2 em {
 }
 .project-notes > section {
   display: grid;
-  grid-template-columns: 35px 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
   border-top: 1px solid var(--line);
   padding: 23px 0;
@@ -1722,7 +1722,7 @@ h2 em {
   }
   .project-notes > section {
     gap: 7px;
-    grid-template-columns: 25px 1fr;
+    grid-template-columns: 1fr;
     padding: 20px 0;
   }
   .project-notes h3 {
@@ -3823,4 +3823,49 @@ h2 em {
   .site-header nav {
     gap: 19px;
   }
+}
+
+.hero-heading h1 {
+  font-size: clamp(50px, 6.6vw, 112px);
+  letter-spacing: -0.065em;
+}
+.profile-skills {
+  border-top: 1px solid var(--line);
+  margin-top: 22px;
+}
+.profile-skills > div {
+  display: grid;
+  grid-template-columns: minmax(90px, 0.46fr) 1fr;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  line-height: 1.6;
+}
+.profile-skills dt { font-weight: 550; }
+.profile-skills dd { margin: 0; color: var(--muted); }
+.experience-heading h3 { font-size: 23px; font-weight: 500; }
+.palm-exhibit {
+  overflow: hidden;
+  background: radial-gradient(ellipse at 45% 40%, #f4f1e7, #dadbd0 85%);
+}
+.palm-caption > span:first-child {
+  color: #505c4e;
+  font: 11px var(--mono);
+}
+.palm-label { pointer-events: none; }
+@media (max-width: 700px) {
+  .hero-heading h1 { font-size: clamp(42px, 11.8vw, 76px); }
+}
+
+.handheld-fallback {
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.handheld-fallback img {
+  height: 85%;
+  max-width: 80%;
+  object-fit: contain;
+  border-radius: 12px;
 }

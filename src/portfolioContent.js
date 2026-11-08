@@ -4,7 +4,6 @@ export const profile = {
   name: "Maksym",
   fullName: resume.name,
   email: resume.contacts[0].label,
-  github: "https://github.com/iiMaximus",
   university: "Politecnico di Torino",
   degree: "Bachelor’s in Mechanical Engineering",
   graduation: "July 2027",
@@ -14,26 +13,24 @@ export const apps = [
   {
     id: "lychee",
     name: "Lychee",
-    category: "Food & cosmetics",
-    status: "Available on iOS",
     url: "https://apps.apple.com/us/app/lychee-clean-food-scanner/id6755896152",
-    verb: "Know what’s inside.",
+    verb: "Food and cosmetics scanner",
+    screen: "/screens/lychee.webp",
+    screenCaption: "Lychee · Product scan",
     description:
-      "Scan a food or cosmetics barcode to explore its ingredients, product score, and recommendations. I handle the app’s development and work on distribution with a friend, whose focus is promotion.",
-    focus: ["Barcode scanning", "Ingredient information", "Product scoring"],
+      "Lychee turns a barcode scan into an ingredient list, a product score, and recommendations. I write the app. A friend and I share distribution, and he leads promotion.",
     color: "#c4e7b3",
     glyph: "scan",
   },
   {
     id: "absorb",
     name: "Absorb",
-    category: "RSVP reading",
-    status: "Available on iOS",
     url: "https://apps.apple.com/us/app/read-fast-absorb/id6759666710",
-    verb: "One word at a time.",
+    verb: "Word-by-word reader",
+    screen: "/screens/absorb.webp",
+    screenCaption: "Absorb · Reading view",
     description:
-      "A reading app that presents words one at a time using rapid serial visual presentation (RSVP). I built and released the app, turning a reading technique into a focused mobile experience.",
-    focus: ["Word-by-word reading", "Focused presentation", "Mobile experience"],
+      "Absorb displays one word at a time at a chosen reading speed. I built the reader around this technique, called rapid serial visual presentation (RSVP).",
     color: "#c9bde8",
     glyph: "book",
   },
@@ -43,13 +40,13 @@ export const projects = [
   {
     id: "drone",
     number: "01",
-    title: "The flight project.",
+    title: "5-inch FPV drone",
     discipline: "Mechanical engineering",
     status: "Designed, built & flown",
     summary:
-      "A custom 5-inch FPV drone, from an empty SolidWorks assembly to a flying carbon-fibre build. I designed the dead-cat frame, arranged manufacture, and assembled and integrated the complete drone.",
+      "I designed the frame in SolidWorks and sent the DXFs out for carbon-fibre machining. When the parts arrived, I assembled the drone, soldered the electronics, and flew it.",
     intro:
-      "I wanted a drone that could combine agile FPV flight with a forward-mounted cinematic camera. I designed the carbon-fibre frame and every component’s position in SolidWorks, prepared the cutting files, and arranged manufacture. I then assembled the frame, soldered the electronics, and integrated the off-the-shelf motors, flight controller, ESC, and video system. The drone is complete and has made its initial flights.",
+      "I wanted a 5-inch quad that I could fly for fun and eventually use for filming. I drew the frame around the motors, boards, and camera I’d chosen. Five DXFs went to the machine shop. I soldered the electronics and assembled the finished carbon parts myself.",
     facts: [
       ["My role", "Frame design & complete component integration"],
       ["CAD", "SolidWorks"],
@@ -63,19 +60,19 @@ export const projects = [
     notes: [
       [
         "Geometry & balance",
-        "The dead-cat layout makes room for a forward camera. I positioned the battery towards the rear to balance that payload, considering the centres of gravity and thrust together. The design accommodates a future action camera; that accessory has not been purchased yet.",
+        "The dead-cat layout makes room for a forward camera. I positioned the battery towards the rear to balance that payload, considering the centres of gravity and thrust together. The action camera shown in the model is planned.",
       ],
       [
         "Packaging & manufacture",
-        "Component fit, mounting positions, and assembly clearances drove the frame design. The FC and ESC sit side by side, and cut-outs reduce frame material. Taking the assembly through manufacture and soldering taught me as much about tolerances and basic electronics as it did about CAD.",
+        "I put the flight controller and ESC side by side on separate mounts. Cut-outs in the plates remove material while leaving room for wiring and fasteners.",
       ],
       [
         "Initial flights & further analysis",
-        "The drone flies, but extensive flight testing is still ahead. I have not yet measured its mass or flight endurance. Those measurements and a more structured test programme are the next steps towards turning the build into an engineering study.",
+        "I’ve completed the first flights. I haven’t yet recorded all-up mass or flight time. I’d like to measure how far the balance point moves when I reposition the battery.",
       ],
       [
         "About the model",
-        "The frame preserves the outlines, holes, and slots in my original DXFs. The model uses provisional 2 mm plates and 6 mm arms. Hardware, battery dimensions, and the planned action camera are visual approximations, rather than manufacturer CAD.",
+        "The frame preserves the outlines, holes, and slots in my original DXFs. The model uses provisional 2 mm plates and 6 mm arms. The electronics, battery, and planned camera are approximate models.",
       ],
     ],
     download: {
@@ -86,57 +83,36 @@ export const projects = [
   {
     id: "apps",
     number: "02",
-    title: "Small screens. Big questions.",
+    title: "Lychee and Absorb",
     discipline: "Software & product",
     status: "Published iOS apps",
     summary:
-      "Lychee and Absorb: two published iOS apps for product information and word-by-word reading. My current focus is distribution, especially for Lychee.",
+      "Lychee scans products. Absorb presents text one word at a time. Select an app to see its screen.",
     intro:
-      "I built and released both apps with help from AI coding tools. For Lychee, I handle development and some distribution; a friend works with me, focusing on promotion. I’m now concentrating on getting the apps into people’s hands, especially Lychee. The handheld displays illustrative project cards, not live app screens.",
+      "I developed and released both apps with help from AI coding tools. A friend and I work together on Lychee. I handle the code and help with distribution. He spends more of his time on promotion.",
     facts: [
       ["Projects", "Lychee / Absorb"],
       ["My role", "App development, releases & distribution"],
       ["Stage", "Released on the App Store"],
-      ["Focus", "Mobile products & interfaces"],
     ],
     notes: [
       [
         "Lychee",
         "A barcode scanner for food and cosmetics, bringing together ingredient information, product scoring, and recommendations. I build the app and share distribution work with a friend.",
       ],
-      ["Absorb", "An RSVP reading app that presents words one at a time. I developed and published the app, shaping the reading technique into a focused mobile interface."],
-      ["What I’m working on now", "Distribution and promotion, with most of my attention on Lychee: learning how to explain the product and reach people who find it useful."],
+      ["Absorb", "I built the reader so the words appear in the same position as the text advances. Readers can change the pace and pause on a word."],
     ],
     links: apps.map(({ name, url }) => ({ label: `${name} on the App Store`, url })),
   },
   {
     id: "rocket",
     number: "03",
-    title: "A new trajectory.",
-    discipline: "Future exploration",
-    status: "Planned project",
-    summary:
-      "A rocket is the next project I want to take on. For now, a direction to explore—with plenty still to learn.",
-    intro:
-      "I want to explore a rocket project next. It is currently an intention, rather than a completed design or build, and the semester timeline is still open.",
-    facts: [
-      ["Stage", "Early intention"],
-      ["Timeline", "To be determined"],
-      ["Visual", "Illustrative concept"],
-    ],
-    notes: [
-      [
-        "The starting point",
-        "Define a realistic project scope and the questions I want the project to answer.",
-      ],
-      [
-        "The learning",
-        "Explore the relationship between geometry, structure, and flight through research and design.",
-      ],
-      [
-        "The commitment",
-        "Document the process honestly as the project develops. No build, testing, or performance results are claimed yet.",
-      ],
-    ],
+    title: "Model rocket",
+    discipline: "Rocketry",
+    status: "Planned",
+    summary: "I’d like to build a model rocket after the drone study.",
+    intro: "I’m interested in designing a model rocket. The 3D object on the desk is a concept.",
+    facts: [["Stage", "Idea"], ["Schedule", "Open"]],
+    notes: [],
   },
 ];

@@ -73,7 +73,7 @@ export default function DesktopDialog({
         title="Maksym OS: CV, projects, contact, media, terminal, and games"
       />
       <footer className="desktop-shell-footer">
-        <span>MAKSYM OS · OPEN A FOLDER. FOLLOW YOUR CURIOSITY.</span>
+        <span>Maksym OS</span>
         <span>ESC TO RETURN</span>
       </footer>
     </dialog>

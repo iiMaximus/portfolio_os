@@ -916,7 +916,7 @@
       { label: "Apps", target: "apps", type: "folder", keywords: "mobile apps lychee absorb barcode cosmetics rsvp reading product" },
       { label: "Projects", target: "projects", type: "folder", keywords: "projects personality hardware software" },
       { label: "FPV Drone CAD", target: "fpv-detail", type: "project", keywords: "drone cad hardware blueprint mechanical" },
-      { label: "Juice Maker", target: "juice-detail", type: "project", keywords: "juice machine product prototype" },
+      { label: "Juice Maker", target: "juice-detail", type: "idea", keywords: "juice machine future idea" },
       { label: "CV Packet", target: "cv", type: "document", keywords: "cv resume download mechanical engineering" },
       { label: "Terminal", target: "terminal", type: "app", keywords: "command shell terminal print fun" },
       { label: "Email", target: "email", type: "app", keywords: "contact send message email" },
@@ -1093,7 +1093,7 @@
           "Apps                  Lychee + Absorb, published on iOS",
           "This Portfolio        interface lab",
           "FPV Drone             hardware + CAD",
-          "Juice Maker           machine concept"
+          "Juice Maker           unbuilt idea"
         ]);
         return;
       }
@@ -1140,7 +1140,7 @@
         if (file === "contact" || file === "contact.card") {
           writeBlock([
             "Contact.card",
-            "Email: maksym14@onet.pl; GitHub: github.com/iiMaximus",
+            "Email: maksym14@onet.pl",
             "Mode: mechanical engineering portfolio with software side quests"
           ], "system");
           return;
@@ -1149,7 +1149,7 @@
           writeBlock([
             "Projects/",
             "- FPV Drone: custom dead-cat frame; designed, built and flown",
-            "- Juice Maker: product/mechanism concept",
+            "- Juice Maker: unbuilt idea",
             "- Apps: Lychee (food/cosmetics scanning), Absorb (RSVP reading)",
             "- Portfolio OS: the interface you are inside"
           ], "system");

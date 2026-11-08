@@ -23,7 +23,7 @@ The development server is available at http://127.0.0.1:5173 (or the next free p
 
 ## Drone geometry and content
 
-`src/portfolioContent.js` holds project copy, App Store links, and contact details. The drone is manufactured, assembled, and has completed initial flights. Lychee and Absorb are published iOS apps; Lychee’s development is Maksym’s work, while distribution is shared with a friend. The rocket and app screens are illustrative. The drone frame now uses the supplied cutting geometry; hardware components are dimensioned visual approximations, not manufacturer CAD.
+`src/portfolioContent.js` holds project copy, App Store links, and contact details. The drone is manufactured, assembled, and has completed initial flights. Lychee and Absorb are published iOS apps; Lychee’s development is Maksym’s work, while distribution is shared with a friend. The rocket is an illustrative concept. The handheld shows screenshots from the Lychee product page and Absorb reader. The drone frame now uses the supplied cutting geometry; hardware components are dimensioned visual approximations, not manufacturer CAD.
 
 The five original DXFs are preserved in `src/models/drone/cad/`. `scripts/convert_drone_dxf.py` converts their lines, arcs, circles and B-splines into closed profiles, keeping the holes and slots. It checks millimetre units, rejects unsupported geometry/open contours, and records hashes of the source files. Curve chord tolerance is 0.015 mm.
 
@@ -45,7 +45,7 @@ The main models live in `src/models/`; standalone object viewers and the shared 
 
 The profile leads with third-year Mechanical Engineering at Politecnico di Torino and expected graduation in July 2027. The user supplied the drone design, manufacture, assembly, and initial-flight history; the Lychee/Absorb development roles; and the DRAFT/Squadra Corse experience. Aerospace remains a personal interest. No grade average, unmeasured drone performance, or estimated app usage/revenue is published.
 
-`public/resume/Maksym-CV-2026.pdf` is the approved one-page CV, published unchanged. `Maksym-CV-2026.webp` is its rendered preview. `src/resumeData.json` mirrors the approved CV for the accessible text reader and About section. All current CV links, including the restored desktop, use this PDF. GitHub is intentionally absent from the CV, but remains a website contact link.
+`public/resume/Maksym-CV-2026.pdf` is the approved one-page CV, published unchanged. `Maksym-CV-2026.webp` is its rendered preview. `src/resumeData.json` mirrors the approved CV for the accessible text reader and About section. All current CV links, including the restored desktop, use this PDF. Email is the public contact method.
 
 For future CV revisions, export and visually check the approved one-page PDF, render its preview, and update `src/resumeData.json` to match. Replace the two public assets and update the displayed revision date in `PortfolioEssentials.jsx`. The previous draft generator and public draft files have been retired so they cannot overwrite the approved design. The original editable document is kept locally under `output/cv/`; source documents are not served by Vite.
 

@@ -80,9 +80,8 @@ export function ResumeSection({ onOpen }) {
   return (
     <section id="resume" className="resume-section section-pad" data-section>
       <div className="resume-section-copy">
-        <p className="eyebrow">03 — CURRICULUM VITAE</p>
-        <h2>My background,<br /><em>on one page.</em></h2>
-        <p>Education, selected projects, university-team experience, and the tools I’ve used.</p>
+        <h2>Curriculum vitae</h2>
+        <p>My degree, projects, and work with the DRAFT and Squadra Corse student teams.</p>
         <div className="resume-actions">
           <a className="solid-button" href={cvUrl} download>
             Download CV <span>↓</span>
@@ -105,14 +104,14 @@ const collections = [
     id: "photography",
     number: "01",
     title: "Photography",
-    detail: "Images, observations, and the details worth keeping.",
+    detail: "Photographs",
     label: "PHOTO ARCHIVE",
   },
   {
     id: "film",
     number: "02",
     title: "Film & process",
-    detail: "Build footage, motion studies, and visual stories.",
+    detail: "Build footage and film",
     label: "MOTION ARCHIVE",
   },
   {
@@ -128,12 +127,8 @@ export function ArchiveSection({ onOpenDesktop, onOpenMedia }) {
   return (
     <section id="archive" className="personal-corner section-pad">
       <div>
-        <span className="eyebrow">TAKE THE SCENIC ROUTE</span>
-        <h2>A little more of my world.</h2>
-        <p>
-          The original desktop is still here: projects, documents, a terminal,
-          and a few distractions.
-        </p>
+        <h2>Maksym OS</h2>
+        <p>The desktop was the first version of this portfolio. It still opens my projects, CV, terminal, and games.</p>
       </div>
       <div className="personal-actions">
         <button className="solid-button" onClick={onOpenDesktop}>
@@ -158,11 +153,6 @@ export function ArchiveSection({ onOpenDesktop, onOpenMedia }) {
 export function ContactDetails() {
   return (
     <div className="full-contact-details">
-      <a href={profile.github} target="_blank" rel="noreferrer">
-        <span className="contact-type">GITHUB</span>
-        <span>iiMaximus</span>
-        <Arrow />
-      </a>
       <a href={`mailto:${profile.email}`}>
         <span className="contact-type">EMAIL</span>
         <span>{profile.email}</span>
@@ -176,10 +166,10 @@ export function ContactDetails() {
           <small>Mechanical Engineering · Bachelor’s</small>
         </span>
       </div>
-      <span className="contact-footnote">
-        Open to conversations about aerospace, engineering projects, and further
-        study.
-      </span>
+      <div>
+        <span className="contact-type">BASED IN</span>
+        <span>Turin, Italy</span>
+      </div>
     </div>
   );
 }
@@ -259,7 +249,7 @@ export default function ResourceDialog({ resource, onClose }) {
               +
             </span>
             <p className="eyebrow">{current.label}</p>
-            <h3>A space for what’s next.</h3>
+            <h3>No items yet</h3>
             <p>
               No work has been added to this collection yet. Photographs,
               footage, and drawings will appear here as they’re selected.

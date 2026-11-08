@@ -12,11 +12,18 @@ class SceneBoundary extends Component {
     return { failed: true };
   }
   render() {
-    return this.state.failed ? <SceneFallback /> : this.props.children;
+    return this.state.failed ? this.props.fallback : this.props.children;
   }
 }
 
-function SceneFallback() {
+function SceneFallback({ app }) {
+  if (app) {
+    return (
+      <div className="handheld-fallback">
+        <img src={app.screen} alt={app.screenCaption} />
+      </div>
+    );
+  }
   return (
     <div className="scene-fallback">
       <span className="fallback-mark" aria-hidden="true">
@@ -96,6 +103,7 @@ export default function ModelViewer({
   resetKey = 0,
   app,
   onInteract,
+  onAppSelect,
   paused = false,
 }) {
   const container = useRef();
@@ -139,13 +147,13 @@ export default function ModelViewer({
         kind === "drone"
           ? `DXF-derived drone frame with visualised components, ${exploded ? "exploded" : "assembled"} view`
           : kind === "palm"
-            ? `Palm-style handheld showing ${app.name}, an interface study`
+            ? `Handheld displaying a screenshot from ${app.name}`
             : "Illustrative rocket concept; planned project"
       }
     >
-      <SceneBoundary>
+      <SceneBoundary fallback={<SceneFallback app={app} />}>
         {lost ? (
-          <SceneFallback />
+          <SceneFallback app={app} />
         ) : (
           near && (
             <Canvas
@@ -164,7 +172,7 @@ export default function ModelViewer({
                 alpha: true,
                 powerPreference: "high-performance",
               }}
-              fallback={<SceneFallback />}
+              fallback={<SceneFallback app={app} />}
               onCreated={({ gl }) => {
                 gl.toneMapping = THREE.ACESFilmicToneMapping;
                 gl.toneMappingExposure = 1.15;
@@ -219,7 +227,7 @@ export default function ModelViewer({
                     reducedMotion={reducedMotion}
                   />
                 ) : kind === "palm" ? (
-                  <Palm app={app} />
+                  <Palm app={app} onAppSelect={onAppSelect} />
                 ) : (
                   <Rocket />
                 )}

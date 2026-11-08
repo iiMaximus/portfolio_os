@@ -110,6 +110,7 @@ function BenchScene({
   exploded,
   frameOnly,
   selectedApp,
+  onAppSelect,
   reducedMotion,
 }) {
   const controls = useRef();
@@ -190,7 +191,7 @@ function BenchScene({
         scale={layout.palm.scale}
         onSelect={() => setView(1)}
       >
-        <Palm app={apps[selectedApp]} />
+        <Palm app={apps[selectedApp]} onAppSelect={view === 1 ? onAppSelect : undefined} />
       </Selectable>
       <Selectable
         position={layout.rocket.position}
@@ -277,7 +278,7 @@ export default function Workbench({
         <div>
           <span className="bench-symbol">m↗</span>
           <span id="workbench-title">
-            The workbench<small>A FEW IDEAS. ONE SHARED SURFACE.</small>
+            The workbench
           </span>
         </div>
         <button className="bench-exit" onClick={onClose}>
@@ -322,6 +323,7 @@ export default function Workbench({
                 exploded={exploded}
                 frameOnly={frameOnly}
                 selectedApp={selectedApp}
+                onAppSelect={setSelectedApp}
                 reducedMotion={reducedMotion}
               />
             </Suspense>
@@ -331,24 +333,24 @@ export default function Workbench({
       <div className="bench-caption" aria-live="polite">
         <p className="eyebrow">
           {project
-            ? `${project.number} / ${project.discipline}`
+            ? project.discipline
             : computer
-              ? "04 / PERSONAL DESKTOP"
-              : "THE SCENIC ROUTE"}
+              ? "Desktop"
+              : "Overview"}
         </p>
         <h2>
           {project
             ? project.title
             : computer
-              ? "Everything has a place."
-              : "Follow your curiosity."}
+              ? "Maksym OS"
+              : "My workbench"}
         </h2>
         <p>
           {project
             ? project.summary
             : computer
-              ? "CV, projects, contact card, media, terminal, and a few distractions. Open a folder and explore."
-              : "Choose an object. Get a little closer. There’s a project behind each one."}
+              ? "Open the computer to browse my CV and projects."
+              : "Select the drone, handheld, rocket, or computer for a closer look."}
         </p>
         {computer && (
           <button className="bench-read" onClick={onOpenDesktop}>
@@ -446,9 +448,6 @@ export default function Workbench({
           </button>
         </div>
       </div>
-      <span className="bench-visual-note">
-        DXF DRONE FRAME · COMPONENTS VISUALISED
-      </span>
     </dialog>
   );
 }

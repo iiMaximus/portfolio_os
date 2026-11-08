@@ -9,12 +9,7 @@ export default function AboutSection() {
   return (
     <section id="about" className="about-section section-pad" data-section>
       <div className="about-identity">
-        <p className="eyebrow">02 — ABOUT ME</p>
-        <h2>
-          It started
-          <br />
-          with <em>airplanes.</em>
-        </h2>
+        <h2>About me</h2>
         <div id="education" className="education-card">
           <span className="eyebrow">CURRENT EDUCATION</span>
           <h3>Politecnico di Torino</h3>
@@ -33,41 +28,33 @@ export default function AboutSection() {
       </div>
       <div className="about-copy">
         <p className="about-lead">
-          At five, I was drawing imaginary machines. Airplanes were always my
-          favourites.
+          When I was five, I drew imaginary machines. Airplanes were my favourites.
         </p>
         <p>
-          By middle school, I knew I wanted to study aerospace. I’m now in my
-          third year of Mechanical Engineering at Politecnico di Torino,
-          building the foundations and working on projects of my own.
+          By middle school I knew I wanted to study aerospace. I’m now finishing
+          my mechanical engineering degree in Turin. The drone was my first chance
+          to take a design all the way from CAD to flight.
         </p>
         <p>
-          I like having a whole design to think through. For my drone, I started
-          with an empty SolidWorks assembly, designed the frame and where every
-          component would go, and had the parts cut from carbon fibre. Then came
-          assembly, soldering, and the first flights. The electronics and motors
-          are off the shelf; the mechanical design and integration are my work.
+          One of the harder decisions was where to put the battery. The camera
+          belongs at the front, but that shifts the balance. Working out where
+          everything could fit made the SolidWorks assembly as much about the
+          electronics as the frame itself.
         </p>
-        <p>
-          Software is another part of that curiosity. I built and released
-          Lychee, a food and cosmetics scanner, and Absorb, a word-by-word
-          reading app, with help from AI coding tools. I handle Lychee’s
-          development and work with a friend on distribution, which is our
-          focus now.
-        </p>
+        <dl className="profile-skills">
+          {resume.skills.map(([label, items]) => (
+            <div key={label}><dt>{label}</dt><dd>{items}</dd></div>
+          ))}
+          <div><dt>Languages</dt><dd>Polish (native), English (C2), Spanish (about B1), Chinese (HSK 3).</dd></div>
+        </dl>
         <div className="about-interests">
-          <span className="eyebrow">AWAY FROM THE WORKBENCH</span>
+          <span className="eyebrow">Outside university</span>
           <p>{resume.interests}</p>
         </div>
       </div>
       <div className="experience-block">
         <div className="experience-heading">
-          <p className="eyebrow">EXPERIENCE ALONG THE WAY</p>
-          <p>
-            Two student teams.
-            <br />
-            Different parts of engineering.
-          </p>
+          <h3>University teams</h3>
         </div>
         <div className="experience-entries">
           {resume.experience.map((item) => (
