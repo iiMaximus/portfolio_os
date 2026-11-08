@@ -158,6 +158,11 @@ export function ContactDetails() {
         <span>{profile.email}</span>
         <Arrow />
       </a>
+      <a href={profile.linkedin} target="_blank" rel="noreferrer">
+        <span className="contact-type">LINKEDIN</span>
+        <span>{profile.fullName}</span>
+        <Arrow />
+      </a>
       <div>
         <span className="contact-type">EDUCATION</span>
         <span>

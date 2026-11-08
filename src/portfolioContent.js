@@ -4,6 +4,7 @@ export const profile = {
   name: "Maksym",
   fullName: resume.name,
   email: resume.contacts[0].label,
+  linkedin: resume.contacts.find((contact) => contact.label === "LinkedIn").url,
   university: "Politecnico di Torino",
   degree: "Bachelor’s in Mechanical Engineering",
   graduation: "July 2027",

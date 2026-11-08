@@ -45,7 +45,7 @@ The main models live in `src/models/`; standalone object viewers and the shared 
 
 The profile leads with third-year Mechanical Engineering at Politecnico di Torino and expected graduation in July 2027. The user supplied the drone design, manufacture, assembly, and initial-flight history; the Lychee/Absorb development roles; and the DRAFT/Squadra Corse experience. Aerospace remains a personal interest. No grade average, unmeasured drone performance, or estimated app usage/revenue is published.
 
-`public/resume/Maksym-CV-2026.pdf` is the approved one-page CV, published unchanged. `Maksym-CV-2026.webp` is its rendered preview. `src/resumeData.json` mirrors the approved CV for the accessible text reader and About section. All current CV links, including the restored desktop, use this PDF. Email is the public contact method.
+`public/resume/Maksym-CV-2026.pdf` is the approved one-page CV, published unchanged. `Maksym-CV-2026.webp` is its rendered preview. `src/resumeData.json` mirrors the approved CV for the accessible text reader and About section. All current CV links, including the restored desktop, use this PDF. The contact section links to email and LinkedIn.
 
 For future CV revisions, export and visually check the approved one-page PDF, render its preview, and update `src/resumeData.json` to match. Replace the two public assets and update the displayed revision date in `PortfolioEssentials.jsx`. The previous draft generator and public draft files have been retired so they cannot overwrite the approved design. The original editable document is kept locally under `output/cv/`; source documents are not served by Vite.
 

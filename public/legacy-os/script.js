@@ -1141,6 +1141,7 @@
           writeBlock([
             "Contact.card",
             "Email: maksym14@onet.pl",
+            "LinkedIn: https://www.linkedin.com/in/maksym-horoszczak-40ab40412/",
             "Mode: mechanical engineering portfolio with software side quests"
           ], "system");
           return;
